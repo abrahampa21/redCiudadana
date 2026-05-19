@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #1a6dbf 0%, #2563eb 50%, #1d4ed8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+main {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 30px 33px;
+  width: 360px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.register .icon-register {
+  width: 52px;
+  height: 52px;
+  background-color: #1a2540;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 16px;
+}
+
+.register svg {
+  width: 28px;
+  fill: #fffff0;
+}
+
+.register .container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.register button {
+  width: 100%;
+  padding: 11px;
+  background: #1a2540;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.register button:hover {
+  background-color: #0f172a;
+}
+
+.fa-arrow-left {
+  font-size: 25px;
+}
+#login {
+  display: none;
+}
