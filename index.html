@@ -46,6 +46,7 @@
           id="back-icon"
           class="arrow fa-solid fa-arrow-left"
           title="Regresar"
+          onclick="showLogin()";
         ></i>
         <div class="icon-register">
           <svg viewBox="0 0 24 24">
@@ -55,10 +56,10 @@
           </svg>
         </div>
         <h1>Registro para ciudadanos</h1>
-        <h2>Crea tu cuenta</h2>
+        <p class="create-account">Crea tu cuenta</p>
         <form action="">
           <div class="nombre-div register-div">
-            <p>Nombre completo</p>
+            <label>Nombre completo</label>
             <input
               type="text"
               placeholder="Ej. Juán Pérez"
@@ -67,7 +68,7 @@
             />
           </div>
           <div class="email-div register-div">
-            <p>Correo electrónico</p>
+            <label>Correo electrónico</label>
             <input
               type="email"
               placeholder="Ej. alejandro@gmail.com"
@@ -76,7 +77,7 @@
             />
           </div>
           <div class="usuario-div register-div">
-            <p>Usuario</p>
+            <label>Usuario</label>
             <input
               type="text"
               placeholder="Ej. Alejandro85"
@@ -85,13 +86,16 @@
             />
           </div>
           <div class="password-div register-div">
-            <p>Contraseña</p>
+            <label>Contraseña</label>
             <input type="password" title="password" required name="password" />
           </div>
           <button type="submit">Registrarse</button>
         </form>
-        <p>¿Ya tienes cuenta? <span>Inicia sesión</span></p>
+        <p class="go-login">¿Ya tienes cuenta? <span onclick="showLogin()">Inicia sesión</span></p>
       </div>
     </main>
+
+
+    <script src="assets/js/index.js"></script>
   </body>
 </html>
