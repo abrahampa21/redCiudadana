@@ -7,7 +7,7 @@
 }
 
 :root{
-  --bgd-grad: linear-gradient(135deg, #1a6dbf 0%, #2563eb 50%, #1d4ed8 100%);
+  --bgd-grad: linear-gradient(135deg, #203D65, #224373,#264C85,#2A589E,#2B5AA3,#2D60AF,#346FCD,#387BE7);
   --emt-bgd: #1a2540;
 }
 
@@ -27,19 +27,22 @@ main {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
-.register .container {
+.register .container, 
+.login .container {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.register h1{
+.register h1,
+.login h1{
   text-align: center;
   line-height: 1;
 }
 
-.register .icon-register {
+.register .icon-register, 
+.login .icon-login {
   width: 52px;
   height: 52px;
   background-color: var(--emt-bgd);
@@ -50,16 +53,19 @@ main {
   margin: 0 auto 16px;
 }
 
-.register .create-account{
+.register .create-account, 
+.login .login-message{
   text-align: center;
 }
 
-.register svg {
+.register svg,
+.login svg {
   width: 28px;
   fill: #fffff0;
 }
 
-.register button {
+.register button, 
+.login button {
   width: 100%;
   padding: 11px;
   background: var(--emt-bgd);
@@ -74,17 +80,20 @@ main {
   font-family: inherit;
 }
 
-.register button:hover {
+.register button:hover,
+.login button:hover {
   background-color: #0f172a;
 }
 
-.register form{
+.register form,
+.login form{
   display: flex;
   flex-direction:column;
   gap: 10px;
 }
 
-.register form input{
+.register form input, 
+.login form input{
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid #e2e8f0;
@@ -93,12 +102,15 @@ main {
   outline: none;
 }
 
-.register .register-div{
+.register .register-div,
+.login .login-div{
   display: flex;
   flex-direction: column;
+
 }
 
-.register .register-div label{
+.register .register-div label, 
+.login .login-div label {
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
@@ -111,18 +123,39 @@ main {
   cursor: pointer;
 }
 
-.register .go-login{
+.register .go-login,
+.login .go-register{
   text-align: center;
   margin-top: 10px;
 }
 
-.register .go-login span{
+.register .go-login span,
+.login strong{
   cursor: pointer;
   color: #2563eb;
   font-weight: 600;
 }
 
 
-#login {
+#register {
   display: none;
 }
+
+.login strong{
+  cursor: pointer;
+  color: #2563eb;
+}
+
+.login strong:hover{
+  text-decoration: underline
+}
+
+.login i{
+  position: relative;
+  left: 280px;
+  top: -26px;
+  cursor: pointer;
+  color: var(--emt-bgd);
+}
+
+
