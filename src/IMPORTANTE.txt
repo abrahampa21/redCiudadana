@@ -1,4 +1,0 @@
-Aquí irán los archivos de conexión a base de datos y las imágenes que se utilicen
-
-IMPORTANTE:
-llamar los archivos de conexion a BD como están en el .gitignore
