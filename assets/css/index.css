@@ -6,8 +6,18 @@
   font-family: "DM Sans", sans-serif;
 }
 
-:root{
-  --bgd-grad: linear-gradient(135deg, #203D65, #224373,#264C85,#2A589E,#2B5AA3,#2D60AF,#346FCD,#387BE7);
+:root {
+  --bgd-grad: linear-gradient(
+    135deg,
+    #203d65,
+    #224373,
+    #264c85,
+    #2a589e,
+    #2b5aa3,
+    #2d60af,
+    #346fcd,
+    #387be7
+  );
   --emt-bgd: #1a2540;
 }
 
@@ -27,7 +37,7 @@ main {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
-.register .container, 
+.register .container,
 .login .container {
   width: 100%;
   display: flex;
@@ -36,12 +46,12 @@ main {
 }
 
 .register h1,
-.login h1{
+.login h1 {
   text-align: center;
   line-height: 1;
 }
 
-.register .icon-register, 
+.register .icon-register,
 .login .icon-login {
   width: 52px;
   height: 52px;
@@ -53,8 +63,8 @@ main {
   margin: 0 auto 16px;
 }
 
-.register .create-account, 
-.login .login-message{
+.register .create-account,
+.login .login-message {
   text-align: center;
 }
 
@@ -64,7 +74,7 @@ main {
   fill: #fffff0;
 }
 
-.register button, 
+.register button,
 .login button {
   width: 100%;
   padding: 11px;
@@ -86,14 +96,14 @@ main {
 }
 
 .register form,
-.login form{
+.login form {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   gap: 10px;
 }
 
-.register form input, 
-.login form input{
+.register form input,
+.login form input {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid #e2e8f0;
@@ -103,13 +113,12 @@ main {
 }
 
 .register .register-div,
-.login .login-div{
+.login .login-div {
   display: flex;
   flex-direction: column;
-
 }
 
-.register .register-div label, 
+.register .register-div label,
 .login .login-div label {
   font-size: 14px;
   font-weight: 600;
@@ -118,44 +127,54 @@ main {
   margin-bottom: 6px;
 }
 
-.fa-arrow-left {
+.fa-eye, .fa-arrow-left {
   font-size: 25px;
   cursor: pointer;
 }
 
 .register .go-login,
-.login .go-register{
+.login .go-register {
   text-align: center;
   margin-top: 10px;
 }
 
 .register .go-login span,
-.login strong{
+.login strong {
   cursor: pointer;
   color: #2563eb;
   font-weight: 600;
 }
 
-
 #register {
   display: none;
 }
 
-.login strong{
+.login strong {
   cursor: pointer;
   color: #2563eb;
 }
 
-.login strong:hover{
-  text-decoration: underline
+.login strong:hover {
+  text-decoration: underline;
 }
 
-.login i{
+
+.input-div{
   position: relative;
-  left: 280px;
-  top: -26px;
-  cursor: pointer;
-  color: var(--emt-bgd);
 }
 
+.input-div i {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: var(--emt-bgd);
+  font-size: 15px;
+}
 
+@media(max-width: 450px) {
+  main {
+    width: 90%;
+    padding: 20px;
+  }
+}
