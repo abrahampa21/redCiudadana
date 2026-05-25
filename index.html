@@ -3,10 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="src/favicon/favicon-96x96.png" sizes="96x96" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="src/favicon/favicon-96x96.png"
+      sizes="96x96"
+    />
     <link rel="icon" type="image/svg+xml" href="src/favicon/favicon.svg" />
     <link rel="shortcut icon" href="src/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="src/favicon/apple-touch-icon.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="src/favicon/apple-touch-icon.png"
+    />
     <link rel="stylesheet" href="assets/css/index.css" />
     <script
       src="https://kit.fontawesome.com/e522357059.js"
@@ -29,13 +38,13 @@
         <p class="login-message">Inicia sesión para continuar</p>
         <form action="" method="post">
           <div class="usuario-div login-div">
-            <label for="user">Usuario</label>
+            <label for="email">Correo electrónico</label>
             <div class="input-div">
               <input
-                type="text"
-                name="user"
-                id="user"
-                placeholder="Tu nombre de usuario"
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Tu correo electrónico"
                 required
                 maxlength="255"
               />
@@ -101,7 +110,7 @@
                 maxlength="255"
                 pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{1,255}$"
               />
-              <i class="fa-solid fa-pen-nib"></i>
+              <i class="fa-solid fa-user"></i>
             </div>
           </div>
           <div class="email-div register-div">
@@ -118,16 +127,18 @@
             </div>
           </div>
           <div class="usuario-div register-div">
-            <label>Usuario</label>
+            <label>Número telefónico</label>
             <div class="input-div">
               <input
-                type="text"
-                placeholder="Ej. Alejandro85"
+                type="number"
+                placeholder="Ej. 9811243219"
                 required
-                name="user"
-                maxlength="255"
+                name="cellphone"
+                id="cellphone"
+                maxlength="12"
+                pattern="^\d{1,12}$"
               />
-              <i class="fa-solid fa-user"></i>
+              <i class="fa-solid fa-mobile"></i>
             </div>
           </div>
           <div class="password-div register-div">
