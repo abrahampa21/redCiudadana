@@ -1,5 +1,5 @@
 <?php
-$dbhost = "";
-$dbuser = "";
+$dbhost = "localhost";
+$dbuser = "root";
 $dbpass = "";
-$dbname = "";
+$dbname = "reportesciudadanos";

@@ -1,3 +1,57 @@
+<?php
+include_once "src\config\connection.php";
+
+function validar_contraseña($contraseña)
+{
+  // Mínimo 10 caracteres
+  if (strlen($contraseña) < 10) {
+    return false;
+  }
+
+  // Al menos una letra
+  if (!preg_match('/[A-Za-z]/', $contraseña)) {
+    return false;
+  }
+
+  // Al menos un carácter especial
+  if (!preg_match('/[!@#$%^&*()_\-=\[\]{};\'":\\|,.<>\/?]/', $contraseña)) {
+    return false;
+  }
+
+  return true;
+}
+
+
+//Formulario Registro
+if(isset($_POST["btn-registro"])){
+
+$nombre = trim(htmlspecialchars($_POST['name']));
+$correo = trim(htmlspecialchars($_POST['email']));
+$telefono = trim(htmlspecialchars($_POST['cellphone']));
+$pass = trim(htmlspecialchars($_POST['password']));
+
+  if(!validar_contraseña($pass)){
+    echo "<script>alert('Contraseña inválida. Debe tener mínimo 10 caracteres, una letra y un carácter especial.')</script>";
+  } else{
+    $securePass = sha1($pass);
+
+    $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono) VALUES (?,?,?,?)");
+    $registro->bind_param("sssi", $nombre, $correo, $securePass, $telefono);
+
+    if($registro->execute()){
+    print "Datos registrados correctamente";
+    }else{
+    print "Error al registrar datos";
+    }
+    $registro->close();
+    $conn->close();
+    exit;
+  }
+
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -97,7 +151,7 @@
         </div>
         <h1>Registro para ciudadanos</h1>
         <p class="create-account">Crea tu cuenta</p>
-        <form action="" id="register-form">
+        <form action="" id="register-form" method="post">
           <div class="nombre-div register-div">
             <label>Nombre completo</label>
             <div class="input-div">
@@ -154,7 +208,7 @@
               <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
             </div>
           </div>
-          <button type="submit">Registrarse</button>
+          <button type="submit" id="btn-registro" name="btn-registro">Registrarse</button>
         </form>
         <p class="go-login">
           ¿Ya tienes cuenta? <span onclick="showLogin()">Inicia sesión</span>
