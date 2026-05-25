@@ -34,16 +34,30 @@ $pass = trim(htmlspecialchars($_POST['password']));
     echo "<script>alert('Contraseña inválida. Debe tener mínimo 10 caracteres, una letra y un carácter especial.')</script>";
   } else{
     $securePass = sha1($pass);
+    
+     //todo validación de datos repetidos (listo?)
 
-    $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono) VALUES (?,?,?,?)");
-    $registro->bind_param("sssi", $nombre, $correo, $securePass, $telefono);
+    $validar = $conn->prepare("SELECT correo, telefono FROM usuario WHERE correo = ? OR telefono = ?");
+    $validar->bind_param("ss",$correo, $telefono);
+    $validar->execute();
+    $resultado_verificar = $validar->get_result();
 
-    if($registro->execute()){
-    print "Datos registrados correctamente";
-    }else{
-    print "Error al registrar datos";
+    if ($resultado_verificar && $resultado_verificar->num_rows > 0) {
+      header("Location: index.php"); //todo reemplazar esto por un mejor mensaje de error
+      echo "<script>alert('error')</script>";
+    } else{ //consulta de inserción
+
+      $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono) VALUES (?,?,?,?)");
+      $registro->bind_param("sssi", $nombre, $correo, $securePass, $telefono);
+
+      if($registro->execute()){
+      print "Datos registrados correctamente";
+      }else{
+      print "Error al registrar datos";
+      }
+      $registro->close();
     }
-    $registro->close();
+    $validar->close();
     $conn->close();
     exit;
   }
