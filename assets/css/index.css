@@ -38,7 +38,7 @@ main {
 }
 
 .register .container,
-.login .container {
+.login .container, .recover-password .container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -46,7 +46,7 @@ main {
 }
 
 .register h1,
-.login h1 {
+.login h1, .recover-password h1 {
   text-align: center;
   line-height: 1;
 }
@@ -75,7 +75,7 @@ main {
 }
 
 .register button,
-.login button {
+.login button, .recover-password button {
   width: 100%;
   padding: 11px;
   background: var(--emt-bgd);
@@ -91,19 +91,19 @@ main {
 }
 
 .register button:hover,
-.login button:hover {
+.login button:hover, .recover-password button:hover {
   background-color: #0f172a;
 }
 
 .register form,
-.login form {
+.login form, .recover-password form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .register form input,
-.login form input {
+.login form input, .recover-password form input {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid #e2e8f0;
@@ -113,13 +113,13 @@ main {
 }
 
 .register .register-div,
-.login .login-div {
+.login .login-div, .recover-password .recover-div {
   display: flex;
   flex-direction: column;
 }
 
 .register .register-div label,
-.login .login-div label {
+.login .login-div label, .recover-password .recover-div label {
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
@@ -158,6 +158,16 @@ main {
   text-decoration: underline;
 }
 
+.login .forgot-pass{
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 1.1rem;
+}
+
+.login .forgot-pass:hover{
+  text-decoration: underline;
+}
 
 .input-div{
   position: relative;
@@ -172,6 +182,17 @@ main {
   font-size: 15px;
 }
 
+/*Recover password component*/
+.recover-password{
+  display: none;
+}
+.recover-password .container{
+  gap: 1.5rem;
+}
+
+.recover-password button{
+  margin-top: 2rem;
+}
 @media(max-width: 450px) {
   main {
     width: 90%;
