@@ -1,5 +1,5 @@
 <?php
-include_once "src\config\connection.php";
+include_once("src/connection.php");
 
 function validar_contraseña($contraseña)
 {
@@ -23,37 +23,37 @@ function validar_contraseña($contraseña)
 
 
 //Formulario Registro
-if(isset($_POST["btn-registro"])){
+if (isset($_POST["btn-registro"])) {
 
-$nombre = trim(htmlspecialchars($_POST['name']));
-$correo = trim(htmlspecialchars($_POST['email']));
-$telefono = trim(htmlspecialchars($_POST['cellphone']));
-$pass = trim(htmlspecialchars($_POST['password']));
+  $nombre = trim(htmlspecialchars($_POST['name']));
+  $correo = trim(htmlspecialchars($_POST['email']));
+  $telefono = trim(htmlspecialchars($_POST['cellphone']));
+  $pass = trim(htmlspecialchars($_POST['password']));
 
-  if(!validar_contraseña($pass)){
+  if (!validar_contraseña($pass)) {
     echo "<script>alert('Contraseña inválida. Debe tener mínimo 10 caracteres, una letra y un carácter especial.')</script>";
-  } else{
+  } else {
     $securePass = sha1($pass);
-    
-     //todo validación de datos repetidos (listo?)
+
+    //todo validación de datos repetidos (listo?)
 
     $validar = $conn->prepare("SELECT correo, telefono FROM usuario WHERE correo = ? OR telefono = ?");
-    $validar->bind_param("ss",$correo, $telefono);
+    $validar->bind_param("ss", $correo, $telefono);
     $validar->execute();
     $resultado_verificar = $validar->get_result();
 
     if ($resultado_verificar && $resultado_verificar->num_rows > 0) {
       header("Location: index.php"); //todo reemplazar esto por un mejor mensaje de error
       echo "<script>alert('error')</script>";
-    } else{ //consulta de inserción
+    } else { //consulta de inserción
 
       $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono) VALUES (?,?,?,?)");
       $registro->bind_param("sssi", $nombre, $correo, $securePass, $telefono);
 
-      if($registro->execute()){
-      print "Datos registrados correctamente";
-      }else{
-      print "Error al registrar datos";
+      if ($registro->execute()) {
+        print "Datos registrados correctamente";
+      } else {
+        print "Error al registrar datos";
       }
       $registro->close();
     }
@@ -61,155 +61,109 @@ $pass = trim(htmlspecialchars($_POST['password']));
     $conn->close();
     exit;
   }
-
 }
 
 ?>
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="src/favicon/favicon-96x96.png"
-      sizes="96x96"
-    />
-    <link rel="icon" type="image/svg+xml" href="src/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="src/favicon/favicon.ico" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="src/favicon/apple-touch-icon.png"
-    />
-    <link rel="stylesheet" href="assets/css/index.css" />
-    <script
-      src="https://kit.fontawesome.com/e522357059.js"
-      crossorigin="anonymous"
-    ></script>
-    <title>Inicio de Sesión</title>
-  </head>
-  <body>
-    <!--Login-->
-    <main id="login" class="login">
-      <div class="container">
-        <div class="icon-login">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z"
-            />
-          </svg>
-        </div>
-        <h1>Reportes ciudadanos</h1>
-        <p class="login-message">Inicia sesión para continuar</p>
-        <form action="" method="post">
-          <div class="usuario-div login-div">
-            <label for="email">Correo electrónico</label>
-            <div class="input-div">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Tu correo electrónico"
-                required
-                maxlength="255"
-              />
-              <i class="fa-solid fa-user"></i>
-            </div>
-          </div>
-          <div class="password-div login-div">
-            <label for="password">Contraseña</label>
-            <div class="input-div">
-              <input
-                type="password"
-                name="password"
-                id="password-login"
-                placeholder="Tu contraseña"
-                required
-                maxlength="255"
-              />
-              <i
-                class="fa-solid fa-eye"
-                id="password-eye"
-                onclick="revealPassword(this)"
-              ></i>
-            </div>
-          </div>
-          <button type="submit" id="login-button">Iniciar Sesión</button>
-        </form>
-        <p class="go-register">
-          ¿No tienes cuenta?
-          <strong onclick="showRegister()">Regístrate</strong>
-        </p>
-      </div>
-    </main>
 
-    <!--Registro de ciudadanos-->
-    <main id="register" class="register">
-      <div class="container">
-        <i
-          id="back-icon"
-          class="arrow fa-solid fa-arrow-left"
-          title="Regresar"
-          onclick="showLogin()"
-          ;
-        ></i>
-        <div class="icon-register">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z"
-            />
-          </svg>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="icon"
+    type="image/png"
+    href="src/favicon/favicon-96x96.png"
+    sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="src/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="src/favicon/favicon.ico" />
+  <link
+    rel="apple-touch-icon"
+    sizes="180x180"
+    href="src/favicon/apple-touch-icon.png" />
+  <link rel="stylesheet" href="assets/css/index.css" />
+  <script
+    src="https://kit.fontawesome.com/e522357059.js"
+    crossorigin="anonymous"></script>
+  <title>Inicio de Sesión</title>
+</head>
+
+<body>
+  <!--Login-->
+  <main id="login" class="login">
+    <div class="container">
+      <div class="icon-login">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z" />
+        </svg>
+      </div>
+      <h1>Reportes ciudadanos</h1>
+      <p class="login-message">Inicia sesión para continuar</p>
+      <form action="" method="post">
+        <div class="usuario-div login-div">
+          <label for="email">Correo electrónico</label>
+          <div class="input-div">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Tu correo electrónico"
+              required
+              maxlength="255" />
+            <i class="fa-solid fa-user"></i>
+          </div>
         </div>
-        <h1>Registro para ciudadanos</h1>
-        <p class="create-account">Crea tu cuenta</p>
-        <form action="" id="register-form" method="post">
-          <div class="nombre-div register-div">
-            <label>Nombre completo</label>
-            <div class="input-div">
-              <input
-                type="text"
-                placeholder="Ej. Juán Pérez"
-                required
-                name="name"
-                id="name"
-                maxlength="255"
-                pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{1,255}$"
-              />
-              <i class="fa-solid fa-user"></i>
-            </div>
+        <div class="password-div login-div">
+          <label for="password">Contraseña</label>
+          <div class="input-div">
+            <input
+              type="password"
+              name="password"
+              id="password-login"
+              placeholder="Tu contraseña"
+              required
+              maxlength="255" />
+            <i
+              class="fa-solid fa-eye"
+              id="password-eye"
+              onclick="revealPassword(this)"></i>
           </div>
-          <div class="email-div register-div">
-            <label>Correo electrónico</label>
-            <div class="input-div">
-              <input
-                type="email"
-                placeholder="Ej. alejandro@gmail.com"
-                required
-                name="email"
-                maxlength="255"
-              />
-              <i class="fa-solid fa-envelope"></i>
-            </div>
+          <span class="forgot-pass" onclick="showRecoverPassword()">Olvidé mi contraseña</span>
+        </div>
+        <button type="submit" id="login-button">Iniciar Sesión</button>
+      </form>
+      <p class="go-register">
+        ¿No tienes cuenta?
+        <strong onclick="showRegister()">Regístrate</strong>
+      </p>
+    </div>
+  </main>
+
+<!--Recover password component-->
+  <main id="recover-password" class="recover-password">
+    <div class="container">
+            <i
+        id="back-icon"
+        class="arrow fa-solid fa-arrow-left"
+        title="Regresar"
+        onclick="showLogin()"
+        ;></i>
+      <h1>Recuperar contraseña</h1>
+      <form action="" method="post">
+        <div class="email-div recover-div">
+          <label>Correo electrónico</label>
+          <div class="input-div">
+            <input
+              type="email"
+              placeholder="Ej. alejandro@gmail.com"
+              required
+              name="email"
+              maxlength="255" />
+            <i class="fa-solid fa-envelope"></i>
           </div>
-          <div class="usuario-div register-div">
-            <label>Número telefónico</label>
-            <div class="input-div">
-              <input
-                type="number"
-                placeholder="Ej. 9811243219"
-                required
-                name="cellphone"
-                id="cellphone"
-                maxlength="12"
-                pattern="^\d{1,12}$"
-              />
-              <i class="fa-solid fa-mobile"></i>
-            </div>
-          </div>
-          <div class="password-div register-div">
+          <div class="new-password-div recover-div">
             <label>Contraseña</label>
             <div class="input-div">
               <input
@@ -217,19 +171,94 @@ $pass = trim(htmlspecialchars($_POST['password']));
                 title="password"
                 required
                 name="password"
-                maxlength="255"
-              />
+                maxlength="255" />
               <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
             </div>
           </div>
-          <button type="submit" id="btn-registro" name="btn-registro">Registrarse</button>
-        </form>
-        <p class="go-login">
-          ¿Ya tienes cuenta? <span onclick="showLogin()">Inicia sesión</span>
-        </p>
-      </div>
-    </main>
+        <button type="submit" id="recover-btn">Confirmar nueva contraseña</button>
+      </form>
+    </div>
+  </main>
 
-    <script src="assets/js/index.js"></script>
-  </body>
+  <!--Registro de ciudadanos-->
+  <main id="register" class="register">
+    <div class="container">
+      <i
+        id="back-icon"
+        class="arrow fa-solid fa-arrow-left"
+        title="Regresar"
+        onclick="showLogin()"
+        ;></i>
+      <div class="icon-register">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z" />
+        </svg>
+      </div>
+      <h1>Registro para ciudadanos</h1>
+      <p class="create-account">Crea tu cuenta</p>
+      <form action="" id="register-form" method="post">
+        <div class="nombre-div register-div">
+          <label>Nombre completo</label>
+          <div class="input-div">
+            <input
+              type="text"
+              placeholder="Ej. Juán Pérez"
+              required
+              name="name"
+              id="name"
+              maxlength="255"
+              pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{1,255}$" />
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+        <div class="email-div register-div">
+          <label>Correo electrónico</label>
+          <div class="input-div">
+            <input
+              type="email"
+              placeholder="Ej. alejandro@gmail.com"
+              required
+              name="email"
+              maxlength="255" />
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+        </div>
+        <div class="usuario-div register-div">
+          <label>Número telefónico</label>
+          <div class="input-div">
+            <input
+              type="number"
+              placeholder="Ej. 9811243219"
+              required
+              name="cellphone"
+              id="cellphone"
+              maxlength="12"
+              pattern="^\d{1,12}$" />
+            <i class="fa-solid fa-mobile"></i>
+          </div>
+        </div>
+        <div class="password-div register-div">
+          <label>Contraseña</label>
+          <div class="input-div">
+            <input
+              type="password"
+              title="password"
+              required
+              name="password"
+              maxlength="255" />
+            <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
+          </div>
+        </div>
+        <button type="submit" id="btn-registro" name="btn-registro">Registrarse</button>
+      </form>
+      <p class="go-login">
+        ¿Ya tienes cuenta? <span onclick="showLogin()">Inicia sesión</span>
+      </p>
+    </div>
+  </main>
+
+  <script src="assets/js/index.js"></script>
+</body>
+
 </html>

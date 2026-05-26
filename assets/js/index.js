@@ -1,5 +1,6 @@
 const register = document.getElementById("register");
 const login = document.getElementById("login");
+const recoverPassword = document.getElementById("recover-password");
 const passwordEye = document.getElementById("password-eye");
 const passwordLogin = document.getElementById("password-login");
 const nameInput = document.getElementById("name");
@@ -7,11 +8,18 @@ const nameInput = document.getElementById("name");
 function showLogin() {
   register.style.display = "none";
   login.style.display = "block";
+  recoverPassword.style.display = "none";
 }
 
 function showRegister() {
   login.style.display = "none";
   register.style.display = "block";
+}
+
+function showRecoverPassword(){
+  login.style.display = "none";
+  recoverPassword.style.display = "block";
+
 }
 
 //No permitir copiar los contenidos de las contraseñas
