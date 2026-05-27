@@ -38,7 +38,8 @@ main {
 }
 
 .register .container,
-.login .container, .recover-password .container {
+.login .container,
+.recover-password .container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -46,7 +47,8 @@ main {
 }
 
 .register h1,
-.login h1, .recover-password h1 {
+.login h1,
+.recover-password h1 {
   text-align: center;
   line-height: 1;
 }
@@ -75,7 +77,8 @@ main {
 }
 
 .register button,
-.login button, .recover-password button {
+.login button,
+.recover-password button {
   width: 100%;
   padding: 11px;
   background: var(--emt-bgd);
@@ -91,19 +94,22 @@ main {
 }
 
 .register button:hover,
-.login button:hover, .recover-password button:hover {
+.login button:hover,
+.recover-password button:hover {
   background-color: #0f172a;
 }
 
 .register form,
-.login form, .recover-password form {
+.login form,
+.recover-password form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .register form input,
-.login form input, .recover-password form input {
+.login form input,
+.recover-password form input {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid #e2e8f0;
@@ -113,13 +119,15 @@ main {
 }
 
 .register .register-div,
-.login .login-div, .recover-password .recover-div {
+.login .login-div,
+.recover-password .recover-div {
   display: flex;
   flex-direction: column;
 }
 
 .register .register-div label,
-.login .login-div label, .recover-password .recover-div label {
+.login .login-div label,
+.recover-password .recover-div label {
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
@@ -127,7 +135,8 @@ main {
   margin-bottom: 6px;
 }
 
-.fa-eye, .fa-arrow-left {
+.fa-eye,
+.fa-arrow-left {
   font-size: 25px;
   cursor: pointer;
 }
@@ -158,18 +167,18 @@ main {
   text-decoration: underline;
 }
 
-.login .forgot-pass{
+.login .forgot-pass {
   color: #2563eb;
   cursor: pointer;
   font-weight: 700;
   margin-top: 1.1rem;
 }
 
-.login .forgot-pass:hover{
+.login .forgot-pass:hover {
   text-decoration: underline;
 }
 
-.input-div{
+.input-div {
   position: relative;
 }
 
@@ -182,18 +191,65 @@ main {
   font-size: 15px;
 }
 
+.my-toast {
+  position: fixed;
+  top: 40px;
+  right: 30px;
+  width: 300px;
+  background: #fffff0;
+  color: #222;
+  padding: 15px;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.4s ease;
+  z-index: 9999;
+}
+
+.my-toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.my-toast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.my-toast-header img{
+  width: 22px;
+  height: 22px;
+}
+
+.my-toast-header .icon-title{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-toast {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 /*Recover password component*/
-.recover-password{
+.recover-password {
   display: none;
 }
-.recover-password .container{
+.recover-password .container {
   gap: 1.5rem;
 }
 
-.recover-password button{
+.recover-password button {
   margin-top: 2rem;
 }
-@media(max-width: 450px) {
+@media (max-width: 450px) {
   main {
     width: 90%;
     padding: 20px;

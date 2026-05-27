@@ -1,6 +1,9 @@
 <?php
 include_once("src/connection.php");
 
+$toast = false;
+$toast_message = "";
+
 function validar_contraseña($contraseña)
 {
   // Mínimo 10 caracteres
@@ -36,7 +39,6 @@ if (isset($_POST["btn-registro"])) {
     $securePass = sha1($pass);
 
     //todo validación de datos repetidos (listo?)
-
     $validar = $conn->prepare("SELECT correo, telefono FROM usuario WHERE correo = ? OR telefono = ?");
     $validar->bind_param("ss", $correo, $telefono);
     $validar->execute();
@@ -51,15 +53,16 @@ if (isset($_POST["btn-registro"])) {
       $registro->bind_param("sssi", $nombre, $correo, $securePass, $telefono);
 
       if ($registro->execute()) {
-        print "Datos registrados correctamente";
+        $toast = true;
+        $toast_message = "Usuario registrado correctamente";
       } else {
-        print "Error al registrar datos";
+        $toast = true;
+        $toast_message = "Error al registrar datos";
       }
       $registro->close();
     }
     $validar->close();
     $conn->close();
-    exit;
   }
 }
 
@@ -141,10 +144,10 @@ if (isset($_POST["btn-registro"])) {
     </div>
   </main>
 
-<!--Recover password component-->
+  <!--Recover password component-->
   <main id="recover-password" class="recover-password">
     <div class="container">
-            <i
+      <i
         id="back-icon"
         class="arrow fa-solid fa-arrow-left"
         title="Regresar"
@@ -175,7 +178,7 @@ if (isset($_POST["btn-registro"])) {
               <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
             </div>
           </div>
-        <button type="submit" id="recover-btn">Confirmar nueva contraseña</button>
+          <button type="submit" id="recover-btn">Confirmar nueva contraseña</button>
       </form>
     </div>
   </main>
@@ -258,7 +261,48 @@ if (isset($_POST["btn-registro"])) {
     </div>
   </main>
 
+
+  <!--Toast mensaje para registro-->
+  <div id="registroToast" class="toast my-toast">
+
+    <div class="my-toast-header">
+      <div class="icon-title">
+        <img src="src/img/check.png" alt="Icono de comprobado para registrado">
+        <strong>Red Ciudadana dice:</strong>
+      </div>
+
+      <button type="button"
+        class="close-toast"
+        data-bs-dismiss="toast">
+        X
+      </button>
+    </div>
+
+    <div class="my-toast-body">
+      <?php echo $toast_message ?>
+    </div>
+
+  </div>
+
   <script src="assets/js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <?php if ($toast): ?>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+
+        const toastElement = document.getElementById("registroToast");
+
+        const toast = new bootstrap.Toast(toastElement, {
+          delay: 2000
+        });
+
+        toast.show();
+
+      });
+    </script>
+
+  <?php endif; ?>
 </body>
 
 </html>
