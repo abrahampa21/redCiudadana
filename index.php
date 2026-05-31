@@ -1,5 +1,5 @@
 <?php
-include_once("src/connection.php");
+require_once("src/config/connection.php");
 
 $toast = false;
 $toast_message = "";

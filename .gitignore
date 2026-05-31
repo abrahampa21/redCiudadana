@@ -1,2 +1,6 @@
-src/connection.php
-src/config.php
+src/config/
+node_modules/
+.env
+.vscode/
+.DS_Store
+Thumbs.db
