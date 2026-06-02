@@ -8,11 +8,14 @@
 
 body {
   font-family: "DM Sans", sans-serif;
+  display: flex;
+
 }
 
 /*============= SIDEBAR ==========*/
 .sidebar {
   background-color: #1a2540;
+  position: fixed;
   width: 190px;
   display: flex;
   flex-direction: column;
@@ -154,9 +157,44 @@ body {
   color: #fca5a5;
 }
 
-
-/*============= DASHBOARD ==========*/
+/*DASHBOARD */
 .dashboard svg{
     width: 22px;
   height: 22px;
+}
+
+.dashboard{
+  margin-left: 190px;
+  width: calc(100% - 190px);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.dashboard .page{
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+
+.stat-card{
+  padding: 20px;
+}
+
+.stat-grid{
+  width: 100%;
+}
+
+.dashboard .card{
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+#dash-date{
+  text-transform: capitalize;
 }

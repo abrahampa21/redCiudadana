@@ -16,10 +16,9 @@ function showRegister() {
   register.style.display = "block";
 }
 
-function showRecoverPassword(){
+function showRecoverPassword() {
   login.style.display = "none";
   recoverPassword.style.display = "block";
-
 }
 
 //No permitir copiar los contenidos de las contraseñas
@@ -63,3 +62,4 @@ nameInput.addEventListener("invalid", function () {
 nameInput.addEventListener("input", function () {
   nameInput.setCustomValidity("");
 });
+
