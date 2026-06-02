@@ -62,10 +62,38 @@ if (isset($_POST["btn-registro"])) {
       $registro->close();
     }
     $validar->close();
-    $conn->close();
+
+    
+    
   }
 }
 
+//Recuperar contraseña
+if (isset($_POST["recover-btn"])){
+  $correo = trim(htmlspecialchars($_POST['email']));
+  $nueva_contraseña = trim(htmlspecialchars($_POST['password']));
+
+  if (!validar_contraseña($nueva_contraseña)) {
+    echo "<script>alert('Contraseña inválida. Debe tener mínimo 10 caracteres, una letra y un carácter especial.')</script>";
+  } else {
+    $securePass = sha1($nueva_contraseña);
+
+    $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ?");
+    $update->bind_param("ss", $securePass, $correo);
+
+    if ($update->execute()) {
+      $toast = true;
+      $toast_message = "Contraseña actualizada correctamente";
+    } else {
+      $toast = true;
+      $toast_message = "Error al actualizar la contraseña";
+    }
+    $update->close();
+  }
+}
+
+
+$conn->close();
 ?>
 
 <!doctype html>
