@@ -206,7 +206,7 @@ $conn->close();
               <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
             </div>
           </div>
-          <button type="submit" id="recover-btn">Confirmar nueva contraseña</button>
+          <button type="submit" id="recover-btn" name="recover-btn">Confirmar nueva contraseña</button>
       </form>
     </div>
   </main>
