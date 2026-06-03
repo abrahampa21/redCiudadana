@@ -1,5 +1,6 @@
 <?php
 require_once("src/config/connection.php");
+session_start();
 
 $toast = false;
 $toast_message = "";
@@ -92,6 +93,32 @@ if (isset($_POST["recover-btn"])){
   }
 }
 
+//Formulario Login
+if (isset($_POST["login-button"])){
+  $correo = trim(htmlspecialchars($_POST['email']));
+  $pass = trim(htmlspecialchars($_POST['password']));
+  $passSec = sha1($pass);
+
+  $login = $conn->prepare("SELECT correo, password FROM usuario WHERE correo = ? AND password = ? LIMIT 1");
+  if (!$login){
+    echo "<script>alert('Error en la consulta: " . $conexion->error . "')</script>";
+  }else {
+    $login->bind_param("ss", $correo, $passSec);
+    $login->execute();
+    $resultado_login = $login->get_result();
+
+    if($resultado_login->num_rows > 0){
+      $usuario = $resultado_login->fetch_assoc();
+      $_SESSION['id_usuario'] = $usuario['id_usuario'];
+      echo "<script>window.location.href='panelCiudadano/dashboard.html?id=" . $usuario['id_usuario'] . "'</script>";
+      //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
+    }else{
+      echo "<script>alert('Correo o contraseña incorrectos.'); </script>"; 
+    }
+  }
+  $login->close();
+}
+
 
 $conn->close();
 ?>
@@ -163,7 +190,7 @@ $conn->close();
           </div>
           <span class="forgot-pass" onclick="showRecoverPassword()">Olvidé mi contraseña</span>
         </div>
-        <button type="submit" id="login-button">Iniciar Sesión</button>
+        <button type="submit" id="login-button" name="login-button">Iniciar Sesión</button>
       </form>
       <p class="go-register">
         ¿No tienes cuenta?
