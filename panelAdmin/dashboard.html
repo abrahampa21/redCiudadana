@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Reportes Ciudadanos</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/panelAdmin.css" />
+    <link rel="icon" href="../src/img/icon-pages.jfif" />
+    <link href="../src/output.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <!-- DASHBOARD -->
+    <main class="dashboard">
+      <div class="page" id="page-dashboard">
+        <div>
+          <h1 class="page-title text-[1.6rem] font-bold text-slate-800">
+            Bienvenido al sistema de reportes
+          </h1>
+          <div
+            class="page-date text-[0.85rem] text-slate-500"
+            id="dash-date"
+          ></div>
+        </div>
+        <div>
+          <div class="stat-grid grid grid-cols-4 gap-4 mb-6">
+            <div class="stat-card bg-white rounded-xl border border-slate-200">
+              <div
+                class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5"
+              >
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#f59e0b">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                  />
+                </svg>
+                <span class="text-amber-500">Pendientes</span>
+              </div>
+              <div
+                class="stat-num text-[2rem] font-bold text-slate-800"
+                id="d-pend"
+              >
+                0
+              </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl border border-slate-200">
+              <div
+                class="stat-label flex items-center gap-2 text-sm font-semibold mb-2.5"
+              >
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#3b82f6">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
+                  />
+                </svg>
+                <span class="text-blue-500">En Proceso</span>
+              </div>
+              <div
+                class="stat-num text-[2rem] font-bold text-slate-800"
+                id="d-proc"
+              >
+                0
+              </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl border border-slate-200">
+              <div
+                class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5"
+              >
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#22c55e">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
+                  />
+                </svg>
+                <span class="text-green-500">Resueltos</span>
+              </div>
+              <div
+                class="stat-num text-[2rem] font-bold text-slate-800"
+                id="d-res"
+              >
+                0
+              </div>
+            </div>
+            <div class="stat-card bg-white rounded-xl border border-slate-200">
+              <div
+                class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5"
+              >
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#ef4444">
+                  <path
+                    d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                  />
+                </svg>
+                <span class="text-red-500">Alta Prioridad</span>
+              </div>
+              <div
+                class="stat-num text-[2rem] font-bold text-slate-800"
+                id="d-alta"
+              >
+                0
+              </div>
+            </div>
+          </div>
+          <div
+            class="card bg-white rounded-xl border border-slate-200 flex flex-col gap-4"
+          >
+            <h3 class="text-base font-bold mb-4 text-slate-800">
+              Reportes Recientes
+            </h3>
+            <div id="recent-list">
+              <p class="empty-msg text-slate-500 text-[0.85rem]">
+                No hay reportes aún.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      fetch("../includes/sidebarAdmin.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("sidebar-container").innerHTML = data;
+        });
+    </script>
+    <script src="../assets/js/panelAdmin.js"></script>
+  </body>
+</html>
