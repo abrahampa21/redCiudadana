@@ -28,7 +28,6 @@ function validar_contraseña($contraseña)
 
 //Formulario Registro
 if (isset($_POST["btn-registro"])) {
-
   $nombre = trim(htmlspecialchars($_POST['name']));
   $correo = trim(htmlspecialchars($_POST['email']));
   $telefono = trim(htmlspecialchars($_POST['cellphone']));
@@ -46,12 +45,11 @@ if (isset($_POST["btn-registro"])) {
     $resultado_verificar = $validar->get_result();
 
     if ($resultado_verificar && $resultado_verificar->num_rows > 0) {
-      header("Location: index.php"); //todo reemplazar esto por un mejor mensaje de error
-      echo "<script>alert('error')</script>";
+      $toast = true;
+      $toast_message = "Correo o teléfono ya registrado";
     } else { //consulta de inserción
-
       $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono) VALUES (?,?,?,?)");
-      $registro->bind_param("sssi", $nombre, $correo, $securePass, $telefono);
+      $registro->bind_param("ssss", $nombre, $correo, $securePass, $telefono);
 
       if ($registro->execute()) {
         $toast = true;
@@ -63,14 +61,11 @@ if (isset($_POST["btn-registro"])) {
       $registro->close();
     }
     $validar->close();
-
-    
-    
   }
 }
 
 //Recuperar contraseña
-if (isset($_POST["recover-btn"])){
+if (isset($_POST["recover-btn"])) {
   $correo = trim(htmlspecialchars($_POST['email']));
   $nueva_contraseña = trim(htmlspecialchars($_POST['password']));
 
@@ -94,26 +89,26 @@ if (isset($_POST["recover-btn"])){
 }
 
 //Formulario Login
-if (isset($_POST["login-button"])){
+if (isset($_POST["login-button"])) {
   $correo = trim(htmlspecialchars($_POST['email']));
   $pass = trim(htmlspecialchars($_POST['password']));
   $passSec = sha1($pass);
 
   $login = $conn->prepare("SELECT correo, password FROM usuario WHERE correo = ? AND password = ? LIMIT 1");
-  if (!$login){
-    echo "<script>alert('Error en la consulta: " . $conexion->error . "')</script>";
-  }else {
+  if (!$login) {
+    echo "<script>alert('Error en la consulta: " . $conn->error . "')</script>";
+  } else {
     $login->bind_param("ss", $correo, $passSec);
     $login->execute();
     $resultado_login = $login->get_result();
 
-    if($resultado_login->num_rows > 0){
+    if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
       echo "<script>window.location.href='panelCiudadano/dashboard.html?id=" . $usuario['id_usuario'] . "'</script>";
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
-    }else{
-      echo "<script>alert('Correo o contraseña incorrectos.'); </script>"; 
+    } else {
+      echo "<script>alert('Correo o contraseña incorrectos.'); </script>";
     }
   }
   $login->close();
@@ -286,7 +281,7 @@ $conn->close();
           <label>Número telefónico</label>
           <div class="input-div">
             <input
-              type="number"
+              type="text"
               placeholder="Ej. 9811243219"
               required
               name="cellphone"

@@ -29,6 +29,12 @@ body {
   min-height: 100dvh;
 }
 
+#login,
+#register,
+#recover-password {
+  width: 380px;
+}
+
 main {
   background-color: #fff;
   border-radius: 16px;
@@ -193,15 +199,17 @@ main {
 
 .my-toast {
   position: fixed;
-  top: 40px;
-  right: 30px;
-  width: 300px;
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  max-width: 360px;
+  margin-left: auto;
   background: #fffff0;
   color: #222;
   padding: 15px;
   border-radius: 10px;
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateY(-16px);
   transition: all 0.4s ease;
   z-index: 9999;
 }
@@ -218,12 +226,12 @@ main {
   margin-bottom: 8px;
 }
 
-.my-toast-header img{
+.my-toast-header img {
   width: 22px;
   height: 22px;
 }
 
-.my-toast-header .icon-title{
+.my-toast-header .icon-title {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -249,9 +257,8 @@ main {
 .recover-password button {
   margin-top: 2rem;
 }
-@media (max-width: 450px) {
-  main {
-    width: 90%;
-    padding: 20px;
+@media (max-width: 420px) {
+  main{
+    padding: 26px;
   }
 }

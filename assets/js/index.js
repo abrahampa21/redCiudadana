@@ -7,8 +7,8 @@ const nameInput = document.getElementById("name");
 
 function showLogin() {
   register.style.display = "none";
-  login.style.display = "block";
-  recoverPassword.style.display = "none";
+  login.style.display = "flex";
+  recoverPassword.style.display = "block";
 }
 
 function showRegister() {
