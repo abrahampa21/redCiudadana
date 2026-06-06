@@ -42,8 +42,8 @@ body {
 }
 
 .brand-icon img {
-  width: 35px;
-  height: 35px;
+  width: 80px;
+  height: 40px;
 }
 
 .sidebar .project-name {
@@ -158,12 +158,12 @@ body {
 }
 
 /*DASHBOARD */
-.dashboard svg{
+.main-container svg{
     width: 22px;
   height: 22px;
 }
 
-.dashboard{
+.main-container{
   margin-left: 190px;
   width: calc(100% - 190px);
   min-height: 100vh;
@@ -172,7 +172,7 @@ body {
   padding: 2rem;
 }
 
-.dashboard .page{
+.main-container .page{
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -190,7 +190,7 @@ body {
   width: 100%;
 }
 
-.dashboard .card{
+.main-container .card{
   margin-top: 2rem;
   padding: 1rem;
 }

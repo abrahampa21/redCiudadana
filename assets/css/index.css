@@ -214,6 +214,10 @@ main {
   z-index: 9999;
 }
 
+.my-toast-body{
+  text-align: left;
+}
+
 .my-toast.show {
   opacity: 1;
   transform: translateX(0);

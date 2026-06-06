@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
+    <link rel="icon" href="../src/img/icon-pages.jfif" />
+    <link href="../src/output.css" rel="stylesheet" />
+    <title>Panel del ciudadano</title>
+  </head>
+  <body>
+    <div id="sidebar-container"></div>
+
+    <!-- Nuevo Reporte -->
+    <main class="main-container">
+      <div class="container">
+        <div class="text">
+          <h1>Crear Reporte</h1>
+          <p>
+            Complete la información del problema para que pueda ser atendido por
+            las autoridades correspondientes.
+          </p>
+        </div>
+        <form action="">
+          <div class="div-input titulo">
+            <label for="">Título</label>
+            <input
+              type="text"
+              name="titulo"
+              placeholder="Ej. Bache en Avenida Gobernadores"
+            />
+          </div>
+          <div class="div-input descripcion">
+            <label for="">Descripción</label>
+            <textarea
+              name="descripcion"
+              placeholder="Describe el problema con detalle"
+            ></textarea>
+          </div>
+          <div class="report-details">
+            <div class="div-input categoria">
+                <label for="">Categoría</label>
+                <select value="" title="Categoría">Selecciona...</select>
+            </div>
+            <div class="div-input prioridad">
+                <label for="">Prioridad</label>
+                <select value="" title="Prioridad"></select>
+            </div>
+          </div>
+          <div class="div-input ubicacion">
+            <label for="">Ubicación</label>
+            <input type="text" name="ubicacion" placeholder="Ej: Calle 5, Colonia Santa Lucía " id="">
+          </div>
+          <div class="div-input evidencia">
+            <label for="">Evidencia</label>
+            <p>Sube una imagen como evidencia del reporte</p>
+            <input title="evidencia" type="file" name="evidencia">
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      fetch("../includes/sidebarCiudadano.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("sidebar-container").innerHTML = data;
+        });
+    </script>
+    <script src="../assets/js/panelCiudadano.js"></script>
+  </body>
+</html>

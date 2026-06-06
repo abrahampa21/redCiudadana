@@ -3,12 +3,13 @@ require_once("src/config/connection.php");
 session_start();
 
 $toast = false;
+$toast_type = "";
 $toast_message = "";
 
 function validar_contraseña($contraseña)
 {
   // Mínimo 10 caracteres
-  if (strlen($contraseña) < 10) {
+  if (strlen($contraseña) < 8) {
     return false;
   }
 
@@ -34,7 +35,9 @@ if (isset($_POST["btn-registro"])) {
   $pass = trim(htmlspecialchars($_POST['password']));
 
   if (!validar_contraseña($pass)) {
-    echo "<script>alert('Contraseña inválida. Debe tener mínimo 10 caracteres, una letra y un carácter especial.')</script>";
+    $toast = true;
+    $toast_type = "error";
+    $toast_message = "Contraseña no válida, debe contener mínimo 8 caracteres, 1 caracter especial y 1 letra";
   } else {
     $securePass = sha1($pass);
 
@@ -53,9 +56,11 @@ if (isset($_POST["btn-registro"])) {
 
       if ($registro->execute()) {
         $toast = true;
+        $toast_type = "success";
         $toast_message = "Usuario registrado correctamente";
       } else {
         $toast = true;
+        $toast_type = "error";
         $toast_message = "Error al registrar datos";
       }
       $registro->close();
@@ -70,7 +75,8 @@ if (isset($_POST["recover-btn"])) {
   $nueva_contraseña = trim(htmlspecialchars($_POST['password']));
 
   if (!validar_contraseña($nueva_contraseña)) {
-    echo "<script>alert('Contraseña inválida. Debe tener mínimo 10 caracteres, una letra y un carácter especial.')</script>";
+    $toast = true;
+    $toast_message = "Contraseña no válida, debe contener mínimo 8 caracteres, 1 caracter especial y 1 letra";
   } else {
     $securePass = sha1($nueva_contraseña);
 
@@ -79,9 +85,11 @@ if (isset($_POST["recover-btn"])) {
 
     if ($update->execute()) {
       $toast = true;
+      $toast_type = "success";
       $toast_message = "Contraseña actualizada correctamente";
     } else {
       $toast = true;
+      $toast_type = "error";
       $toast_message = "Error al actualizar la contraseña";
     }
     $update->close();
@@ -108,7 +116,9 @@ if (isset($_POST["login-button"])) {
       echo "<script>window.location.href='panelCiudadano/dashboard.html?id=" . $usuario['id_usuario'] . "'</script>";
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
     } else {
-      echo "<script>alert('Correo o contraseña incorrectos.'); </script>";
+      $toast = true;
+      $toast_type = "error";
+      $toast_message = "Correo o contraseña incorrectos";
     }
   }
   $login->close();
@@ -201,8 +211,7 @@ $conn->close();
         id="back-icon"
         class="arrow fa-solid fa-arrow-left"
         title="Regresar"
-        onclick="showLogin()"
-        ;></i>
+        onclick="showLogin()"></i>
       <h1>Recuperar contraseña</h1>
       <form action="" method="post">
         <div class="email-div recover-div">
@@ -240,8 +249,7 @@ $conn->close();
         id="back-icon"
         class="arrow fa-solid fa-arrow-left"
         title="Regresar"
-        onclick="showLogin()"
-        ;></i>
+        onclick="showLogin()"></i>
       <div class="icon-register">
         <svg viewBox="0 0 24 24">
           <path
@@ -317,7 +325,7 @@ $conn->close();
 
     <div class="my-toast-header">
       <div class="icon-title">
-        <img src="src/img/check.png" alt="Icono de comprobado para registrado">
+        <img src="src/img/<?php echo ($toast_type === "error") ? "close.png" : "check.png"; ?> " alt="Icono de comprobado para registrado">
         <strong>Red Ciudadana dice:</strong>
       </div>
 
