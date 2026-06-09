@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,41 +8,47 @@
     <aside class="sidebar fixed">
       <div class="logo-content">
         <div class="brand-icon">
-          <img src="../src/img/logo.jpeg" alt="Red ciudadana, logo del proyecto">
+          <img
+            src="../src/img/logo.jpeg"
+            alt="Red ciudadana, logo del proyecto"
+          />
         </div>
-        <span class="project-name pb-4">Reportes Ciudadanos</span>
+        <span class="project-name">Reportes Ciudadanos</span>
       </div>
       <nav>
-        <div class="link-element">
+        <a href="../panelCiudadano/dashboard.html" class="link-element">
           <svg viewBox="0 0 24 24">
             <path
               d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
             />
           </svg>
-          <a href="../panelCiudadano/dashboard.html">Dashboard</a>
-        </div>
-        <div class="link-element">
+          <span>Dashboard</span>
+        </a>
+
+        <a href="../panelCiudadano/reportes.html" class="link-element">
           <svg viewBox="0 0 24 24">
             <path
               d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
             />
           </svg>
-          <a href="../panelCiudadano/reportes.html">Reportes</a>
-        </div>
-        <div class="link-element">
+          <span>Reportes</span>
+        </a>
+
+        <a href="../panelCiudadano/nuevoReporte.html" class="link-element">
           <svg viewBox="0 0 24 24">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
-          <a href="../panelCiudadano/nuevoReporte.html">Nuevo Reporte</a>
-        </div>
-        <div class="link-element">
+          <span>Nuevo Reporte</span>
+        </a>
+
+        <a href="#" class="link-element">
           <svg viewBox="0 0 24 24">
             <path
               d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z"
             />
           </svg>
-          <a href="#">Estadísticas</a>
-        </div>
+          <span>Estadísticas</span>
+        </a>
       </nav>
       <div class="sidebar-user">
         <div class="user-info">
@@ -58,7 +64,8 @@
               d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
             />
           </svg>
-          <span>Cerrar sesión</span>
+          <!--Aquí se colocará el logout.php-->
+          <a href="#">Cerrar sesión</a>
         </button>
       </div>
     </aside>

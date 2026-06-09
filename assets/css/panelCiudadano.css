@@ -1,15 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
-
 body {
   font-family: "DM Sans", sans-serif;
   display: flex;
-
 }
 
 /*============= SIDEBAR ==========*/
@@ -27,23 +23,19 @@ body {
 .sidebar .logo-content {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 18px 16px 14px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.09);
 }
 
 .sidebar .brand-icon {
-  width: 32px;
+  width: 60px;
   height: 32px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.brand-icon img {
-  width: 80px;
-  height: 40px;
 }
 
 .sidebar .project-name {
@@ -64,18 +56,16 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
+  margin: 1px 0;
+
   font-size: 15px;
   font-weight: 500;
-  cursor: pointer;
-  border-radius: 0;
-  transition: all 0.2s;
-  margin: 1px 0;
-  text-decoration: none;
-}
 
-.sidebar .link-element a {
-  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .sidebar .link-element svg {
@@ -83,22 +73,26 @@ body {
   height: 22px;
   flex-shrink: 0;
   fill: rgba(255, 255, 255, 0.6);
+  transition: all 0.2s;
 }
 
-.sidebar .link-element:hover{
+.sidebar .link-element:hover {
   background: rgba(255, 255, 255, 0.07);
-}
-.sidebar .link-element.active {
-  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
 }
 
-.sidebar .link-element:hover a,
 .sidebar .link-element:hover svg {
-  color: #fff;
   fill: #fff;
 }
 
+.sidebar .link-element.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
 
+.sidebar .link-element.active svg {
+  fill: #fff;
+}
 
 .sidebar-user {
   padding: 14px 16px;
@@ -158,12 +152,12 @@ body {
 }
 
 /*DASHBOARD */
-.main-container svg{
-    width: 22px;
+.main-container svg {
+  width: 22px;
   height: 22px;
 }
 
-.main-container{
+.main-container {
   margin-left: 190px;
   width: calc(100% - 190px);
   min-height: 100vh;
@@ -172,7 +166,7 @@ body {
   padding: 2rem;
 }
 
-.main-container .page{
+.main-container .page {
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -182,19 +176,77 @@ body {
   gap: 5rem;
 }
 
-.stat-card{
+.stat-card {
   padding: 20px;
 }
 
-.stat-grid{
+.stat-grid {
   width: 100%;
 }
 
-.main-container .card{
+.main-container .card {
   margin-top: 2rem;
   padding: 1rem;
 }
 
-#dash-date{
+#dash-date {
   text-transform: capitalize;
+}
+
+/*Reportes*/
+.reportes .topbar {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.reportes h1 {
+  font-size: 1.3rem;
+  color: #1e293b;
+}
+
+.reportes .btn-new {
+  background-color: #1a2540;
+  color: #fff;
+}
+
+.reportes .filters {
+  border: 1px solid #e2e8f0;
+}
+
+.reportes input {
+  border: 1.5px solid #e2e8f0;
+}
+
+.reportes select {
+  padding: 7px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 7px;
+  font-size: 15px;
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+  cursor: pointer;
+}
+
+.reportes .clear-btn {
+  color: #2563eb;
+}
+
+.reportes-list p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.reportes-list div {
+  border: 1px solid #e2e8f0;
+}
+
+@media (max-width: 450px) {
+  .reportes .btn-new {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .reportes .topbar {
+    gap: 8px;
+  }
 }
