@@ -26,19 +26,24 @@ const date = new Date();
 document.getElementById("dash-date").textContent =
   `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
 
-const menuToggle = document.getElementById("menuToggle");
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.getElementById("menuToggle");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
 
-menuToggle.addEventListener("click", () => {
-  sidebar.classList.toggle("active");
-  overlay.classList.toggle("active");
+  if (!menuToggle || !sidebar || !overlay) return;
+
+  menuToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+  });
+
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+  });
 });
 
-overlay.addEventListener("click", () => {
-  sidebar.classList.remove("active");
-  overlay.classList.remove("active");
-});
 // INFORMACIÓN DE PRUEBA GENERADO POR IA - DESCOMENTAR A PARTIR DE LA LÍNEA DE ABAJO PARA PRUEBA
 // //── Mock data (reemplazar por fetch a la API cuando esté lista) ──
 // // GET /api/reportes?ciudadano_id={id}  →  array de reportes del ciudadano

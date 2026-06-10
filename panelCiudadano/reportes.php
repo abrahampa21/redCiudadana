@@ -1,41 +1,60 @@
-<?php include_once "../includes/sidebarCiudadano.php"; ?>
+<!doctype html>
+<html lang="en">
 
-    <!-- Reportes-->
-    <main class="main-container reportes">
-      <div class="container">
-        <div class="topbar flex justify-between items-center py-3.5 px-7 flex-wrap">
-          <h1 class="font-bold">Reportes</h1>
-          <a href="nuevoReporte.html" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-            </svg>
-            Nuevo
-          </a>
-        </div>
-        <div class="search-container py-5 px-7">
-          <div class="filters flex items-center gap-2.5 p-3 justify-between bg-white rounded-[10px] mb-4 flex-wrap">
-            <input type="text" class="flex-1 min-w-[140px] px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
-            <select name="" id="estado" aria-label="filter-estado">
-              <option value="">Estado: Todos</option>
-              <option>Pendiente</option>
-              <option>En proceso</option>
-              <option>Resuelto</option>
-            </select>
-            <select name="" id="categoria" aria-label="filter-categoria">
-              <option value="">Categoría: Todas</option>
-            </select>
-            <select name="" id="prioridad" aria-label="filter-prioridad">
-              <option value="">Prioridad: Todas</option>
-              <option>Baja</option>
-              <option>Media</option>
-              <option>Alta</option>
-            </select>
-            <button class="clear-btn text-sm font-semibold cursor-pointer whitespace-nowrap bg-none border-0">Limpiar</button>
-          </div>
-        </div>
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
+  <link rel="icon" href="../src/img/icon-pages.jfif" />
+  <link href="../src/output.css" rel="stylesheet" />
+  <title>Panel del ciudadano</title>
+</head>
 
-        <div class="reportes-list">
-          <div class="text-center bg-white rounded-xl p-6"><p >No se encontraron reportes.</p></div>
+<body>
+  
+  <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <!-- Reportes-->
+  <main class="main-container reportes">
+    <div class="container">
+      <div class="topbar flex justify-between items-center py-3.5 px-7 flex-wrap">
+        <h1 class="font-bold">Reportes</h1>
+        <a href="nuevoReporte.html" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+          </svg>
+          Nuevo
+        </a>
+      </div>
+      <div class="search-container py-5 px-7">
+        <div class="filters flex items-center gap-2.5 p-3 justify-between bg-white rounded-[10px] mb-4 flex-wrap">
+          <input type="text" class="flex-1 min-w-[140px] px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
+          <select name="" id="estado" aria-label="filter-estado">
+            <option value="">Estado: Todos</option>
+            <option>Pendiente</option>
+            <option>En proceso</option>
+            <option>Resuelto</option>
+          </select>
+          <select name="" id="categoria" aria-label="filter-categoria">
+            <option value="">Categoría: Todas</option>
+          </select>
+          <select name="" id="prioridad" aria-label="filter-prioridad">
+            <option value="">Prioridad: Todas</option>
+            <option>Baja</option>
+            <option>Media</option>
+            <option>Alta</option>
+          </select>
+          <button class="clear-btn text-sm font-semibold cursor-pointer whitespace-nowrap bg-none border-0">Limpiar</button>
         </div>
       </div>
-    </main>
+
+      <div class="reportes-list">
+        <div class="text-center bg-white rounded-xl p-6">
+          <p>No se encontraron reportes.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="../assets/js/panelCiudadano.js"></script>
+</body>
+
+</html>
