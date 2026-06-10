@@ -22,9 +22,12 @@ const months = [
   "diciembre",
 ];
 
-const date = new Date();
-document.getElementById("dash-date").textContent =
-  `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+const dashDate = document.getElementById("dash-date");
+
+if (dashDate) {
+  dashDate.textContent =
+    `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
