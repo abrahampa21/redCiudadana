@@ -1,22 +1,11 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
-    <link rel="icon" href="../src/img/icon-pages.jfif" />
-    <link href="../src/output.css" rel="stylesheet" />
-    <title>Panel del ciudadano</title>
-  </head>
-  <body>
-    <div id="sidebar-container"></div>
+<?php include_once "../includes/sidebarCiudadano.php"; ?>
 
     <!-- Reportes-->
     <main class="main-container reportes">
       <div class="container">
         <div class="topbar flex justify-between items-center py-3.5 px-7 flex-wrap">
           <h1 class="font-bold">Reportes</h1>
-          <a href="nuevoReporte.html" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg" title="btn-new" >
+          <a href="nuevoReporte.html" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
               <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
             </svg>
@@ -50,14 +39,3 @@
         </div>
       </div>
     </main>
-
-    <script>
-      fetch("../includes/sidebarCiudadano.html")
-        .then((response) => response.text())
-        .then((data) => {
-          document.getElementById("sidebar-container").innerHTML = data;
-        });
-    </script>
-    <script src="../assets/js/panelCiudadano.js"></script>
-  </body>
-</html>

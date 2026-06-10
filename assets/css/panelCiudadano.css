@@ -8,7 +8,7 @@ body {
   display: flex;
 }
 
-/*============= SIDEBAR ==========*/
+/*SIDEBAR*/
 .sidebar {
   background-color: #1a2540;
   position: fixed;
@@ -32,10 +32,13 @@ body {
 .sidebar .brand-icon {
   width: 60px;
   height: 32px;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.brand-icon img {
+  border-radius: 3px;
 }
 
 .sidebar .project-name {
@@ -151,6 +154,36 @@ body {
   color: #fca5a5;
 }
 
+/*Movil menu*/
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #1a2540;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 60px;
+  height: 60px;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/*Dark background when menu gets open*/
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 1400;
+}
+
+.overlay.active {
+  display: block;
+}
+
 /*DASHBOARD */
 .main-container svg {
   width: 22px;
@@ -238,6 +271,58 @@ body {
 
 .reportes-list div {
   border: 1px solid #e2e8f0;
+}
+
+/*Responsividad*/
+@media (max-width: 750px) {
+    .menu-toggle {
+    display: block;
+  }
+  .sidebar {
+    padding-top: 5rem;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 200px;
+    height: 100vh;
+    flex-direction: column;
+    background-color: #1a2540;
+    transition: left 0.3s ease;
+    z-index: 1500;
+  }
+
+  .sidebar .logo-content{
+    padding-left: 10px;
+  }
+
+  .brand-icon img{
+    width: 40px;
+    height: 40px;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .sidebar nav {
+    flex-direction: column;
+    padding: 12px 0;
+  }
+
+  .sidebar .link-element {
+    justify-content: flex-start;
+    padding: 10px 16px;
+  }
+
+  .sidebar-user {
+    display: none;
+  }
+  .main-container {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+    padding-top: 80px;
+  }
 }
 
 @media (max-width: 450px) {
