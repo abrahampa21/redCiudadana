@@ -23,6 +23,7 @@ const months = [
 ];
 
 const dashDate = document.getElementById("dash-date");
+const date = new Date();
 
 if (dashDate) {
   dashDate.textContent =
