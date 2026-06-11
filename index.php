@@ -113,7 +113,7 @@ if (isset($_POST["login-button"])) {
     if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
-      echo "<script>window.location.href='panelCiudadano/dashboard.html?id=" . $usuario['id_usuario'] . "'</script>";
+      echo "<script>window.location.href='panelCiudadano/dashboard.php?id=" . $usuario['id_usuario'] . "'</script>";
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
     } else {
       $toast = true;
@@ -233,7 +233,8 @@ $conn->close();
                 title="password"
                 required
                 name="password"
-                maxlength="255" />
+                maxlength="255"
+                placeholder="Mínimo 8 caracteres" />
               <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
             </div>
           </div>
@@ -307,7 +308,8 @@ $conn->close();
               title="password"
               required
               name="password"
-              maxlength="255" />
+              maxlength="255"
+              placeholder="Mínimo 8 caracteres" />
             <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
           </div>
         </div>

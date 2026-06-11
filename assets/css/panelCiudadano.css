@@ -30,7 +30,7 @@ body {
 }
 
 .sidebar .brand-icon {
-  width: 60px;
+  width: 50px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -271,6 +271,38 @@ body {
 
 .reportes-list div {
   border: 1px solid #e2e8f0;
+}
+
+/*NUEVO REPORTE*/
+.nuevo-reporte h1{
+  color: #1e293b;
+}
+
+.nuevo-reporte .div-input{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.nuevo-reporte form{
+  border: 1px solid #e2e8f0;
+}
+
+.nuevo-reporte .div-input input, .nuevo-reporte .div-input select{
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+.nuevo-reporte form label{
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  display: block;
+  margin-bottom: 6px;
 }
 
 /*Responsividad*/

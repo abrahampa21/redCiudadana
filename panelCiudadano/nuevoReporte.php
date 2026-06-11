@@ -13,49 +13,54 @@
 <body>
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
   <!-- Nuevo Reporte -->
-  <main class="main-container">
+  <main class="main-container nuevo-reporte">
     <div class="container">
       <div class="text">
-        <h1>Crear Reporte</h1>
+        <h1 class="text-[1.6rem] font-bold mb-1">Crear Reporte</h1>
         <p>
           Complete la información del problema para que pueda ser atendido por
           las autoridades correspondientes.
         </p>
       </div>
-      <form action="">
-        <div class="div-input titulo">
-          <label for="">Título</label>
-          <input
-            type="text"
-            name="titulo"
-            placeholder="Ej. Bache en Avenida Gobernadores" />
-        </div>
-        <div class="div-input descripcion">
-          <label for="">Descripción</label>
-          <textarea
-            name="descripcion"
-            placeholder="Describe el problema con detalle"></textarea>
-        </div>
-        <div class="report-details">
-          <div class="div-input categoria">
-            <label for="">Categoría</label>
-            <select value="" title="Categoría">Selecciona...</select>
+      <div class="container-form w-full flex items-center justify-center mt-6">
+        <form action="" class="bg-white rounded-xl p-7 max-w-[150] mx-auto">
+          <div class="div-input titulo">
+            <label for="titulo">Título</label>
+            <input
+              type="text"
+              name="titulo"
+              placeholder="Ej. Bache en Avenida Gobernadores"
+              required />
           </div>
-          <div class="div-input prioridad">
-            <label for="">Prioridad</label>
-            <select value="" title="Prioridad"></select>
+          <div class="div-input descripcion">
+            <label for="descripcion">Descripción</label>
+            <textarea
+              name="descripcion"
+              placeholder="Describe el problema con detalle"
+              required></textarea>
           </div>
-        </div>
-        <div class="div-input ubicacion">
-          <label for="">Ubicación</label>
-          <input type="text" name="ubicacion" placeholder="Ej: Calle 5, Colonia Santa Lucía " id="">
-        </div>
-        <div class="div-input evidencia">
-          <label for="">Evidencia</label>
-          <p>Sube una imagen como evidencia del reporte</p>
-          <input title="evidencia" type="file" name="evidencia">
-        </div>
-      </form>
+          <div class="report-details">
+            <div class="div-input categoria">
+              <label for="categoria">Categoría</label>
+              <select value="" title="Categoría">
+                <option value="">Selecciona...</option>
+              </select>
+            </div>
+            <div class="div-input prioridad">
+              <label for="prioridad">Prioridad</label>
+              <select value="" title="Prioridad"></select>
+            </div>
+          </div>
+          <div class="div-input ubicacion">
+            <label for="ubicacion">Ubicación</label>
+            <input type="text" name="ubicacion" placeholder="Ej: Calle 5, Colonia Santa Lucía" required>
+          </div>
+          <div class="div-input evidencia">
+            <label for="evidencia">Evidencia fotográfica</label>
+            <input title="evidencia" type="file" name="evidencia" required>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 
