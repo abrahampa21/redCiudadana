@@ -18,7 +18,7 @@
     <div class="container">
       <div class="topbar flex justify-between items-center py-3.5 px-7 flex-wrap">
         <h1 class="font-bold">Reportes</h1>
-        <a href="nuevoReporte.html" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
+        <a href="nuevoReporte.php" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
           </svg>
