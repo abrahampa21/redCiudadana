@@ -59,6 +59,7 @@
             <label for="evidencia">Evidencia fotográfica</label>
             <input title="evidencia" type="file" name="evidencia" required>
           </div>
+          <button type="submit" name="reporte-btn" class="w-full border-none rounded-lg font-semibold cursor-pointer mt-1 ">Enviar reporte</button>
         </form>
       </div>
     </div>

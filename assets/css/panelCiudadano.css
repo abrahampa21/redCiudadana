@@ -288,6 +288,13 @@ body {
   border: 1px solid #e2e8f0;
 }
 
+.nuevo-reporte form button{
+  background-color: #1a2540;
+  color: #fff;
+  font-size: 15px;
+  padding: 11px;
+}
+
 .nuevo-reporte .div-input input, .nuevo-reporte .div-input select{
   width: 100%;
   padding: 10px 14px;
