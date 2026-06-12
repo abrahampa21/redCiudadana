@@ -8,7 +8,7 @@ $toast_message = "";
 
 function validar_contraseña($contraseña)
 {
-  // Mínimo 10 caracteres
+  // Mínimo 8 caracteres
   if (strlen($contraseña) < 8) {
     return false;
   }
@@ -41,7 +41,7 @@ if (isset($_POST["btn-registro"])) {
   } else {
     $securePass = sha1($pass);
 
-    //todo validación de datos repetidos (listo?)
+    // validación de datos repetidos
     $validar = $conn->prepare("SELECT correo, telefono FROM usuario WHERE correo = ? OR telefono = ?");
     $validar->bind_param("ss", $correo, $telefono);
     $validar->execute();
@@ -51,7 +51,7 @@ if (isset($_POST["btn-registro"])) {
       $toast = true;
       $toast_message = "Correo o teléfono ya registrado";
     } else { //consulta de inserción
-      $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono) VALUES (?,?,?,?)");
+      $registro = $conn->prepare("INSERT INTO usuario(nombre,correo,password,telefono,id_rol) VALUES (?,?,?,?,1)");
       $registro->bind_param("ssss", $nombre, $correo, $securePass, $telefono);
 
       if ($registro->execute()) {
@@ -80,7 +80,7 @@ if (isset($_POST["recover-btn"])) {
   } else {
     $securePass = sha1($nueva_contraseña);
 
-    $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ?");
+    $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND id_rol = 1");
     $update->bind_param("ss", $securePass, $correo);
 
     if ($update->execute()) {
@@ -101,8 +101,8 @@ if (isset($_POST["login-button"])) {
   $correo = trim(htmlspecialchars($_POST['email']));
   $pass = trim(htmlspecialchars($_POST['password']));
   $passSec = sha1($pass);
-
-  $login = $conn->prepare("SELECT correo, password FROM usuario WHERE correo = ? AND password = ? LIMIT 1");
+  //selecciona solo 
+  $login = $conn->prepare("SELECT id_usuario, correo, password FROM usuario WHERE correo = ? AND password = ? AND id_rol = 1 LIMIT 1");
   if (!$login) {
     echo "<script>alert('Error en la consulta: " . $conn->error . "')</script>";
   } else {
@@ -113,7 +113,7 @@ if (isset($_POST["login-button"])) {
     if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
-      echo "<script>window.location.href='panelCiudadano/dashboard.php?id=" . $usuario['id_usuario'] . "'</script>";
+      echo "<script>window.location.href='panelCiudadano/dashboard.php</script>";
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
     } else {
       $toast = true;
