@@ -166,7 +166,7 @@ $conn->close();
       <p class="login-message">Inicia sesión para continuar</p>
       <form action="" method="post">
         <div class="usuario-div login-div">
-          <label for="email">Correo electrónico</label>
+          <label for="email">Corre|o electrónico</label>
           <div class="input-div">
             <input
               type="email"
