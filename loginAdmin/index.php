@@ -321,7 +321,6 @@ $conn->close();
   </main>
 
 
-   Toast mensaje para registro
   <div id="registroToast" class="toast my-toast">
 
     <div class="my-toast-header">
