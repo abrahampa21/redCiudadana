@@ -137,14 +137,14 @@ $conn->close();
   <link
     rel="icon"
     type="image/png"
-    href="src/favicon/favicon-96x96.png"
+    href="../src/favicon/favicon-96x96.png"
     sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="src/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="src/favicon/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="../src/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="../src/favicon/favicon.ico" />
   <link
     rel="apple-touch-icon"
     sizes="180x180"
-    href="src/favicon/apple-touch-icon.png" />
+    href="../src/favicon/apple-touch-icon.png" />
   <link rel="stylesheet" href="../assets/css/index.css" />
   <script
     src="https://kit.fontawesome.com/e522357059.js"
@@ -162,7 +162,7 @@ $conn->close();
           <path d="M20 2h-4l.5-1h2l1.5 1zm0 2v2h2V4h-2z" />
         </svg>
       </div>
-      <h1>Red de Ciudadanía</h1>
+      <h1>Red Ciudadana</h1>
       <p class="login-message">Inicia sesión para continuar</p>
       <form action="" method="post">
         <div class="usuario-div login-div">
@@ -256,7 +256,7 @@ $conn->close();
           <path d="M20 2h-4l.5-1h2l1.5 1zm0 2v2h2V4h-2z" />
         </svg>
       </div>
-      <h1>Registro para Administrador</h1>
+      <h1>Registro de Administrador</h1>
       <p class="create-account">Crea tu cuenta</p>
       <form action="" id="register-form" method="post">
         <div class="nombre-div register-div">

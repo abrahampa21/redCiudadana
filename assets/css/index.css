@@ -7,17 +7,7 @@
 }
 
 :root {
-  --bgd-grad: linear-gradient(
-    135deg,
-    #203d65,
-    #224373,
-    #264c85,
-    #2a589e,
-    #2b5aa3,
-    #2d60af,
-    #346fcd,
-    #387be7
-  );
+  --bgd-grad: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #387be7 100%);
   --emt-bgd: #1a2540;
 }
 
@@ -32,15 +22,19 @@ body {
 #login,
 #register,
 #recover-password {
-  width: 380px;
+  width: 100%;
+  max-width: 380px;
 }
 
 main {
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 24px 35px;
-  width: 380px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  background-color: rgba(255, 255, 255, 0.97);
+  border-radius: 20px;
+  padding: 32px 35px;
+  width: 100%;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.12),
+    0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: fadeUp 0.5s ease;
 }
 
 .register .container,
@@ -57,14 +51,19 @@ main {
 .recover-password h1 {
   text-align: center;
   line-height: 1;
+  font-size: 33px;
+}
+
+.register h1{
+  font-size: 27px;
 }
 
 .register .icon-register,
 .login .icon-login {
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
   background-color: var(--emt-bgd);
-  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,6 +73,8 @@ main {
 .register .create-account,
 .login .login-message {
   text-align: center;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 
 .register svg,
@@ -95,8 +96,16 @@ main {
   font-weight: 600;
   cursor: pointer;
   margin-top: 4px;
-  transition: background 0.2s;
   font-family: inherit;
+}
+
+.register button:hover,
+.login button:hover,
+.recover-password button:hover {
+  background: #0f172a;
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
 }
 
 .register button:hover,
@@ -112,6 +121,11 @@ main {
   flex-direction: column;
   gap: 10px;
 }
+
+.register{
+  padding: 1rem 2.1rem;
+}
+
 
 .register form input,
 .login form input,
@@ -160,6 +174,13 @@ main {
   font-weight: 600;
 }
 
+.register form input:focus,
+.login form input:focus,
+.recover-password form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
 #register {
   display: none;
 }
@@ -177,7 +198,7 @@ main {
   color: #2563eb;
   cursor: pointer;
   font-weight: 700;
-  margin-top: 1.1rem;
+  margin: 1rem 0rem 0.4rem;
 }
 
 .login .forgot-pass:hover {
@@ -214,7 +235,7 @@ main {
   z-index: 9999;
 }
 
-.my-toast-body{
+.my-toast-body {
   text-align: left;
 }
 
@@ -262,7 +283,20 @@ main {
   margin-top: 2rem;
 }
 @media (max-width: 420px) {
-  main{
+  main {
     padding: 26px;
+  }
+}
+
+/*Animation when charges*/
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(3px);
   }
 }
