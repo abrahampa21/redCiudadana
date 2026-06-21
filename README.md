@@ -52,22 +52,7 @@ Antes de inicializar el entorno de desarrollo local, verifique que su estación 
 
 ### Pasos para la Ejecución
 
-1. Clonar el repositorio del proyecto:
+Clonar el repositorio del proyecto:
    ```bash
    git clone https://github.com/abrahampa21/redCiudadana.git
    cd redCiudadana
-
----
-
-# Ejecución del punto de entrada estándar
-open index.html
-
-## Estructura del directorio
-
-📦 redCiudadana
- ┣ 📂 src
- ┃ ┣ 📂 assets     # Identidad visual, iconos de estados y recursos gráficos
- ┃ ┣ 📂 components # Módulos de interfaz reutilizables (Formularios, Tablas de reportes)
- ┃ ┣ 📂 logic      # Validadores, controladores de flujo y lógica de clasificación
- ┃ ┗ 📂 styles     # Hojas de estilo y variables del sistema de diseño
- ┗ 📄 index.html   # Punto de entrada y estructura base del árbol DOM
