@@ -113,7 +113,8 @@ if (isset($_POST["login-button"])) {
     if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
-      echo "<script>window.location.href='panelCiudadano/dashboard.php</script>";
+      header("Location: panelCiudadano/dashboard.php");
+      exit();
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
     } else {
       $toast = true;
@@ -162,8 +163,8 @@ $conn->close();
             d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z" />
         </svg>
       </div>
-      <h1>Reportes ciudadanos</h1>
-      <p class="login-message">Inicia sesión para continuar</p>
+      <h1>Portal Ciudadano</h1>
+      <p class="login-message">Reporta quejas e incidencias de tu comunidad</p>
       <form action="" method="post">
         <div class="usuario-div login-div">
           <label for="email">Corre|o electrónico</label>
@@ -257,8 +258,8 @@ $conn->close();
             d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z" />
         </svg>
       </div>
-      <h1>Registro para ciudadanos</h1>
-      <p class="create-account">Crea tu cuenta</p>
+      <h1>Registro de ciudadanos</h1>
+      <p class="create-account">Únete y contribuye a mejorar tu comunidad</p>
       <form action="" id="register-form" method="post">
         <div class="nombre-div register-div">
           <label>Nombre completo</label>
