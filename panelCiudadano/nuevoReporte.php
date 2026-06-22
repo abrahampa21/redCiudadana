@@ -23,7 +23,8 @@
         </p>
       </div>
       <div class="container-form w-full flex items-center justify-center mt-6">
-        <form action="" class="bg-white rounded-xl p-7 max-w-[150] mx-auto">
+        <!--Formulario-->
+        <form action="../includes/nuevoReporteCiudadano" class="bg-white rounded-xl p-7 max-w-[150] mx-auto">
           <div class="div-input titulo">
             <label for="titulo">Título</label>
             <input
@@ -42,13 +43,13 @@
           <div class="report-details">
             <div class="div-input categoria">
               <label for="categoria">Categoría</label>
-              <select value="" title="Categoría">
+              <select value="" title="Categoría" name="id_categoria">
                 <option value="">Selecciona...</option>
               </select>
             </div>
             <div class="div-input prioridad">
               <label for="prioridad">Prioridad</label>
-              <select value="" title="Prioridad"></select>
+              <select value="" title="Prioridad" name="id_prioridad"></select>
             </div>
           </div>
           <div class="div-input ubicacion">
