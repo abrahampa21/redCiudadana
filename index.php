@@ -102,7 +102,7 @@ if (isset($_POST["login-button"])) {
   $pass = trim(htmlspecialchars($_POST['password']));
   $passSec = sha1($pass);
   //selecciona solo 
-  $login = $conn->prepare("SELECT id_usuario, correo, password FROM usuario WHERE correo = ? AND password = ? AND id_rol = 1 LIMIT 1");
+  $login = $conn->prepare("SELECT id_usuario, nombre, correo, password FROM usuario WHERE correo = ? AND password = ? AND id_rol = 1 LIMIT 1");
   if (!$login) {
     echo "<script>alert('Error en la consulta: " . $conn->error . "')</script>";
   } else {
@@ -113,6 +113,7 @@ if (isset($_POST["login-button"])) {
     if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
+      $_SESSION['nombre'] = $usuario['nombre'];
       header("Location: panelCiudadano/dashboard.php");
       exit();
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
