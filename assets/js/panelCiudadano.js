@@ -134,3 +134,141 @@ document.addEventListener("DOMContentLoaded", () => {
 //     .then(data => cargarDashboard(data))
 //     .catch(() => cargarDashboard([]));
 // */
+
+//APIs de para ciudadanos
+//Mostrar reportes
+async function obtenerReportes() {
+  try {
+    const endpoint = "../src/api/reportes_api.php";
+    const response = await fetch(endpoint);
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    //Reemplazar por toast
+    console.error("Error: " + error.message);
+  }
+}
+
+//Mostrar evidencia
+async function obtenerEvidencias() {
+  try {
+    const endpoint = "../src/api/evidencias_api.php";
+    const response = await fetch(endpoint);
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    //Reemplazar por toast
+    console.error("Error: " + error.message);
+  }
+}
+
+//Crear reportes
+async function crearReporte() {
+  try {
+    //const endpoint = "../src/api/reportes_api.php";
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {"Content-type" : "application/json"},
+    });
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+}
+
+//Crear evidencia
+async function crearEvidencia() {
+  try {
+    //const endpoint = "../src/api/evidencias_api.php";
+    const response = await fetch(endpoint, {
+      method : 'POST',
+      headers: {"Content-type" : "application/json"},
+    });
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+}
+
+
+//Filtrar reporte por categoria
+async function filtrarPorCategoria() {
+  try {
+    //const endpoint = `../src/api/reportes_api.php?id_categoria=${id_categoria}`;
+    const response = await fetch(endpoint, {
+      method : 'POST',
+      headers: {"Content-type" : "application/json"},
+    });
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+}
+
+//Filtrar reporte por prioridad
+async function filtrarPorPrioridad() {
+  try {
+    //const endpoint = `../src/api/reportes_api.php?id_prioridad=${id_prioridad}`;
+    const response = await fetch(endpoint, {
+      method : 'POST',
+      headers: {"Content-type" : "application/json"},
+    });
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+}
+
+//Filtrar reporte por estado
+async function filtrarPorEstado() {
+  try {
+    //const endpoint = `../src/api/reportes_api.php?id_estado=${id_estado}`;
+    const response = await fetch(endpoint, {
+      method : 'POST',
+      headers: {"Content-type" : "application/json"},
+    });
+
+    if(response.ok){
+      const reportes = await response.json();
+    }else{
+      throw new Error(`${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+}
