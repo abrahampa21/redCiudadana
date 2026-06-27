@@ -76,23 +76,36 @@ if (isset($_POST["recover-btn"])) {
 
   if (!validar_contraseña($nueva_contraseña)) {
     $toast = true;
+    $toast_type = "error";
     $toast_message = "Contraseña no válida, debe contener mínimo 8 caracteres, 1 caracter especial y 1 letra";
   } else {
-    $securePass = sha1($nueva_contraseña);
+    // Verificar si el correo existe primero
+    $verificarCorreo = $conn->prepare("SELECT id_usuario FROM usuario WHERE correo = ? AND id_rol = 1 LIMIT 1");
+    $verificarCorreo->bind_param("s", $correo);
+    $verificarCorreo->execute();
+    $resCorreo = $verificarCorreo->get_result();
 
-    $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND id_rol = 1");
-    $update->bind_param("ss", $securePass, $correo);
-
-    if ($update->execute()) {
-      $toast = true;
-      $toast_type = "success";
-      $toast_message = "Contraseña actualizada correctamente";
-    } else {
+    if ($resCorreo->num_rows === 0) {
       $toast = true;
       $toast_type = "error";
-      $toast_message = "Error al actualizar la contraseña";
+      $toast_message = "No existe una cuenta con ese correo";
+    } else {
+      $securePass = sha1($nueva_contraseña);
+      $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND id_rol = 1");
+      $update->bind_param("ss", $securePass, $correo);
+
+      if ($update->execute()) {
+        $toast = true;
+        $toast_type = "success";
+        $toast_message = "Contraseña actualizada correctamente";
+      } else {
+        $toast = true;
+        $toast_type = "error";
+        $toast_message = "Error al actualizar la contraseña";
+      }
+      $update->close();
     }
-    $update->close();
+    $verificarCorreo->close();
   }
 }
 
@@ -101,32 +114,34 @@ if (isset($_POST["login-button"])) {
   $correo = trim(htmlspecialchars($_POST['email']));
   $pass = trim(htmlspecialchars($_POST['password']));
   $passSec = sha1($pass);
-  //selecciona solo 
-  $login = $conn->prepare("SELECT id_usuario, nombre, correo, password FROM usuario WHERE correo = ? AND password = ? AND id_rol = 1 LIMIT 1");
-  if (!$login) {
-    echo "<script>alert('Error en la consulta: " . $conn->error . "')</script>";
-  } else {
-    $login->bind_param("ss", $correo, $passSec);
-    $login->execute();
-    $resultado_login = $login->get_result();
 
-    if ($resultado_login->num_rows > 0) {
-      $usuario = $resultado_login->fetch_assoc();
+  // 1. Verificar si el correo existe
+  $loginCorreo = $conn->prepare("SELECT id_usuario, nombre, password FROM usuario WHERE correo = ? AND id_rol = 1 LIMIT 1");
+  $loginCorreo->bind_param("s", $correo);
+  $loginCorreo->execute();
+  $resCorreo = $loginCorreo->get_result();
+
+  if ($resCorreo->num_rows === 0) {
+    $toast = true;
+    $toast_type = "error";
+    $toast_message = "No existe una cuenta para este correo";
+  } else {
+    $usuario = $resCorreo->fetch_assoc();
+
+    // 2. Verificar si la contraseña es correcta
+    if ($usuario['password'] !== $passSec) {
+      $toast = true;
+      $toast_type = "error";
+      $toast_message = "Contraseña incorrecta";
+    } else {
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
       $_SESSION['nombre'] = $usuario['nombre'];
       header("Location: panelCiudadano/dashboard.php");
       exit();
-      //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
-    } else {
-      $toast = true;
-      $toast_type = "error";
-      $toast_message = "Correo o contraseña incorrectos";
     }
   }
-  $login->close();
+  $loginCorreo->close();
 }
-
-
 $conn->close();
 ?>
 
