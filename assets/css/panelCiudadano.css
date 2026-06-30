@@ -274,6 +274,7 @@ body {
 }
 
 /*NUEVO REPORTE*/
+
 .nuevo-reporte h1{
   color: #1e293b;
 }
@@ -286,6 +287,7 @@ body {
 
 .nuevo-reporte form{
   border: 1px solid #e2e8f0;
+  width: 500px;
 }
 
 .nuevo-reporte form button{
@@ -311,6 +313,10 @@ body {
   display: block;
   margin-bottom: 6px;
 }
+
+/* .nuevo-reporte .prioridad{
+  display: none;
+} */
 
 /*Responsividad*/
 @media (max-width: 750px) {
@@ -368,6 +374,10 @@ body {
   .reportes .btn-new {
     font-size: 14px;
     padding: 6px 12px;
+  }
+
+  .nuevo-reporte{
+    width: 440px;
   }
 
   .reportes .topbar {
