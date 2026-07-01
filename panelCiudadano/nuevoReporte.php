@@ -48,6 +48,7 @@ $queryCategorias->close();
               type="text"
               name="titulo"
               placeholder="Ej. Bache en Avenida Gobernadores"
+              autofocus
               required />
           </div>
           <div class="div-input descripcion">

@@ -183,7 +183,7 @@ $conn->close();
       <p class="login-message">Reporta quejas e incidencias de tu comunidad</p>
       <form action="" method="post">
         <div class="usuario-div login-div">
-          <label for="email">Corre|o electrónico</label>
+          <label for="email">Correo electrónico</label>
           <div class="input-div">
             <input
               type="email"
@@ -191,6 +191,7 @@ $conn->close();
               id="email"
               placeholder="Tu correo electrónico"
               required
+              autofocus
               maxlength="255" />
             <i class="fa-solid fa-user"></i>
           </div>
