@@ -135,27 +135,6 @@ switch ($method) {
             }
         }
         break;
-    case 'DELETE':
-    //eliminar reporte (admin)
-    //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_reporte=2
-    $id_reporte = $_GET['id_reporte'] ?? null;
-
-    if(!empty($id_reporte)){
-        $stmt = $conn->prepare("DELETE FROM reporte WHERE id_reporte = ?");
-        $stmt->bind_param("i",$id_reporte);
-
-        if($stmt->execute()){
-            http_response_code(200);
-            echo json_encode(["mensaje"=>"Reporte eliminado exitosamente"]);
-        }else{
-            http_response_code(500);
-            echo json_encode(["mensaje"=>"Error al eliminar reporte ".$stmt->error]);
-        }
-    }else{
-        http_response_code(400);
-        echo json_encode(["mensaje"=>"No se recibió el id del reporte"]);
-    }
-        break;
     default:
 
         break;

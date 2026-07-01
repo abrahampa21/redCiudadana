@@ -21,15 +21,18 @@ const months = [
   "noviembre",
   "diciembre",
 ];
-
 const dashDate = document.getElementById("dash-date");
 const date = new Date();
+// Toast
+const toastElement = document.getElementById("error-fetch");
+const toastBtnClose = document.getElementById("btn-close");
 
+//Para mostrar la fecha en el dashboard
 if (dashDate) {
-  dashDate.textContent =
-    `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
+  dashDate.textContent = `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
 }
 
+//Para el menu toggle responsivo
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
   const sidebar = document.getElementById("sidebar");
@@ -135,6 +138,27 @@ document.addEventListener("DOMContentLoaded", () => {
 //     .catch(() => cargarDashboard([]));
 // */
 
+//Evento para formulario de nuevoReporte.php
+const nuevoReporteForm = document.getElementById("nuevo-reporte");
+
+nuevoReporteForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+});
+
+//Mostrar toast
+function showToast(message) {
+  const textToast = document.querySelector(".text-toast");
+  textToast.textContent = message;
+
+  toastElement.classList.add("show");
+}
+
+
+function hideToast() {
+  toastElement.classList.remove("show");
+}
+
+toastBtnClose.addEventListener("click", hideToast);
 //APIs de para ciudadanos
 //Mostrar reportes
 async function obtenerReportes() {
@@ -142,15 +166,13 @@ async function obtenerReportes() {
     const endpoint = "../src/api/reportes_api.php";
     const response = await fetch(endpoint);
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    //Reemplazar por toast
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }
 
@@ -160,15 +182,13 @@ async function obtenerEvidencias() {
     const endpoint = "../src/api/evidencias_api.php";
     const response = await fetch(endpoint);
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    //Reemplazar por toast
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }
 
@@ -177,18 +197,17 @@ async function crearReporte() {
   try {
     //const endpoint = "../src/api/reportes_api.php";
     const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {"Content-type" : "application/json"},
+      method: "POST",
+      headers: { "Content-type": "application/json" },
     });
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }
 
@@ -197,39 +216,36 @@ async function crearEvidencia() {
   try {
     //const endpoint = "../src/api/evidencias_api.php";
     const response = await fetch(endpoint, {
-      method : 'POST',
-      headers: {"Content-type" : "application/json"},
+      method: "POST",
+      headers: { "Content-type": "application/json" },
     });
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }
-
 
 //Filtrar reporte por categoria
 async function filtrarPorCategoria() {
   try {
     //const endpoint = `../src/api/reportes_api.php?id_categoria=${id_categoria}`;
     const response = await fetch(endpoint, {
-      method : 'POST',
-      headers: {"Content-type" : "application/json"},
+      method: "POST",
+      headers: { "Content-type": "application/json" },
     });
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }
 
@@ -238,18 +254,17 @@ async function filtrarPorPrioridad() {
   try {
     //const endpoint = `../src/api/reportes_api.php?id_prioridad=${id_prioridad}`;
     const response = await fetch(endpoint, {
-      method : 'POST',
-      headers: {"Content-type" : "application/json"},
+      method: "POST",
+      headers: { "Content-type": "application/json" },
     });
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }
 
@@ -258,17 +273,16 @@ async function filtrarPorEstado() {
   try {
     //const endpoint = `../src/api/reportes_api.php?id_estado=${id_estado}`;
     const response = await fetch(endpoint, {
-      method : 'POST',
-      headers: {"Content-type" : "application/json"},
+      method: "POST",
+      headers: { "Content-type": "application/json" },
     });
 
-    if(response.ok){
+    if (response.ok) {
       const reportes = await response.json();
-    }else{
+    } else {
       throw new Error(`${response.status}`);
     }
-    
   } catch (error) {
-    console.error("Error: " + error.message);
+    showToast(error.message);
   }
 }

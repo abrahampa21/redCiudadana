@@ -176,7 +176,7 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.4);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1400;
 }
 
@@ -275,29 +275,30 @@ body {
 
 /*NUEVO REPORTE*/
 
-.nuevo-reporte h1{
+.nuevo-reporte h1 {
   color: #1e293b;
 }
 
-.nuevo-reporte .div-input{
+.nuevo-reporte .div-input {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
 }
 
-.nuevo-reporte form{
+.nuevo-reporte form {
   border: 1px solid #e2e8f0;
   width: 500px;
 }
 
-.nuevo-reporte form button{
+.nuevo-reporte form button {
   background-color: #1a2540;
   color: #fff;
   font-size: 15px;
   padding: 11px;
 }
 
-.nuevo-reporte .div-input input, .nuevo-reporte .div-input select{
+.nuevo-reporte .div-input input,
+.nuevo-reporte .div-input select {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid #e2e8f0;
@@ -306,21 +307,52 @@ body {
   outline: none;
 }
 
-.nuevo-reporte form label{
+.nuevo-reporte form label {
   font-size: 15px;
   font-weight: 600;
   color: #1e293b;
   display: block;
   margin-bottom: 6px;
 }
+/*Toast error*/
+.toast {
+  position: fixed;
+  top: 45px;
+  right: 10px;
+  padding: 1rem;
+  width: 350px;
+  opacity: 0;
+  background-color: #e9adad;
+  border-radius: 8px;
+  transform: translateY(-16px);
+  transition: all 0.4s ease;
+  z-index: 9999;
+}
 
-/* .nuevo-reporte .prioridad{
-  display: none;
-} */
+.toast-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.toast .btn-close {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
 
 /*Responsividad*/
 @media (max-width: 750px) {
-    .menu-toggle {
+  .menu-toggle {
     display: block;
   }
   .sidebar {
@@ -336,11 +368,11 @@ body {
     z-index: 1500;
   }
 
-  .sidebar .logo-content{
+  .sidebar .logo-content {
     padding-left: 10px;
   }
 
-  .brand-icon img{
+  .brand-icon img {
     width: 40px;
     height: 40px;
   }
@@ -376,7 +408,7 @@ body {
     padding: 6px 12px;
   }
 
-  .nuevo-reporte{
+  .nuevo-reporte {
     width: 440px;
   }
 
