@@ -77,27 +77,6 @@ switch($method){
     case 'PATCH':
 
         break;
-    case 'DELETE':
-        //eliminar evidencia (admin)
-        //endpoint: http://localhost/redciudadana/src/api/evidencias_api.php?id_evidence=2
-    $id_reporte = $_GET['id_evidence'] ?? null;
-
-    if(!empty($id_reporte)){
-        $stmt = $conn->prepare("DELETE FROM evidencias WHERE id_evidence = ?");
-        $stmt->bind_param("i",$id_evidence);
-
-        if($stmt->execute()){
-            http_response_code(200);
-            echo json_encode(["mensaje"=>"Evidencia eliminada exitosamente"]);
-        }else{
-            http_response_code(500);
-            echo json_encode(["mensaje"=>"Error al eliminar evidencia ".$stmt->error]);
-        }
-    }else{
-        http_response_code(400);
-        echo json_encode(["mensaje"=>"No se recibió el id de la evidencia"]);
-    }
-        break;
     default:
 
         break;
