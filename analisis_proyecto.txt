@@ -49,7 +49,7 @@
           potencialmente peligroso.
  Solucion: Cambiar $id_evidence por $id_reporte.
 
- 1.4  LOGOUT SIN session_start()
+ 1.4  LOGOUT SIN session_start() ✅HECHO
  ──────
  Archivos: src/logout.php:2, src/logoutAdmin.php:2
  Codigo:   session_destroy();
@@ -171,7 +171,7 @@
 
  3.3  NOMBRE INCONSISTENTE DE COLUMNA EN CATEGORIAS
  ──────
- Archivo: panelCiudadano/nuevoReporte.php:68
+ Archivo: panelCiudadano/nuevoReporte.php:68 ✅HECHO
  Codigo:  $categoria['id']
  Problema: La consulta SQL hace "SELECT id_categoria, nombre FROM
            categoria", pero el foreach accede a $categoria['id'].
@@ -179,7 +179,7 @@
            de indice indefinido.
  Solucion: Cambiar $categoria['id'] por $categoria['id_categoria'].
 
- 3.4  FORMULARIO SIN ENCTYPE PARA SUBIR ARCHIVOS
+ 3.4  FORMULARIO SIN ENCTYPE PARA SUBIR ARCHIVOS ✅HECHO
  ──────
  Archivo: panelCiudadano/nuevoReporte.php:44
  Problema: El formulario tiene <input type="file"> pero NO tiene
@@ -319,7 +319,7 @@
  Solucion: Usar UNIQUE constraints en la BD y capturar la
            excepcion de duplicados.
 
- 3.18  SIN SANITIZACION DE SALIDA EN PHP
+ 3.18  SIN SANITIZACION DE SALIDA EN PHP ✅HECHO
  ──────
  Archivos: includes/sidebarCiudadano.php:46,48
            index.php:359, loginAdmin/index.php:340
@@ -347,17 +347,6 @@
            hacer fuerza bruta de contrasenas sin restriccion.
  Solucion: Implementar rate limiting por IP o por cuenta (ej:
            maximo 5 intentos por minuto).
-
- 3.21  ELIMINACION FISICA EN VEZ DE LOGICA
- ──────
- Archivo: src/api/reportes_api.php:145
-          src/api/evidencias_api.php:86
- Problema: DELETE FROM elimina registros permanentemente. En una
-           aplicacion de reportes, se prefiere borrado logico
-           (UPDATE activo = 0) para mantener auditoria y poder
-           recuperar datos.
- Solucion: Agregar columna "activo" y hacer UPDATE en vez de
-           DELETE.
 
  3.22  SIN VALIDACION DE CSRF EN LAS APIS
  ──────
@@ -432,7 +421,7 @@
            3-4 iconos (fa-user, fa-eye, fa-mobile, fa-arrow-left).
  Solucion: Usar SVG inline o iconos en formato de fuente parcial.
 
- 4.5  BOOTSTRAP CARGADO SOLO PARA UN TOAST
+ 4.5  BOOTSTRAP CARGADO SOLO PARA UN TOAST ✅HECHO
  ──────
  Archivos: index.php:365, loginAdmin/index.php:346,
            panelCiudadano/nuevoReporte.php:109

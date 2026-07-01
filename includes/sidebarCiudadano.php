@@ -43,7 +43,7 @@ $nombre_usuario = $_SESSION["nombre"];
     </nav>
     <div class="sidebar-user">
       <div class="user-info">
-        <div class="avatar" id="sb-avatar"><?= strtoupper(substr($nombre_usuario,0,1)); ?></div>
+        <div class="avatar" id="sb-avatar"><?=htmlspecialchars(strtoupper(substr($nombre_usuario,0,1))); ?></div>
         <div>
           <div class="user-name" id="sb-name"><?= htmlspecialchars($nombre_usuario)?></div>
           <div class="user-role" id="sb-role">Ciudadano</div>

@@ -41,7 +41,7 @@ $queryCategorias->close();
       </div>
       <div class="container-form w-full flex items-center justify-center mt-6">
         <!--Formulario-->
-        <form action="handler/nuevoReporteCiudadano" class="bg-white rounded-xl p-7 max-w-[150] mx-auto" id="nuevo-reporte">
+        <form action="handler/nuevoReporteCiudadano" class="bg-white rounded-xl p-7 max-w-[150] mx-auto" id="nuevo-reporte" enctype="multipart/form-data">
           <div class="div-input titulo">
             <label for="titulo">Título</label>
             <input
@@ -65,7 +65,7 @@ $queryCategorias->close();
                 <option value="">Selecciona...</option>
                 <?php
                 foreach ($categorias as $categoria) {
-                  echo "<option value='{$categoria['id']}'>${categoria['nombre']}</option>";
+                  echo "<option value='{$categoria['id_categoria']}'>${categoria['nombre']}</option>";
                 }
                 ?>
               </select>
@@ -77,7 +77,7 @@ $queryCategorias->close();
           </div>
           <div class="div-input evidencia">
             <label for="evidencia">Evidencia fotográfica</label>
-            <input title="evidencia" type="file" name="evidencia" required>
+            <input title="evidencia" type="file" name="evidencia" accept="image/*" required>
           </div>
           <button type="submit" name="reporte-btn" class="w-full border-none rounded-lg font-semibold cursor-pointer mt-1 ">Enviar reporte</button>
         </form>
