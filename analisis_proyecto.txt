@@ -1,0 +1,586 @@
+================================================================================
+ ANÁLISIS COMPLETO DEL PROYECTO - RED CIUDADANA
+================================================================================
+ Fecha: Julio 2026
+ Proposito: Solo auditoria - no se modifico nada
+================================================================================
+
+
+================================================================================
+ 1. ERRORES CRITICOS (IMPIDEN QUE EL PROYECTO FUNCIONE)
+================================================================================
+
+ 1.1  FALTA EL ARCHIVO DE CONEXION A LA BASE DE DATOS
+ ──────
+ Archivo: src/config/connection.php (NO EXISTE)
+ Impacto: TODO el proyecto depende de este archivo. Ninguna pagina
+          funciona sin el. Ni el registro, ni login, ni las APIs.
+          Los requires en index.php, sidebarCiudadano.php, todas las
+          APIs y handlers fallaran con "file not found".
+ Solucion: Crear src/config/connection.php con la conexion MySQLi
+           a la base de datos correspondiente.
+
+
+ 1.2  ERROR DE SINTAXIS PHP EN HANDLER DE NUEVO REPORTE
+ ──────
+ Archivo: panelCiudadano/handler/nuevoReporteCiudadano.php:5
+ Codigo:  if ($_SERVER["REQUEST_METHOD" !== "POST"]){
+ Error:   Falta el corchete de cierre ]. La variable correcta es
+          $_SERVER["REQUEST_METHOD"], pero esta escrito como
+          $_SERVER["REQUEST_METHOD" !== "POST"].
+          PHP interpreta todo como string "REQUEST_METHOD !== POST".
+          Ademas, aunque se corrigiera, no hay session_start()
+          antes de acceder a $_SESSION['id_usuario'] en la linea 9.
+ Impacto: El handler jamas ejecuta ninguna logica. Los reportes
+          nunca se guardan.
+ Solucion:  if ($_SERVER["REQUEST_METHOD"] !== "POST") { ... }
+           Y agregar session_start() antes de usar $_SESSION.
+
+
+ 1.3  VARIABLE INDEFINIDA EN DELETE DE EVIDENCIAS
+ ──────
+ Archivo: src/api/evidencias_api.php:87
+ Codigo:  $stmt->bind_param("i",$id_evidence);
+ Error:   La variable $id_evidence nunca fue definida. La variable
+          definida es $id_reporte (linea 83). PHP ejecutara el bind
+          con NULL, causando error en la consulta o borrando
+          registros incorrectos.
+ Impacto: El DELETE de evidencias no funciona y ademas es
+          potencialmente peligroso.
+ Solucion: Cambiar $id_evidence por $id_reporte.
+
+ 1.4  LOGOUT SIN session_start()
+ ──────
+ Archivos: src/logout.php:2, src/logoutAdmin.php:2
+ Codigo:   session_destroy();
+ Error:    session_destroy() requiere que la sesion este iniciada
+           con session_start() primero. Sin session_start(), la
+           funcion no tiene efecto y la sesion del usuario nunca
+           se destruye. El usuario sigue autenticado.
+ Solucion: Agregar session_start() ANTES de session_destroy().
+
+ 1.5  REDIRECCION ROTA EN LOGIN DE ADMIN
+ ──────
+ Archivo: loginAdmin/index.php:116
+ Codigo:  echo "<script>window.location.href='panelAdmin/dashboard.php</script>";
+ Error:   Falta la comilla simple de cierre y el parentesis.
+          Deberia ser: '</script>'. Ademas, mezclar echo con
+          header() es mala practica y puede fallar si hay output
+          previo.
+ Impacto: El login de admin jamas redirige. La pagina se queda
+          en blanco con un script invalido.
+ Solucion: Usar header("Location: ../panelAdmin/dashboard.php");
+           exit();
+
+
+================================================================================
+ 2. VULNERABILIDADES DE SEGURIDAD
+================================================================================
+
+ 2.1  CONTRASENAS CON SHA-1 (GRAVE)
+ ──────
+ Archivos: index.php:42, loginAdmin/index.php:42
+           src/api/usuarios_api.php:41 (envia hash SHA-1)
+ Problema: SHA-1 es criptograficamente roto desde 2005. Se puede
+           romper en segundos con hardware moderno (8,000 millones
+           de hashes/segundo en GPU). Cualquier filtracion de la BD
+           expone todas las contrasenas en texto plano inmediato.
+ Riesgo:   ALTO - Exposicion total de credenciales de usuarios.
+ Solucion: Usar password_hash($pass, PASSWORD_BCRYPT) para
+           almacenar y password_verify() para verificar.
+
+ 2.2  CORS CON WILDCARD (*) EN TODAS LAS APIS
+ ──────
+ Archivos: src/api/reportes_api.php:5
+           src/api/evidencias_api.php:4
+           src/api/usuarios_api.php:4
+ Problema: Access-Control-Allow-Origin: * permite que CUALQUIER
+           sitio web externo haga peticiones AJAX a las APIs.
+           Un atacante puede crear un sitio malicioso que robe
+           datos de usuarios autenticados (CSRF via CORS).
+ Riesgo:   ALTO - Robo de informacion y suplantacion.
+ Solucion: Restringir a origenes especificos o validar tokens.
+
+ 2.3  SIN PROTECCION CSRF EN FORMULARIOS
+ ──────
+ Archivos: index.php (registro/login), loginAdmin/index.php,
+           panelCiudadano/nuevoReporte.php
+ Problema: Ningun formulario incluye un token CSRF. Cualquier
+           sitio externo puede enviar peticiones POST al servidor
+           y crear cuentas o reportes en nombre de usuarios.
+ Riesgo:   ALTO - Creacion fraudulenta de cuentas y reportes.
+ Solucion: Implementar tokens CSRF unicos por sesion.
+
+ 2.4  SESION SIN TIMEOUT NI REGENERACION DE ID
+ ──────
+ Archivos: Todos los que usan session_start()
+ Problema: No se configura session.gc_maxlifetime, ni se regenera
+           el session_id() despues del login. La sesion dura
+           indefinidamente y es vulnerable a session fixation.
+ Riesgo:   MEDIO - Secuestro de sesion.
+ Solucion: Configurar tiempo de expiracion y llamar
+           session_regenerate_id(true) despues del login.
+
+ 2.5  INFORMACION DEL SERVIDOR EN RESPUESTAS DE ERROR
+ ──────
+ Archivos: src/api/reportes_api.php:104
+           src/api/evidencias_api.php:67
+           src/api/usuarios_api.php:52
+           loginAdmin/index.php:107
+ Problema: Las APIs devuelven $stmt->error y $conn->error en las
+           respuestas JSON, exponiendo estructura interna de la
+           base de datos (nombres de tablas, columnas, etc.).
+ Riesgo:   MEDIO - Fuga de informacion para ataques dirigidos.
+ Solucion: Loggear el error internamente y devolver mensaje
+           generico al usuario.
+
+ 2.6  SIN HTTPS FORZADO
+ ──────
+ Archivos: Ninguno
+ Problema: No hay redireccion de HTTP a HTTPS. Las contrasenas
+           viajan en texto plano por la red si no se usa HTTPS.
+ Riesgo:   ALTO - Intercepcion de credenciales (man-in-the-middle).
+ Solucion: Forzar HTTPS via .htaccess o configuracion del servidor.
+
+
+================================================================================
+ 3. PROBLEMAS DE BACKEND (PHP Y BASE DE DATOS)
+================================================================================
+
+ 3.1  QUERIES SIN LIMIT NI PAGINACION
+ ──────
+ Archivos: src/api/reportes_api.php:69
+           src/api/evidencias_api.php:34
+           src/api/usuarios_api.php:16
+ Problema: "SELECT * FROM reporte" sin LIMIT ni paginacion. Con
+           miles de registros, el servidor se queda sin memoria,
+           la respuesta es lentisima, y el frontend se congela.
+ Solucion: Implementar paginacion con LIMIT y OFFSET, o cursor-
+           based pagination.
+
+ 3.2  CONEXION CERRADA DENTRO DEL SWITCH
+ ──────
+ Archivo: src/api/reportes_api.php:30,47,64
+          src/api/evidencias_api.php:29
+ Problema: $conn->close() se ejecuta dentro de los if-else del
+           switch. Si caen en un caso que no ejecuta close(), o
+           si hay mas de una operacion, la conexion se cierra
+           prematuramente. Ademas, $conn ya no existe para el
+           resto del script.
+ Solucion: Mover $conn->close() fuera del switch, al final.
+
+ 3.3  NOMBRE INCONSISTENTE DE COLUMNA EN CATEGORIAS
+ ──────
+ Archivo: panelCiudadano/nuevoReporte.php:68
+ Codigo:  $categoria['id']
+ Problema: La consulta SQL hace "SELECT id_categoria, nombre FROM
+           categoria", pero el foreach accede a $categoria['id'].
+           La key correcta es 'id_categoria'. Esto genera errores
+           de indice indefinido.
+ Solucion: Cambiar $categoria['id'] por $categoria['id_categoria'].
+
+ 3.4  FORMULARIO SIN ENCTYPE PARA SUBIR ARCHIVOS
+ ──────
+ Archivo: panelCiudadano/nuevoReporte.php:44
+ Problema: El formulario tiene <input type="file"> pero NO tiene
+           enctype="multipart/form-data". Los archivos jamas se
+           envian al servidor.
+ Solucion: Agregar enctype="multipart/form-data" al tag <form>.
+
+ 3.5  ACTION DEL FORMULARIO SIN EXTENSION .PHP
+ ──────
+ Archivo: panelCiudadano/nuevoReporte.php:44
+ Codigo:  action="handler/nuevoReporteCiudadano"
+ Problema: El action apunta a un archivo sin extension .php.
+           Dependiendo de la configuracion del servidor, esto
+           devuelve 404 o descarga el archivo como texto.
+ Solucion: Cambiar a action="handler/nuevoReporteCiudadano.php".
+
+ 3.6  SIN VALIDACION DE TIPO Y TAMANO DE ARCHIVO
+ ──────
+ Archivo: panelCiudadano/nuevoReporte.php:80
+          panelCiudadano/handler/nuevoReporteCiudadano.php
+ Problema: No se valida extension, tipo MIME ni tamano maximo del
+           archivo de evidencia. Un atacante puede subir .php o
+           .exe, comprometiendo el servidor.
+ Solucion: Validar extension (solo jpg,png,gif,webp), tipo MIME,
+           y establecer limite de tamano (ej: 5MB).
+
+ 3.7  DUPLICACION DE LOGICA DE AUTENTICACION
+ ──────
+ Archivos: index.php y loginAdmin/index.php (codigo casi identico)
+ Problema: La logica de registro, login y recuperacion de
+           contrasena esta duplicada en ambos archivos. Si se
+           cambia algo en uno, hay que acordarse de cambiarlo
+           en el otro. Violacion del principio DRY.
+ Solucion: Unificar en una sola clase/controlador de autenticacion
+           que reciba el rol como parametro.
+
+ 3.8  SIN TRANSACCIONES EN OPERACIONES MULTIPLES
+ ──────
+ Archivo: src/api/reportes_api.php (POST)
+ Problema: Crear un reporte requiere insertar en tabla reporte y
+           posiblemente en evidencias. No se usa transaccion
+           ($conn->begin_transaction()). Si falla el segundo
+           INSERT, queda un reporte huerfano.
+ Solucion: Usar transacciones MySQLi para operaciones atomicas.
+
+ 3.9  MANEJO INSEGURO DE ARCHIVOS DE EVIDENCIA
+ ──────
+ Archivo: src/api/evidencias_api.php:53-60
+ Problema: $id_reporte viene de $_GET pero se pasa directo al
+           bind_param sin validar que el reporte pertenezca al
+           usuario. Cualquier usuario puede adjuntar evidencias
+           a reportes de otros.
+ Solucion: Validar que el reporte pertenezca al usuario en sesion.
+
+ 3.10  COALESCE/NULLIF INNECESARIO EN UPDATE
+ ──────
+ Archivos: src/api/reportes_api.php:124
+           src/api/usuarios_api.php:44
+ Codigo:   UPDATE ... SET columna = COALESCE(NULLIF(?, ''), columna)
+ Problema: $id_estado es un entero (intval). NULLIF(?, '')
+           compara un entero con string '', lo cual siempre es
+           verdadero (entero != ''), asi que COALESCE siempre
+           devuelve el valor nuevo. La proteccion no funciona.
+ Solucion: Simplificar: SET id_estado = ? y validar el dato
+           antes de ejecutar la consulta.
+
+ 3.11  SIN INDEXS EN LA BASE DE DATOS
+ ──────
+ Archivos: Las consultas SELECT * FROM reporte WHERE id_categoria = ?
+           etc. No hay sugerencias de indices en el esquema.
+ Problema: Sin indices en id_categoria, id_estado, id_prioridad,
+           id_usuario, las consultas hacen full table scan.
+           Con miles de reportes, las consultas seran lentisimas.
+ Solucion: Agregar indices compuestos en las columnas de filtrado.
+
+ 3.12  SIN CACHE DE NINGUN TIPO
+ ──────
+ Archivos: Todas las APIs
+ Problema: Cada peticion GET consulta la BD aunque los datos no
+           hayan cambiado. Sin cache (Redis, Memcached, o incluso
+           cache de opcode), el servidor se satura facilmente.
+ Solucion: Implementar cache con TTL para datos de consulta
+           frecuente (categorias, estados, estadisticas).
+
+ 3.13  HEADERS CORS DUPLICADOS Y PERMISIVOS EN METHODS
+ ──────
+ Archivos: src/api/reportes_api.php:7
+           src/api/evidencias_api.php:6
+           src/api/usuarios_api.php:6
+ Problema: Access-Control-Allow-Methods lista PUT, PATCH, DELETE
+           incluso en endpoints que no los implementan. PUT y
+           PATCH tienen cases vacios (break sin hacer nada).
+           Esto es confuso y potencialmente inseguro.
+ Solucion: Solo permitir los metodos que realmente se implementan.
+
+ 3.14  ERROR EN LA QUERY DE LOGIN DEL ADMIN
+ ──────
+ Archivo: loginAdmin/index.php:105
+ Problema: La consulta incluye "AND password = ?" en el WHERE.
+           Esto filtra por password EN la consulta SQL, en vez
+           de primero buscar al usuario y luego verificar.
+           Esto permite ataques de timing para adivinar emails
+           existentes vs no existentes (no hay distincion en
+           el mensaje de error, pero el atacante puede medir
+           tiempos de respuesta).
+ Solucion: Separar: SELECT para encontrar al usuario por correo,
+           luego password_verify() en PHP.
+
+ 3.15  ELIMINACION DE REPORTES SIN VERIFICACION DE PROPIEDAD
+ ──────
+ Archivo: src/api/reportes_api.php:139-158
+ Problema: El DELETE no verifica si el usuario que elimina es
+           administrador (no hay chequeo de sesion/rol). Ademas
+           no se verifica que el reporte exista antes de borrar.
+ Solucion: Validar que el usuario sea admin (id_rol == 2) y que
+           el reporte exista antes de eliminar.
+
+ 3.16  LOGIN DE ADMIN VERIFICA PASSWORD EN SQL (NO EN PHP)
+ ──────
+ Archivo: loginAdmin/index.php:105
+ Problema: La consulta SQL hace: WHERE correo = ? AND password = ?
+           Esto mezcla autenticacion con consulta. Si se migra a
+           password_hash() (como deberia), esta consulta dejaria
+           de funcionar porque el hash se debe verificar en PHP.
+ Solucion: Refactorizar: SELECT solo por correo, luego verificar
+           password con password_verify() en PHP.
+
+ 3.17  SIN VALIDACION DE CAMPOS UNICOS EN EL BACKEND
+ ──────
+ Archivo: loginAdmin/index.php:45-48
+ Problema: La validacion de correo/telefono duplicados existe en
+           index.php pero en loginAdmin/index.php no hay
+           validacion de duplicados para el registro de admin.
+           Ademas, la validacion no es atomic (race condition:
+           dos peticiones simultaneas pueden registrarse con el
+           mismo correo).
+ Solucion: Usar UNIQUE constraints en la BD y capturar la
+           excepcion de duplicados.
+
+ 3.18  SIN SANITIZACION DE SALIDA EN PHP
+ ──────
+ Archivos: includes/sidebarCiudadano.php:46,48
+           index.php:359, loginAdmin/index.php:340
+ Problema: Se usa htmlspecialchars() para el nombre de usuario
+           pero en otros lugares se imprime directamente con
+           <?= $variable ?> sin escapado. Si la variable contiene
+           HTML/JS, hay XSS reflejado.
+ Solucion: Usar htmlspecialchars() en TODA salida de datos
+           provenientes del usuario o BD.
+
+ 3.19  MANEJO INCONSISTENTE DE ERRORES
+ ──────
+ Archivos: Todas las APIs
+ Problema: Algunas APIs devuelven http_response_code() y otras no.
+           Los mensajes de error mezclan espanol con nombres de
+           variables tecnicas. No hay un formato estandar de
+           respuesta JSON.
+ Solucion: Crear una funcion utilitaria: function jsonResponse
+           ($data, $code) que estandarice las respuestas.
+
+ 3.20  SIN RATE LIMITING EN ENDPOINTS CRITICOS
+ ──────
+ Archivos: login y registro (index.php, loginAdmin/index.php)
+ Problema: No hay limite de intentos de login. Un atacante puede
+           hacer fuerza bruta de contrasenas sin restriccion.
+ Solucion: Implementar rate limiting por IP o por cuenta (ej:
+           maximo 5 intentos por minuto).
+
+ 3.21  ELIMINACION FISICA EN VEZ DE LOGICA
+ ──────
+ Archivo: src/api/reportes_api.php:145
+          src/api/evidencias_api.php:86
+ Problema: DELETE FROM elimina registros permanentemente. En una
+           aplicacion de reportes, se prefiere borrado logico
+           (UPDATE activo = 0) para mantener auditoria y poder
+           recuperar datos.
+ Solucion: Agregar columna "activo" y hacer UPDATE en vez de
+           DELETE.
+
+ 3.22  SIN VALIDACION DE CSRF EN LAS APIS
+ ──────
+ Archivos: src/api/reportes_api.php, evidencias_api.php
+ Problema: Las APIs POST/PATCH/DELETE no verifican tokens CSRF.
+           Cualquier sitio externo puede hacer peticiones
+           maliciosas si el usuario tiene sesion activa.
+ Solucion: Implementar verificacion de token CSRF en todas las
+           peticiones que modifican datos.
+
+ 3.23  EL HANDLER DE NUEVO REPORTE NO INSERTA EN BD
+ ──────
+ Archivo: panelCiudadano/handler/nuevoReporteCiudadano.php
+ Problema: Despues de las validaciones (linea 20-21), el script
+           termina con exit. Nunca hay una consulta INSERT. El
+           archivo esta incompleto.
+ Solucion: Implementar la insercion del reporte en la BD despues
+           de pasar las validaciones.
+
+ 3.24  SIN VALIDACION DE CAMPOS REQUERIDOS EN NUEVO REPORTE
+ ──────
+ Archivo: panelCiudadano/nuevoReporte.php:44-83
+ Problema: El formulario usa el atributo HTML "required" pero no
+           hay validacion del lado del servidor para los campos
+           que llegan. Un atacante puede enviar peticion POST
+           directa sin el formulario.
+ Solucion: Agregar validacion backend de todos los campos en
+           nuevoReporteCiudadano.php.
+
+
+================================================================================
+ 4. PROBLEMAS DE FRONTEND
+================================================================================
+
+ 4.1  FUNCIONES JS CON VARIABLES NO DEFINIDAS
+ ──────
+ Archivo: assets/js/panelCiudadano.js:196-288
+ Funciones: crearReporte(), crearEvidencia(), filtrarPorCategoria(),
+            filtrarPorPrioridad(), filtrarPorEstado()
+ Problema: Estas funciones usan la variable "endpoint" sin
+           declararla. Las lineas del endpoint estan comentadas
+           (//const endpoint = ...). JS lanza ReferenceError.
+           Ademas, todas usan POST aunque los filtros deberian
+           ser GET.
+ Solucion: Descomentar y definir endpoint dentro de cada funcion,
+           y usar el metodo HTTP correcto.
+
+ 4.2  CODIGO MUERTO (85 LINEAS COMENTADAS)
+ ──────
+ Archivo: assets/js/panelCiudadano.js:54-139
+ Problema: Mock data, funciones de dashboard, renderizado de
+           tabla, todo comentado. Nunca se usa. Aumenta el
+           tamano del archivo innecesariamente.
+ Solucion: Eliminar el codigo comentado o moverlo a un archivo
+           de pruebas separado.
+
+ 4.3  FORMULARIO DE NUEVO REPORTE NO ENVIA DATOS
+ ──────
+ Archivo: assets/js/panelCiudadano.js:144-146
+ Codigo:  nuevoReporteForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+          });
+ Problema: El event listener SOLO hace preventDefault(). No
+           envia los datos a ninguna API ni al handler PHP.
+           El formulario jamas se procesa.
+ Solucion: Implementar fetch() para enviar los datos al backend.
+
+ 4.4  CARGA DE FONTAWESOME ENTERO PARA POCOS ICONOS
+ ──────
+ Archivos: index.php:167, loginAdmin/index.php:149
+ Problema: Se carga kit.fontawesome.com (~150KB JS) para solo
+           3-4 iconos (fa-user, fa-eye, fa-mobile, fa-arrow-left).
+ Solucion: Usar SVG inline o iconos en formato de fuente parcial.
+
+ 4.5  BOOTSTRAP CARGADO SOLO PARA UN TOAST
+ ──────
+ Archivos: index.php:365, loginAdmin/index.php:346,
+           panelCiudadano/nuevoReporte.php:109
+ Problema: Se carga bootstrap.bundle.min.js (77KB) solo para
+           usar el componente Toast de Bootstrap. Ademas tienen
+           CSS propio para el toast que compite con Bootstrap.
+ Solucion: Reemplazar con CSS puro + JS simple, o con una
+           libreria ligera (ej: Notyf, Toastify).
+
+ 4.6  CSS DUPLICADO ENTRE PANELES
+ ──────
+ Archivos: assets/css/panelCiudadano.css y panelAdmin.css
+ Problema: ~80% del codigo es identico (sidebar, dashboard, stats,
+           tipografia). Si se cambia algo hay que hacerlo en
+           ambos archivos.
+ Solucion: Extraer CSS comun a un archivo compartido (panel.css)
+           y solo mantener las diferencias en cada uno.
+
+ 4.7  SIDEBAR ADMIN HTML INCLUIDO COMO DOCUMENTO COMPLETO
+ ──────
+ Archivo: includes/sidebarAdmin.html:1-77
+ Problema: El archivo tiene DOCTYPE, <html>, <head>, <body>
+           completos, pero se incluye dentro de otro HTML via
+           fetch(). Esto crea HTML anidado invalido.
+ Solucion: sidebarAdmin.html debe contener SOLO el <aside>, sin
+           DOCTYPE ni <html><head><body>.
+
+ 4.8  TAILWIND CSS NO CUBRE PANEL ADMIN
+ ──────
+ Archivo: src/input.css:2-3
+ Problema: @source solo incluye "../panelCiudadano/*.html" y
+           "../includes/*.html". No incluye "../panelAdmin/*.html"
+           ni "../loginAdmin/*.html". Las clases de Tailwind en
+           esas paginas no se generan.
+ Solucion: Agregar @source "../panelAdmin/*.html";
+
+ 4.9  SIN MINIFICACION NI BUNDLING
+ ──────
+ Archivos: Todos los CSS y JS
+ Problema: Los archivos CSS y JS se sirven sin minificar.
+           El proyecto carga 4 archivos CSS y 3 JS en algunas
+           paginas, incrementando requests HTTP.
+ Solucion: Usar un bundler (Vite, Webpack) o al menos minificar
+           los archivos manualmente.
+
+ 4.10  TOAST NO FUNCIONA SIN BOOTSTRAP INICIALIZADO
+ ──────
+ Archivo: assets/js/panelCiudadano.js:149-155
+ Problema: showToast() solo agrega la clase "show" al elemento.
+           Pero la clase "show" en index.css tiene animacion
+           CSS. En panelCiudadano.css no hay definicion de
+           ".toast.show". El toast puede no mostrarse o no
+           tener la animacion.
+ Solucion: Asegurar que los estilos del toast esten definidos
+           en todos los CSS donde se usa.
+
+ 4.11  ICONO DE PAGINA ES .JFIF (FORMATO OBSOLETO)
+ ──────
+ Archivos: panelAdmin/dashboard.php:12
+           panelCiudadano/*.php
+ Problema: Se usa icon-pages.jfif como favicon. JFIF no es
+           soportado por todos los navegadores como favicon.
+ Solucion: Usar .ico o .png como favicon.
+
+
+================================================================================
+ 5. CONSUMO DE RECURSOS (PROYECCION A FUTURO)
+================================================================================
+
+ 5.1  ESCALABILIDAD
+ ──────
+ Problemas identificados:
+ - SELECT * sin LIMIT: Con 10,000 reportes, la API devuelve
+   ~5-10MB de JSON. Tiempo de respuesta >5 segundos.
+ - Sin paginacion: El frontend recibe TODO de golpe.
+ - Sin indices en BD: Full table scans en cada consulta.
+ - Sin cache: Cada request golpea MySQL directamente.
+ - Sesiones en archivos: No escalan horizontalmente.
+ Proyeccion: Con 100 usuarios concurrentes y 5,000 reportes,
+             el servidor se satura en menos de 1 minuto.
+
+ 5.2  MEMORIA
+ ──────
+ - El SELECT * sin LIMIT puede agotar la memoria de PHP
+   (memory_limit tipico 128MB) con ~20,000 registros.
+ - node_modules (300MB+) en produccion es desperdicio total.
+ - Las sesiones en archivos en disco pueden llenar el
+   almacenamiento con miles de usuarios.
+
+ 5.3  RENDIMIENTO
+ ──────
+ - FontAwesome + Bootstrap = ~230KB de JS innecesario.
+ - 4 hojas de CSS separadas = 4 HTTP requests adicionales.
+ - Google Fonts DM Sans es otro request externo.
+ - Sin HTTP/2, cada recurso externo suma latencia.
+
+ 5.4  SEGURIDAD
+ ──────
+ - SHA-1: Cualquier filtracion de BD expone todas las
+   contrasenas inmediatamente.
+ - Sin rate limiting: Fuerza bruta ilimitada.
+ - Sin CSRF: Ataques de cross-site request forgery.
+ - CORS abierto: Exfiltracion de datos desde cualquier sitio.
+
+
+================================================================================
+ 6. MEJORAS RECOMENDADAS (PRIORIZADAS)
+================================================================================
+
+ PRIORIDAD 1 - HACERLO FUNCIONAR (URGENTE):
+  - Crear src/config/connection.php
+  - Corregir typo en handler/nuevoReporteCiudadano.php:5
+  - Arreglar session_destroy() en logout*.php
+  - Corregir redireccion en loginAdmin/index.php:116
+  - Arreglar variable $id_evidence en evidencias_api.php:87
+  - Agregar session_start() en nuevoReporteCiudadano.php
+  - Arreglar action="handler/nuevoReporteCiudadano" (falta .php)
+  - Agregar enctype="multipart/form-data" en nuevoReporte.php
+  - Corregir $categoria['id'] por $categoria['id_categoria']
+
+ PRIORIDAD 2 - SEGURIDAD:
+  - Reemplazar SHA-1 por password_hash(PASSWORD_BCRYPT)
+  - Restringir CORS a origenes especificos
+  - Implementar tokens CSRF
+  - Forzar HTTPS
+  - Rate limiting en login
+  - Validar tipo/tamano de archivos subidos
+
+ PRIORIDAD 3 - BACKEND:
+  - Agregar paginacion (LIMIT + OFFSET) en todas las APIs
+  - Mover $conn->close() fuera del switch
+  - Unificar autenticacion en una sola clase
+  - Agregar transacciones en operaciones multi-tabla
+  - Implementar borrado logico en vez de DELETE
+  - Agregar indices en la BD
+  - Implementar cache (Redis o Redis-like)
+  - Validar propiedad de reportes en DELETE y evidencias
+
+ PRIORIDAD 4 - FRONTEND:
+  - Arreglar funciones JS con endpoint indefinido
+  - Eliminar codigo muerto comentado
+  - Implementar envio real del formulario de reporte
+  - Reemplazar FontAwesome y Bootstrap por alternativas ligeras
+  - Unificar CSS comun de paneles
+  - Corregir sidebarAdmin.html (solo contenido, no HTML completo)
+  - Agregar @source para panelAdmin en input.css
+  - Minificar assets
+
+================================================================================
+ FIN DEL ANALISIS
+================================================================================
