@@ -30,7 +30,7 @@ function validar_contraseña($contraseña)
 //Formulario Registro
 if (isset($_POST["btn-registro"])) {
   $nombre = trim(htmlspecialchars($_POST['name']));
-  $correo = trim(htmlspecialchars($_POST['email']));
+  $correo = strtolower(trim(htmlspecialchars($_POST['email'])));
   $telefono = trim(htmlspecialchars($_POST['cellphone']));
   $pass = trim(htmlspecialchars($_POST['password']));
 
