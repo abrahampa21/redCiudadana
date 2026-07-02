@@ -241,12 +241,21 @@ body {
   color: #fff;
 }
 
+.reportes-container{
+  box-shadow: 0 3px 10px rgba(15, 23, 42, .05);
+}
+
 .reportes .filters {
   border: 1px solid #e2e8f0;
 }
 
 .reportes input {
   border: 1.5px solid #e2e8f0;
+}
+
+.reportes input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
 .reportes select {
@@ -267,6 +276,34 @@ body {
 .reportes-list p {
   font-size: 14px;
   color: #64748b;
+}
+
+.reportes table thead{
+  background: #f8fafc;
+}
+
+.reportes table th {
+  padding: 15px 18px;
+  text-align: center;
+  font-size: .9rem;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+  background: transparent;
+}
+
+.reportes table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: .9rem;
+}
+
+.reportes table tbody tr {
+  transition: .2s ease;
+}
+
+.reportes table tbody tr:hover {
+  background: #dce7f1;
 }
 
 .reportes-list div {
@@ -290,15 +327,15 @@ body {
   width: 500px;
 }
 
-.nuevo-reporte form input:focus, .nuevo-reporte form textarea:focus{
-    border-color: #2563eb;
+.nuevo-reporte form input:focus,
+.nuevo-reporte form textarea:focus {
+  border-color: #2563eb;
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
-.nuevo-reporte form textarea{
+.nuevo-reporte form textarea {
   padding: 10px;
   border: 1.5px solid #e2e8f0;
-
 }
 
 .nuevo-reporte form button {
@@ -359,7 +396,6 @@ body {
   transform: translateX(0);
   pointer-events: auto;
 }
-
 
 /*Responsividad*/
 @media (max-width: 750px) {

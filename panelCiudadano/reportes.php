@@ -48,8 +48,19 @@
       </div>
 
       <div class="reportes-list">
-        <div class="text-center bg-white rounded-xl p-6">
-          <p>No se encontraron reportes.</p>
+        <div class="text-center bg-white rounded-xl p-6 reportes-container overflow-hidden">
+          <table class="w-full reportes-table border-collapse">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="body-table-reporte"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -68,6 +79,7 @@
         type="button"
         class="btn-close"
         data-bs-dismiss="toast"
+        id="btn-close"
         aria-label="Close">X</button>
     </div>
     <div class="toast-body">
