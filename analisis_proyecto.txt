@@ -10,18 +10,7 @@
  1. ERRORES CRITICOS (IMPIDEN QUE EL PROYECTO FUNCIONE)
 ================================================================================
 
- 1.1  FALTA EL ARCHIVO DE CONEXION A LA BASE DE DATOS
- ──────
- Archivo: src/config/connection.php (NO EXISTE)
- Impacto: TODO el proyecto depende de este archivo. Ninguna pagina
-          funciona sin el. Ni el registro, ni login, ni las APIs.
-          Los requires en index.php, sidebarCiudadano.php, todas las
-          APIs y handlers fallaran con "file not found".
- Solucion: Crear src/config/connection.php con la conexion MySQLi
-           a la base de datos correspondiente.
-
-
- 1.2  ERROR DE SINTAXIS PHP EN HANDLER DE NUEVO REPORTE
+ 1.2  ERROR DE SINTAXIS PHP EN HANDLER DE NUEVO REPORTE ✅HECHO
  ──────
  Archivo: panelCiudadano/handler/nuevoReporteCiudadano.php:5
  Codigo:  if ($_SERVER["REQUEST_METHOD" !== "POST"]){
@@ -37,9 +26,9 @@
            Y agregar session_start() antes de usar $_SESSION.
 
 
- 1.3  VARIABLE INDEFINIDA EN DELETE DE EVIDENCIAS
+ 1.3  VARIABLE INDEFINIDA EN DELETE DE EVIDENCIAS ✅HECHO
  ──────
- Archivo: src/api/evidencias_api.php:87
+ Archivo: src/api/evidencias_api.php:87 
  Codigo:  $stmt->bind_param("i",$id_evidence);
  Error:   La variable $id_evidence nunca fue definida. La variable
           definida es $id_reporte (linea 83). PHP ejecutara el bind
@@ -101,7 +90,7 @@
  Riesgo:   ALTO - Robo de informacion y suplantacion.
  Solucion: Restringir a origenes especificos o validar tokens.
 
- 2.3  SIN PROTECCION CSRF EN FORMULARIOS
+ 2.3  SIN PROTECCION CSRF EN FORMULARIOS //HACER ESTO SOLO HASTA EL FINAL Y PERMITIR SOLO LOCALHOST
  ──────
  Archivos: index.php (registro/login), loginAdmin/index.php,
            panelCiudadano/nuevoReporte.php

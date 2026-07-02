@@ -113,7 +113,7 @@ if (isset($_POST["login-button"])) {
     if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
-      echo "<script>window.location.href='panelAdmin/dashboard.php</script>";
+      echo "<script>window.location.href='panelAdmin/dashboard.php'</script>";
       //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
     } else {
       $toast = true;
