@@ -278,34 +278,6 @@ body {
   color: #64748b;
 }
 
-.reportes table thead{
-  background: #f8fafc;
-}
-
-.reportes table th {
-  padding: 15px 18px;
-  text-align: center;
-  font-size: .9rem;
-  font-weight: 600;
-  color: #475569;
-  border-bottom: 1px solid #e2e8f0;
-  background: transparent;
-}
-
-.reportes table td {
-  padding: 16px 18px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: .9rem;
-}
-
-.reportes table tbody tr {
-  transition: .2s ease;
-}
-
-.reportes table tbody tr:hover {
-  background: #dce7f1;
-}
-
 .reportes-list div {
   border: 1px solid #e2e8f0;
 }

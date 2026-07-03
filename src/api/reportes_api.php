@@ -49,7 +49,7 @@
                 $stmt->close();
                 $conn->close();
             }
-            //filtrar por prioridad (admin y ciudadano)
+            //filtrar por prioridad (admin)
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_prioridad=2
             elseif (isset($_GET['id_prioridad'])) {
                 $id_estado = intval($_GET['id_prioridad']);
