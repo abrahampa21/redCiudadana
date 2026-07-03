@@ -14,7 +14,21 @@
         case 'GET':
             //AGREGAR ENDPOINT PARA FILTRAR REPORTES POR CIUDADANO
            //endpoint http://localhost/redciudadana/src/api/reportes_api.php?id_usuario=2
-
+            if (isset($_GET['id_usuario'])) {
+                $id_usuario = intval($_GET['id_usuario']);
+                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE usuario.id_usuario = ?");
+                $stmt->bind_param("i", $id_usuario);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                if ($resultado->num_rows > 0) {
+                    $categoria = $resultado->fetch_assoc();
+                    echo json_encode($categoria);
+                } else {
+                    echo json_encode(array("mensaje" => "Categoria no encontrada"));
+                }
+                $stmt->close();
+                $conn->close();
+            }
             //filtrar categoria (admin y ciudadano)
             //endpoint http://localhost/redciudadana/src/api/reportes_api.php?id_categoria=2
             if (isset($_GET['id_categoria'])) {
