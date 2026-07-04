@@ -54,7 +54,8 @@ $query->close();
       </div>
       <div class="search-container py-5 px-7">
         <div class="filters flex items-center gap-2.5 p-3 justify-between bg-white rounded-[10px] mb-4 flex-wrap">
-          <input type="text" class="flex-1 min-w-[140px] px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
+<!--140px-->
+          <input type="text" class="flex-1 min-w-35 px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
           <select name="id_estado" id="estado" aria-label="filter-estado">
             <option value="">Estado: Todos</option>
             <?php
