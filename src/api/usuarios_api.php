@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('../config/connection.php');
 
 header("Access-Control-Allow-Origin: *");
@@ -11,21 +12,46 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        //mostrar todos los usuarios (ciudadanos)
-        //endpoint: http://localhost/redciudadana/src/api/usuarios_api.php?id_rol=
-        $id_rol = intval($_GET["id_rol"] ?? 0);
-        $stmt = $conn->prepare("SELECT nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_rol = ?");
-        $stmt->bind_param("i",$id_rol);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        $usuarios = array();
-        while ($row = $resultado->fetch_assoc()) {
-            $usuarios[] = $row;
+        //Obtener usuarios por id_usuario
+        // http://localhost/redciudadana/src/api/usuarios_api.php?id_usuario=
+        if (isset($_GET["id_usuario"])) {
+            if (!isset($_SESSION['id_usuario'])) {
+                http_response_code(401);
+                echo json_encode(array("Mensaje" => "Datos no autorizados"));
+            }
+
+            $id_usuario = $_SESSION['id_usuario'];
+            $stmt = $conn->prepare("SELECT nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_usuario = ?");
+            $stmt->bind_param("i", $id_usuario);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            $usuarios = array();
+            while ($row = $resultado->fetch_assoc()) {
+                $usuarios[] = $row;
+            }
+            $respuesta = json_encode($usuarios);
+            echo $respuesta;
+            $stmt->close();
+            $conn->close();
+        } else {
+            //Obtener usuarios por id_rol
+            //http://localhost/redciudadana/src/api/usuarios_api.php?id_rol=
+            $id_rol = intval($_GET["id_rol"] ?? 0);
+            $stmt = $conn->prepare("SELECT nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_rol = ?");
+            $stmt->bind_param("i", $id_rol);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            $usuarios = array();
+            while ($row = $resultado->fetch_assoc()) {
+                $usuarios[] = $row;
+            }
+            $respuesta = json_encode($usuarios);
+            echo $respuesta;
+            $stmt->close();
+            $conn->close();
         }
-        $respuesta = json_encode($usuarios);
-        echo $respuesta;
-        $stmt->close();
-        $conn->close();
+
+
         break;
     case 'PATCH':
         //habilitar/deshabilitar una cuenta de un ciudadano (admin)
