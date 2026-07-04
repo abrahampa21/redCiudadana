@@ -58,11 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
 //   e.preventDefault();
 // });
 
+//=========== FUNCIONES DE TOAST ============
 //Mostrar toast
 function showToast(message) {
+  if (!toastElement) return;
   const textToast = document.querySelector(".text-toast");
   textToast.textContent = message;
-
   toastElement.classList.add("show");
 }
 
@@ -70,7 +71,9 @@ function hideToast() {
   toastElement.classList.remove("show");
 }
 
-toastBtnClose.addEventListener("click", hideToast);
+if (toastBtnClose) {
+  toastBtnClose.addEventListener("click", hideToast);
+}
 
 //Card para cada reporte
 function createReporteCard(reporte) {
@@ -79,14 +82,15 @@ function createReporteCard(reporte) {
   cardReporte.classList.add("card-reporte");
 
   //Estados y colores
-    const estados = {
-    "Pendiente": "bg-yellow-100 text-yellow-800",
+  const estados = {
+    Pendiente: "bg-yellow-100 text-yellow-800",
     "En proceso": "bg-blue-100 text-blue-800",
-    "Resuelto": "bg-green-100 text-green-800",
-    "Rechazado": "bg-red-100 text-red-800",
+    Resuelto: "bg-green-100 text-green-800",
+    Rechazado: "bg-red-100 text-red-800",
   };
 
-  const estadoBG = estados[reporte.nombre_estado] || "bg-slate-100 text-slate-800";
+  const estadoBG =
+    estados[reporte.nombre_estado] || "bg-slate-100 text-slate-800";
 
   cardReporte.innerHTML = `
     <div class='card-body flex flex-col gap-4 rounded-lg'>
@@ -101,22 +105,25 @@ function createReporteCard(reporte) {
 
   reportesContainer.appendChild(cardReporte);
 
-  //Abrir modal
   const btnDetails = cardReporte.querySelector(".btn-details");
-
+  
+  //Evento para la llamada a la función de abrir modal
   btnDetails.addEventListener("click", () => {
-    abrirModal(reporte)
-  })
+    abrirModal(reporte);
+  });
 }
 
+//======== FUNCIONES Y VALIDACIÓN PARA MODAL ============
 //Abrir modal
 function abrirModal(reporte) {
   const modalReporte = document.getElementById("modal-reporte");
 
   document.getElementById("detalle-titulo").textContent = reporte.titulo;
   document.getElementById("detalle-estado").textContent = reporte.nombre_estado;
-  document.getElementById("detalle-categoria").textContent = reporte.nombre_categoria;
-  document.getElementById("detalle-descripcion").textContent = reporte.descripcion;
+  document.getElementById("detalle-categoria").textContent =
+    reporte.nombre_categoria;
+  document.getElementById("detalle-descripcion").textContent =
+    reporte.descripcion;
 
   modalReporte.classList.remove("hidden");
   modalReporte.classList.add("flex");
@@ -130,27 +137,42 @@ function cerrarModal() {
   modalReporte.classList.add("hidden");
 }
 
+//Validación para que al ser nulos el toast y modal, no interfieran en las otras secciones
 //Botones cerrar modal
-document.getElementById("cerrar-modal").addEventListener("click", cerrarModal);
-document.getElementById("cerrar-modal-footer").addEventListener("click", cerrarModal);
+const cerrarModalBtn = document.getElementById("cerrar-modal");
+const cerrarModalFooterBtn = document.getElementById("cerrar-modal-footer");
+const modalReporteEl = document.getElementById("modal-reporte");
 
-//Cerrar modal fuera de ello
-document.getElementById("modal-reporte").addEventListener("click", (e) => {
-  if (e.target.id === "modal-reporte") {
-    cerrarModal();
-  }
-});
+if (cerrarModalBtn && cerrarModalFooterBtn && modalReporteEl) {
+  cerrarModalBtn.addEventListener("click", cerrarModal);
+  cerrarModalFooterBtn.addEventListener("click", cerrarModal);
 
+  //Cerrar modal fuera de ello
+  modalReporteEl.addEventListener("click", (e) => {
+    if (e.target.id === "modal-reporte") {
+      cerrarModal();
+    }
+  });
+}
 
-//APIs de para ciudadanos
-//Mostrar reportes en tabla  ES EJEMPLOOOO
+//======== APIS PARA CIUDADANOS =============
+//Mostrar reportes en tabla
 async function obtenerReportes() {
   try {
-    const endpoint = `../src/api/reportes_api.php`;
+    const endpoint = "../src/api/reportes_api.php?id_usuario=";
     const response = await fetch(endpoint);
 
     if (response.ok) {
       const reportes = await response.json();
+      const reportesContainer = document.getElementById("reportes-container");
+
+      if (reportes.length === 0) {
+        reportesContainer.innerHTML = `
+          <p class='col-span-full text-slate-500 text-center py-8'>Aún no tienes reportes registrados.</p>
+        `;
+        return;
+      }
+
       reportes.forEach((reporte) => {
         createReporteCard(reporte);
       });
@@ -170,6 +192,10 @@ async function obtenerEvidencias() {
 
     if (response.ok) {
       const reportes = await response.json();
+
+      reportes.forEach((reporte) => {
+        createReporteCard(reporte);
+      });
     } else {
       throw new Error(`${response.status}`);
     }
@@ -235,25 +261,6 @@ async function filtrarPorCategoria() {
   }
 }
 
-//Filtrar reporte por prioridad
-async function filtrarPorPrioridad() {
-  try {
-    //const endpoint = `../src/api/reportes_api.php?id_prioridad=${id_prioridad}`;
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-    });
-
-    if (response.ok) {
-      const reportes = await response.json();
-    } else {
-      throw new Error(`${response.status}`);
-    }
-  } catch (error) {
-    showToast(error.message);
-  }
-}
-
 //Filtrar reporte por estado
 async function filtrarPorEstado() {
   try {
@@ -273,6 +280,10 @@ async function filtrarPorEstado() {
   }
 }
 
+//Evento que carga la función obtenerReportes si encuentra el contenedor
 document.addEventListener("DOMContentLoaded", () => {
-  obtenerReportes();
+  const reportesContainer = document.getElementById("reportes-container");
+  if (reportesContainer) {
+    obtenerReportes();
+  }
 });

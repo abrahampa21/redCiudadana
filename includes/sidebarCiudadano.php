@@ -1,6 +1,6 @@
 <?php
-require_once("../src/config/connection.php");
 session_start();
+require_once("../src/config/connection.php");
 
 $nombre_usuario = $_SESSION["nombre"];
 ?>
