@@ -1,0 +1,28 @@
+<?php
+require_once('../config/connection.php');
+
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+switch ($method) {
+    case 'GET':
+        //Retornar todas las categorías
+        // http://localhost/redCiudadana/src/api/categorias_api.php
+        $query = $conn->prepare("SELECT nombre,descripcion FROM categoria");
+        $query->execute();
+        $resultado = $query->get_result();
+        $categorias = $resultado->fetch_all(MYSQLI_ASSOC);
+        echo json_encode($categorias);
+        $query->close();
+        $conn->close();
+        break;
+    default:
+        http_response_code(400);
+        echo json_encode(array("mensaje" => "Método no válido"));
+        break;
+}

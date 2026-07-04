@@ -4,7 +4,7 @@
 
     header("Access-Control-Allow-Origin: *");
     header("Content-Type: application/json; charset=UTF-8");
-    header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE");
+    header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 
@@ -25,8 +25,8 @@
                 $stmt->bind_param("i", $id_usuario);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
-                $categoria = $resultado->fetch_all(MYSQLI_ASSOC);
-                echo json_encode($categoria);
+                $reportes = $resultado->fetch_all(MYSQLI_ASSOC);
+                echo json_encode($reportes);
                 $stmt->close();
                 $conn->close();
             }
@@ -126,10 +126,6 @@
                 echo json_encode(array("mensaje" => "Todos los datos son obligatorios"));
             }
             break;
-
-        case 'PUT':
-
-            break;
         case 'PATCH':
             //cambiar estado del reporte
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_reporte=2
@@ -176,6 +172,7 @@
             }
             break;
         default:
-
+            http_response_code(400);
+            echo json_encode(array("mensaje" => "Método no válido"));
             break;
     }
