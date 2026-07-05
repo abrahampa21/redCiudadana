@@ -1,3 +1,4 @@
+
 <?php include_once "../includes/sidebarCiudadano.php"; ?>
 <!doctype html>
 <html lang="en">
@@ -34,7 +35,7 @@
               <svg
                 viewBox="0 0 24 24"
                 fill="#6366f1"
-                class="w-5 h-5 flex-shrink-0">
+                class="w-5 h-5 shrink-0">
                 <path
                   d="M9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4zM5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
@@ -52,7 +53,7 @@
               <svg
                 viewBox="0 0 24 24"
                 fill="#f59e0b"
-                class="w-5 h-5 flex-shrink-0">
+                class="w-5 h-5 shrink-0">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
               </svg>
@@ -70,7 +71,7 @@
               <svg
                 viewBox="0 0 24 24"
                 fill="#3b82f6"
-                class="w-5 h-5 flex-shrink-0">
+                class="w-5 h-5 shrink-0">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
               </svg>
@@ -88,7 +89,7 @@
               <svg
                 viewBox="0 0 24 24"
                 fill="#22c55e"
-                class="w-5 h-5 flex-shrink-0">
+                class="w-5 h-5 shrink-0">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
               </svg>

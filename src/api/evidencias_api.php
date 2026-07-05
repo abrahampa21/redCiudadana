@@ -3,7 +3,7 @@ require_once('../config/connection.php');
 
 header("Access-Control-Allow-Origin: *"); 
 header("Content-Type: application/json; charset=UTF-8"); 
-header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE"); 
+header("Access-Control-Allow-Methods: GET, POST"); 
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 
@@ -70,14 +70,8 @@ switch($method){
             echo json_encode(array("mensaje" => "Todos los datos son obligatorios"));
         }
         break;
-
-    case 'PUT':
-
-        break;
-    case 'PATCH':
-
-        break;
     default:
-
+        http_response_code(400);
+        echo json_encode(array("mensaje" => "Método no válido"));
         break;
 }
