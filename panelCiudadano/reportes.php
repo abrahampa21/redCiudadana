@@ -55,24 +55,24 @@ $query->close();
       <div class="search-container py-5 px-7">
         <div class="filters flex items-center gap-2.5 p-3 justify-between bg-white rounded-[10px] mb-4 flex-wrap">
 <!--140px-->
-          <input type="text" class="flex-1 min-w-35 px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
-          <select name="id_estado" id="estado" aria-label="filter-estado">
-            <option value="">Estado: Todos</option>
+          <input type="text" id="buscar-reporte" class="flex-1 min-w-35 px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
+          <select name="id_estado" id="estado-select" aria-label="filter-estado">
+            <option value="default">Estado: Todos</option>
             <?php
             foreach ($estados as $estado) {
               echo "<option value='{$estado['id_estado']}'>{$estado['nombre']}</option>";
             }
             ?>
           </select>
-          <select name="id_categoria" id="categoria" aria-label="filter-categoria">
-            <option value="">Categoría: Todas</option>
+          <select name="id_categoria" id="categoria-select" aria-label="filter-categoria">
+            <option value="default">Categoría: Todas</option>
             <?php
             foreach ($categorias as $categoria) {
               echo "<option value='{$categoria['id_categoria']}'>{$categoria['nombre']}</option>";
             }
             ?>
           </select>
-          <button class="clear-btn text-sm font-semibold cursor-pointer whitespace-nowrap bg-none border-0">Limpiar</button>
+          <button class="clear-btn text-sm font-semibold cursor-pointer whitespace-nowrap bg-none border-0" id="clean-filter">Limpiar</button>
         </div>
       </div>
 
@@ -83,12 +83,12 @@ $query->close();
     </div>
   </main>
 
-  <!-- Modal detalle-s del Reporte -->
+  <!-- Modal detalles del Reporte -->
   <div id="modal-reporte" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
     <div class="bg-white w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
       <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
         <h2 class="text-2xl font-bold text-slate-800">
-          detalle-s del reporte
+          Detalles del reporte
         </h2>
         <button id="cerrar-modal"
           class="text-slate-500 hover:text-red-500 transition text-2xl cursor-pointer">
@@ -145,8 +145,7 @@ $query->close();
         aria-label="Close">X</button>
     </div>
     <div class="toast-body">
-      No se pudo procesar la información del reporte <br /><span
-        class="text-toast"></span>
+      No se pudo procesar la información del reporte
     </div>
   </div>
   <script src="../assets/js/panelCiudadano.js"></script>

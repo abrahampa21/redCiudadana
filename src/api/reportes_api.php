@@ -21,8 +21,25 @@
                 }
 
                 $id_usuario = $_SESSION['id_usuario'];
-                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE usuario.id_usuario = ?");
+                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE usuario.id_usuario = ?");
                 $stmt->bind_param("i", $id_usuario);
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                $reportes = $resultado->fetch_all(MYSQLI_ASSOC);
+                echo json_encode($reportes);
+                $stmt->close();
+                $conn->close();
+            } elseif (isset($_GET["buscar"])) {
+                //http://localhost/redciudadana/src/api/reportes_api.php?buscar=
+                $busquedaReporte = "%" . trim($_GET["buscar"] ?? "") . "%";
+                if (!isset($_SESSION['id_usuario'])) {
+                    http_response_code(401);
+                    echo json_encode(array("Mensaje" => "No autorizado"));
+                }
+
+                $id_usuario = $_SESSION['id_usuario'];
+                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE usuario.id_usuario = ? AND reporte.titulo LIKE ?");
+                $stmt->bind_param("is", $id_usuario,$busquedaReporte);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 $reportes = $resultado->fetch_all(MYSQLI_ASSOC);
@@ -33,16 +50,16 @@
             //filtrar categoria (admin y ciudadano)
             //endpoint http://localhost/redciudadana/src/api/reportes_api.php?id_categoria=2
             elseif (isset($_GET['id_categoria'])) {
-                $id_categoria = intval($_GET['id_categoria']);
-                $stmt = $conn->prepare("SELECT * FROM reporte WHERE id_categoria = ?");
+                $id_categoria = intval($_GET['id_categoria'] ?? 0);
+                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE reporte.id_categoria = ?");
                 $stmt->bind_param("i", $id_categoria);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
-                    $categoria = $resultado->fetch_assoc();
-                    echo json_encode($categoria);
+                    $categorias = $resultado->fetch_all(MYSQLI_ASSOC);
+                    echo json_encode($categorias);
                 } else {
-                    echo json_encode(array("mensaje" => "Categoria no encontrada"));
+                    echo json_encode([]);
                 }
                 $stmt->close();
                 $conn->close();
@@ -51,15 +68,15 @@
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_estado=2
             elseif (isset($_GET['id_estado'])) {
                 $id_estado = intval($_GET['id_estado']);
-                $stmt = $conn->prepare("SELECT * FROM reporte WHERE id_estado = ?");
+                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE reporte.id_estado = ?");
                 $stmt->bind_param("i", $id_estado);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
-                    $estado = $resultado->fetch_assoc();
+                    $estado = $resultado->fetch_all(MYSQLI_ASSOC);
                     echo json_encode($estado);
                 } else {
-                    echo json_encode(array("mensaje" => "Estado no existente"));
+                    echo json_encode([]);
                 }
                 $stmt->close();
                 $conn->close();
@@ -84,7 +101,7 @@
             //obtener todos los reportes (admin)
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php
             else {
-                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario");
+                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario");
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 $reportes = array();

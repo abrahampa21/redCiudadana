@@ -26,6 +26,7 @@ const date = new Date();
 // Toast
 const toastElement = document.getElementById("error-fetch");
 const toastBtnClose = document.getElementById("btn-close");
+const reportesContainer = document.getElementById("reportes-container");
 
 //Para mostrar la fecha en el dashboard
 if (dashDate) {
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //Mostrar toast
 function showToast(message) {
   if (!toastElement) return;
-  const textToast = document.querySelector(".text-toast");
+  const textToast = document.querySelector(".toast-body");
   textToast.textContent = message;
   toastElement.classList.add("show");
 }
@@ -106,7 +107,7 @@ function createReporteCard(reporte) {
   reportesContainer.appendChild(cardReporte);
 
   const btnDetails = cardReporte.querySelector(".btn-details");
-  
+
   //Evento para la llamada a la función de abrir modal
   btnDetails.addEventListener("click", () => {
     abrirModal(reporte);
@@ -156,7 +157,7 @@ if (cerrarModalBtn && cerrarModalFooterBtn && modalReporteEl) {
 }
 
 //======== APIS PARA CIUDADANOS =============
-//Mostrar reportes en tabla
+//Mostrar reportes
 async function obtenerReportes() {
   try {
     const endpoint = "../src/api/reportes_api.php?id_usuario=";
@@ -164,7 +165,6 @@ async function obtenerReportes() {
 
     if (response.ok) {
       const reportes = await response.json();
-      const reportesContainer = document.getElementById("reportes-container");
 
       if (reportes.length === 0) {
         reportesContainer.innerHTML = `
@@ -173,6 +173,78 @@ async function obtenerReportes() {
         return;
       }
 
+      reportes.forEach((reporte) => {
+        createReporteCard(reporte);
+      });
+    } else {
+      throw new Error(`${response.status}`);
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+//Filtrar reporte por estado
+async function filtrarPorEstado(estado) {
+  try {
+    const endpoint = `../src/api/reportes_api.php?id_estado=${estado}`;
+    const response = await fetch(endpoint);
+
+    if (response.ok) {
+      const reportes = await response.json();
+      reportesContainer.innerHTML = "";
+
+      //En caso de no tener ningún reporte de ese estado
+      if (reportes.length === 0) {
+        return;
+      }
+
+      reportes.forEach((reporte) => {
+        createReporteCard(reporte);
+      });
+    } else {
+      throw new Error(`${response.status}`);
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+//Filtrar reporte por categoria
+async function filtrarPorCategoria(categoria) {
+  try {
+    const endpoint = `../src/api/reportes_api.php?id_categoria=${categoria}`;
+    const response = await fetch(endpoint);
+
+    if (response.ok) {
+      const reportes = await response.json();
+      reportesContainer.innerHTML = "";
+
+      //En caso de no tener ningún reporte de esa categoria
+      if (reportes.length === 0) {
+        return;
+      }
+
+      reportes.forEach((reporte) => {
+        createReporteCard(reporte);
+      });
+    } else {
+      throw new Error(`${response.status}`);
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+//Buscar por título
+async function buscarPorTitulo(reporte) {
+  try {
+    const endpoint = `../src/api/reportes_api.php?buscar=${encodeURIComponent(reporte)}`;
+    const response = await fetch(endpoint);
+
+    if (response.ok) {
+      const reportes = await response.json();
+      reportesContainer.innerHTML = "";
       reportes.forEach((reporte) => {
         createReporteCard(reporte);
       });
@@ -242,48 +314,54 @@ async function crearEvidencia() {
   }
 }
 
-//Filtrar reporte por categoria
-async function filtrarPorCategoria() {
-  try {
-    //const endpoint = `../src/api/reportes_api.php?id_categoria=${id_categoria}`;
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-    });
-
-    if (response.ok) {
-      const reportes = await response.json();
-    } else {
-      throw new Error(`${response.status}`);
-    }
-  } catch (error) {
-    showToast(error.message);
-  }
-}
-
-//Filtrar reporte por estado
-async function filtrarPorEstado() {
-  try {
-    //const endpoint = `../src/api/reportes_api.php?id_estado=${id_estado}`;
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-    });
-
-    if (response.ok) {
-      const reportes = await response.json();
-    } else {
-      throw new Error(`${response.status}`);
-    }
-  } catch (error) {
-    showToast(error.message);
-  }
-}
-
 //Evento que carga la función obtenerReportes si encuentra el contenedor
 document.addEventListener("DOMContentLoaded", () => {
-  const reportesContainer = document.getElementById("reportes-container");
   if (reportesContainer) {
     obtenerReportes();
   }
+});
+
+//Evento para filtrar por estado
+const estadoSelect = document.getElementById("estado-select");
+estadoSelect.addEventListener("change", () => {
+  const estado = estadoSelect.value;
+  if (estado === "default") {
+    reportesContainer.innerHTML = "";
+    obtenerReportes();
+  } else {
+    filtrarPorEstado(estado);
+  }
+});
+
+//Evento para filtrar por categoría
+const categoriaSelect = document.getElementById("categoria-select");
+categoriaSelect.addEventListener("change", () => {
+  const categoria = categoriaSelect.value;
+  if (categoria === "default") {
+    reportesContainer.innerHTML = "";
+    obtenerReportes();
+  } else {
+    filtrarPorCategoria(categoria);
+  }
+});
+
+//Limpiar los filtros/busqueda
+const cleanFilters = document.getElementById("clean-filter");
+cleanFilters.addEventListener("click", () => {
+  reportesContainer.innerHTML = "";
+  obtenerReportes();
+});
+
+//Evento para buscar reporte conforme vaya escribiendo el usuario
+const buscarReporte = document.getElementById("buscar-reporte");
+buscarReporte.addEventListener("input", () => {
+  const reporte = buscarReporte.value.trim();
+
+  if(reporte == ""){
+    reportesContainer.innerHTML = "";
+    obtenerReportes();
+    return;
+  }
+
+  buscarPorTitulo(reporte);
 });
