@@ -75,6 +75,28 @@ switch ($method) {
                 echo json_encode(array("mensaje" => "El id del rol del usuario es necesario"));
             }
         }
+        //modificar celular y correo de un usuario
+        if (isset($_GET['id_usuario'])) {
+            $id_usuario = intval($_GET['id_usuario']);
+            $data = json_decode(file_get_contents("php://input"), true);
+            $correo = trim($data['correo'] ?? "");
+            $telefono = trim($data['telefono'] ?? "");
+
+            if (!empty($id_usuario)) {
+                $stmt = $conn->prepare("UPDATE usuario SET correo = COALESCE(NULLIF(?, ''), correo), telefono = COALESCE(NULLIF(?, ''), telefono) WHERE id_usuario = ?");
+                $stmt->bind_param("ssi", $correo, $telefono, $id_usuario);
+                if ($stmt->execute()) {
+                    http_response_code(200);
+                    echo json_encode(array("mensaje" => "datos actualizados exitosamente"));
+                } else {
+                    http_response_code(500);
+                    echo json_encode(array("mensaje" => "Error al actualizar los datos" . $stmt->error));
+                }
+            } else {
+                http_response_code(400);
+                echo json_encode(array("mensaje" => "El id del usuario es necesario"));
+            }
+        }
         break;
     default:
         http_response_code(400);
