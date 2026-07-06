@@ -12,6 +12,8 @@
     <link href="../src/output.css" rel="stylesheet" />
   </head>
   <body>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+    <div class="overlay" id="overlay"></div>
     <div id="sidebar-container"></div>
 
     <!-- DASHBOARD -->
@@ -122,6 +124,9 @@
         .then((response) => response.text())
         .then((data) => {
           document.getElementById("sidebar-container").innerHTML = data;
+          if (window.initAdminPage) {
+            window.initAdminPage();
+          }
         });
     </script>
     <script src="../assets/js/panelAdmin.js"></script>
