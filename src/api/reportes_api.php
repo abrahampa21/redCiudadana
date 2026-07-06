@@ -68,7 +68,7 @@
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_estado=2
             elseif (isset($_GET['id_estado'])) {
                 $id_estado = intval($_GET['id_estado']);
-                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE reporte.id_estado = ?");
+                $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario INNER JOIN prioridades ON reporte.id_prioridades = prioridades.id_prioridades WHERE reporte.id_estado = ?");
                 $stmt->bind_param("i", $id_estado);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
