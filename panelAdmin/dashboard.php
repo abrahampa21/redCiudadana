@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../assets/css/panelAdmin.css" />
     <link rel="icon" href="../src/img/icon-pages.jfif" />
     <link href="../src/output.css" rel="stylesheet" />
+    <title>Panel del administrador</title>
   </head>
   <body>
     <button class="menu-toggle" id="menuToggle">☰</button>

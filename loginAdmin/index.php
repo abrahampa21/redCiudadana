@@ -113,8 +113,8 @@ if (isset($_POST["login-button"])) {
     if ($resultado_login->num_rows > 0) {
       $usuario = $resultado_login->fetch_assoc();
       $_SESSION['id_usuario'] = $usuario['id_usuario'];
-      echo "<script>window.location.href='panelAdmin/dashboard.php'</script>";
-      //echo "<script>alert('Correo o contraseña correctos!'); </script>"; 
+      $_SESSION['nombre'] = $usuario['nombre'];
+      header("Location: ../panelAdmin/dashboard.php");
     } else {
       $toast = true;
       $toast_type = "error";
@@ -307,8 +307,8 @@ $conn->close();
               title="password"
               required
               name="password"
-              maxlength="255" 
-              placeholder="Contraseña (8+ caracteres)"/>
+              maxlength="255"
+              placeholder="Contraseña (8+ caracteres)" />
             <i class="fa-solid fa-eye" onclick="revealPassword(this)"></i>
           </div>
         </div>
@@ -340,7 +340,7 @@ $conn->close();
       <?php echo $toast_message ?>
     </div>
 
-  </div> 
+  </div>
 
   <script src="../assets/js/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
