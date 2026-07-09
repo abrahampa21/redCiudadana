@@ -27,6 +27,7 @@ const date = new Date();
 const toastElement = document.getElementById("error-fetch");
 const toastBtnClose = document.getElementById("btn-close");
 const reportesContainer = document.getElementById("reportes-container");
+const BASE_URL ="http://localhost/redCiudadana/src/api/";
 
 //Para mostrar la fecha en el dashboard
 if (dashDate) {
@@ -160,7 +161,7 @@ if (cerrarModalBtn && cerrarModalFooterBtn && modalReporteEl) {
 //Mostrar reportes
 async function obtenerReportes() {
   try {
-    const endpoint = "../src/api/reportes_api.php?id_usuario=";
+    const endpoint = `${BASE_URL}reportes_api.php?id_usuario=`;
     const response = await fetch(endpoint);
 
     if (response.ok) {
@@ -187,7 +188,7 @@ async function obtenerReportes() {
 //Filtrar reporte por estado
 async function filtrarPorEstado(estado) {
   try {
-    const endpoint = `../src/api/reportes_api.php?id_estado=${estado}`;
+    const endpoint = `${BASE_URL}reportes_api.php?id_estado=${estado}`;
     const response = await fetch(endpoint);
 
     if (response.ok) {
@@ -213,7 +214,7 @@ async function filtrarPorEstado(estado) {
 //Filtrar reporte por categoria
 async function filtrarPorCategoria(categoria) {
   try {
-    const endpoint = `../src/api/reportes_api.php?id_categoria=${categoria}`;
+    const endpoint = `${BASE_URL}reportes_api.php?id_categoria=${categoria}`;
     const response = await fetch(endpoint);
 
     if (response.ok) {
@@ -239,7 +240,7 @@ async function filtrarPorCategoria(categoria) {
 //Buscar por título
 async function buscarPorTitulo(reporte) {
   try {
-    const endpoint = `../src/api/reportes_api.php?buscar=${encodeURIComponent(reporte)}`;
+    const endpoint = `${BASE_URL}reportes_api.php?buscar=${encodeURIComponent(reporte)}`;
     const response = await fetch(endpoint);
 
     if (response.ok) {
@@ -259,7 +260,7 @@ async function buscarPorTitulo(reporte) {
 //Mostrar evidencia
 async function obtenerEvidencias() {
   try {
-    const endpoint = "../src/api/evidencias_api.php";
+    const endpoint = `${BASE_URL}evidencias_api.php`;
     const response = await fetch(endpoint);
 
     if (response.ok) {
@@ -279,7 +280,7 @@ async function obtenerEvidencias() {
 //Crear reportes
 async function crearReporte() {
   try {
-    //const endpoint = "../src/api/reportes_api.php";
+    //const endpoint = `${BASE_URL}reportes_api.php`;
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -298,7 +299,7 @@ async function crearReporte() {
 //Crear evidencia
 async function crearEvidencia() {
   try {
-    //const endpoint = "../src/api/evidencias_api.php";
+        //const endpoint = `${BASE_URL}evidencias_api.php`;
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-type": "application/json" },
