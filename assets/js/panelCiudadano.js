@@ -296,6 +296,7 @@ async function crearReporte() {
   }
 }
 
+
 //Crear evidencia
 async function crearEvidencia() {
   try {
@@ -312,6 +313,36 @@ async function crearEvidencia() {
     }
   } catch (error) {
     showToast(error.message);
+  }
+}
+
+//Obtener información del ciudadano logueado
+async function obtenerCiudadanoPorId(){
+  try {
+    const endpoint = `${BASE_URL}usuarios_api.php?id_usuario=`;
+    const response = await fetch(endpoint);
+    if(response.ok){
+      const ciudadano = await response.json();
+      return ciudadano
+    }else{
+      throw new Error(`${response.status}`);
+    }
+  } catch (error) {
+    showToast(error.message)
+  }
+}
+
+//Actualizar información del usuario
+
+// ======= FUNCIONES AUXILIARES/REUTILIZABLES ============
+async function poblarFormularioEdicion(){
+  const ciudadano = await obtenerCiudadanoPorId();
+  if(ciudadano){
+        document.getElementById("nombre").value = ciudadano.nombre;
+    document.getElementById("correo").value = ciudadano.correo;
+    document.getElementById("telefono").value = ciudadano.telefono;
+    document.getElementById("fecha-registro").value = ciudadano.fecha_registro;
+    document.getElementById("rol").value = ciudadano.tipo;
   }
 }
 

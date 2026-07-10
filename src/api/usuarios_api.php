@@ -21,7 +21,7 @@ switch ($method) {
             }
 
             $id_usuario = $_SESSION['id_usuario'];
-            $stmt = $conn->prepare("SELECT nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_usuario = ?");
+            $stmt = $conn->prepare("SELECT usuario.nombre,usuario.correo,usuario.telefono,usuario.activo,usuario.fecha_registro, usuario.id_rol, roles.tipo FROM usuario INNER JOIN roles ON usuario.id_rol = roles.id_rol WHERE usuario.id_usuario = ?");
             $stmt->bind_param("i", $id_usuario);
             $stmt->execute();
             $resultado = $stmt->get_result();
