@@ -286,7 +286,7 @@ $conn->close();
           </div>
         </div>
         <div class="usuario-div register-div">
-          <label>Número telefónico</label>
+          <label>Número de teléfono</label>
           <div class="input-div">
             <input
               type="text"

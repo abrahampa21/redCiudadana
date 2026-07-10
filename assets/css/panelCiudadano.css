@@ -334,6 +334,11 @@ body {
   display: block;
   margin-bottom: 6px;
 }
+
+.nuevo-reporte .required-text p{
+  color:#062147;
+}
+
 /*Toast error*/
 .toast {
   position: fixed;

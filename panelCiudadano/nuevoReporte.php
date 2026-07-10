@@ -43,7 +43,7 @@ $queryCategorias->close();
         <!--Formulario-->
         <form action="handler/nuevoReporteCiudadano" class="bg-white rounded-xl p-7 max-w-[150] mx-auto" id="nuevo-reporte" enctype="multipart/form-data">
           <div class="div-input titulo">
-            <label for="titulo">Título</label>
+            <label for="titulo">Título *</label>
             <input
               type="text"
               name="titulo"
@@ -52,7 +52,7 @@ $queryCategorias->close();
               required />
           </div>
           <div class="div-input descripcion">
-            <label for="descripcion">Descripción</label>
+            <label for="descripcion">Descripción *</label>
             <textarea
               name="descripcion"
               placeholder="Describe el problema con detalle"
@@ -60,7 +60,7 @@ $queryCategorias->close();
           </div>
           <div class="report-details">
             <div class="div-input categoria">
-              <label for="categoria">Categoría</label>
+              <label for="categoria">Categoría *</label>
               <select value="" title="Categoría" name="id_categoria">
                 <option value="">Selecciona...</option>
                 <?php
@@ -72,14 +72,17 @@ $queryCategorias->close();
             </div>
           </div>
           <div class="div-input ubicacion">
-            <label for="ubicacion">Ubicación</label>
+            <label for="ubicacion">Ubicación *</label>
             <input type="text" name="ubicacion" placeholder="Ej: Calle 5, Colonia Santa Lucía" required>
           </div>
           <div class="div-input evidencia">
-            <label for="evidencia">Evidencia fotográfica</label>
+            <label for="evidencia">Evidencia fotográfica *</label>
             <input title="evidencia" type="file" name="evidencia" accept="image/*" required>
           </div>
-          <button type="submit" name="reporte-btn" class="w-full border-none rounded-lg font-semibold cursor-pointer mt-1 ">Enviar reporte</button>
+          <div class="required-text mb-4">
+            <p class="text-[1.1rem]">Los campos marcados con * son obligatorios.</p>
+          </div>
+          <button type="submit" name="reporte-btn" class="w-full border-none rounded-lg font-semibold cursor-pointer mt-1">Enviar reporte</button>
         </form>
       </div>
     </div>
