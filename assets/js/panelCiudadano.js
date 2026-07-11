@@ -1,3 +1,4 @@
+const BASE_URL = "http://localhost/redCiudadana/src/api/";
 const days = [
   "domingo",
   "lunes",
@@ -31,8 +32,6 @@ const estadoSelect = document.getElementById("estado-select");
 const categoriaSelect = document.getElementById("categoria-select");
 const buscarReporte = document.getElementById("buscar-reporte");
 const cleanFilters = document.getElementById("clean-filter");
-
-const BASE_URL = "http://localhost/redCiudadana/src/api/";
 
 //Para mostrar la fecha en el dashboard
 if (dashDate) {
@@ -336,18 +335,51 @@ async function obtenerCiudadanoPorId() {
   }
 }
 
-//Actualizar información del usuario
+//Actualizar información del usuario (solo email y número de teléfono)
+async function actualizarDatosCiudadano(correo, numeroTelefono) {
+  const datosActualizados = {
+    correo: correo,
+    telefono: numeroTelefono,
+  };
+  try {
+    const endpoint = `${BASE_URL}/usuarios_api.php?id_usuario=`;
+    const response = await fetch(endpoint, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datosActualizados),
+    });
+
+    if (response.ok) {
+      showToast("Datos actualizados correctamente");
+      return;
+    } else {
+      const errorData = await response.json().catch(() => null);
+      const mensaje =
+        errorData?.mensaje ||
+        response.statusText ||
+        "Error al actualizar los datos";
+      showToast(message);
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
 
 // ======= FUNCIONES AUXILIARES/REUTILIZABLES ============
 async function poblarFormularioEdicion() {
   const ciudadano = await obtenerCiudadanoPorId();
-  console.log(ciudadano);
   if (ciudadano) {
     document.getElementById("nombre").value = ciudadano.nombre;
     document.getElementById("correo").value = ciudadano.correo;
     document.getElementById("telefono").value = ciudadano.telefono;
     document.getElementById("fecha-registro").value = ciudadano.fecha_registro;
     document.getElementById("rol").value = ciudadano.nombre_rol;
+  } else {
+    console.log(
+      "Ocurrió un error al llenar el formulario: ciudadano no encontrado",
+    );
   }
 }
 
@@ -363,6 +395,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (id) {
         poblarFormularioEdicion(id);
       }
+    });
+    misDatosForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const correo = document.getElementById("correo").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      actualizarDatosCiudadano(correo, telefono);
     });
   }
 

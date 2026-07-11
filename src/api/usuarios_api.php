@@ -21,16 +21,17 @@ switch ($method) {
             }
 
             $id_usuario = $_SESSION['id_usuario'];
-            $stmt = $conn->prepare("SELECT usuario.nombre,usuario.correo,usuario.telefono,usuario.activo,usuario.fecha_registro, usuario.id_rol, roles.tipo AS nombre_rol FROM usuario INNER JOIN roles ON usuario.id_rol = roles.id_rol WHERE usuario.id_usuario = ?");
+            $stmt = $conn->prepare("SELECT usuario.id_usuario, usuario.nombre,usuario.correo,usuario.telefono,usuario.activo,usuario.fecha_registro, usuario.id_rol, roles.tipo AS nombre_rol FROM usuario INNER JOIN roles ON usuario.id_rol = roles.id_rol WHERE usuario.id_usuario = ?");
             $stmt->bind_param("i", $id_usuario);
             $stmt->execute();
             $resultado = $stmt->get_result();
-            $usuarios = array();
-            while ($row = $resultado->fetch_assoc()) {
-                $usuarios[] = $row;
+            if ($resultado->num_rows > 0) {
+                $usuario = $resultado->fetch_assoc();
+                echo json_encode($usuario);
+            } else {
+                http_response_code(404);
+                echo json_encode(["mensaje" => "Usuario no encontrado"]);
             }
-            $respuesta = json_encode($usuarios);
-            echo $respuesta;
             $stmt->close();
             $conn->close();
         } else {
@@ -50,7 +51,6 @@ switch ($method) {
             $stmt->close();
             $conn->close();
         }
-
 
         break;
     case 'PATCH':
@@ -77,7 +77,13 @@ switch ($method) {
         }
         //modificar celular y correo de un usuario
         if (isset($_GET['id_usuario'])) {
-            $id_usuario = intval($_GET['id_usuario']);
+            if (!isset($_SESSION['id_usuario'])) {
+                http_response_code(401);
+                echo json_encode(array("Mensaje" => "Datos no autorizados"));
+            }
+            
+            $id_usuario = $_SESSION['id_usuario'];
+
             $data = json_decode(file_get_contents("php://input"), true);
             $correo = trim($data['correo'] ?? "");
             $telefono = trim($data['telefono'] ?? "");

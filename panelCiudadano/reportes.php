@@ -98,7 +98,7 @@ $query->close();
       <div class="p-6 space-y-6">
         <img id="detalle-imagen"
           src="#"
-          class="w-full h-72 object-cover rounded-xl bg-slate-100"
+          class="w-full h-32 object-cover rounded-xl bg-slate-100"
           alt="Imagen del reporte">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
@@ -128,26 +128,8 @@ $query->close();
     </div>
   </div>
 
-  <!--If API request fails-->
-  <div
-    class="toast"
-    role="alert"
-    id="error-fetch"
-    aria-live="assertive"
-    aria-atomic="true">
-    <div class="toast-header">
-      <strong class="me-auto">⚠️ Error</strong>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="toast"
-        id="btn-close"
-        aria-label="Close">X</button>
-    </div>
-    <div class="toast-body">
-      No se pudo procesar la información del reporte
-    </div>
-  </div>
+  <?php include_once "../includes/toast.php"; ?>
+  
   <script src="../assets/js/panelCiudadano.js"></script>
 </body>
 

@@ -40,7 +40,7 @@
           </div>
           <div class="div-input">
             <label for="rol">Rol</label>
-            <input type="text" id="rol" readonly>
+            <input type="text" id="rol" class="capitalize" readonly>
           </div>
           <div class="required-text mb-4">
             <p class="text-[1.1rem]">Los campos marcados con * pueden modificarse.</p>
@@ -50,6 +50,8 @@
       </div>
     </div>
   </main>
+
+  <?php include_once "../includes/toast.php"; ?>
 
 
   <script src="../assets/js/panelCiudadano.js"></script>
