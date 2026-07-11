@@ -33,6 +33,8 @@ const categoriaSelect = document.getElementById("categoria-select");
 const buscarReporte = document.getElementById("buscar-reporte");
 const cleanFilters = document.getElementById("clean-filter");
 
+const nuevoReporteForm = document.getElementById("nuevo-reporte");
+
 //Para mostrar la fecha en el dashboard
 if (dashDate) {
   dashDate.textContent = `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
@@ -282,16 +284,18 @@ async function obtenerEvidencias() {
 }
 
 //Crear reportes
-async function crearReporte() {
+async function crearReporte(datos) {
   try {
-    //const endpoint = `${BASE_URL}reportes_api.php`;
+    const endpoint = `${BASE_URL}reportes_api.php`;
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-type": "application/json" },
+      body: JSON.stringify(datos),
     });
 
     if (response.ok) {
-      const reportes = await response.json();
+      const reporteCreado = await response.json();
+      return await reporteCreado;
     } else {
       throw new Error(`${response.status}`);
     }
@@ -300,17 +304,46 @@ async function crearReporte() {
   }
 }
 
-//Crear evidencia
-async function crearEvidencia() {
+//Subir la imagen de la evidencia
+async function subirEvidenciaImagen(imagen){
   try {
-    //const endpoint = `${BASE_URL}evidencias_api.php`;
+    const formData = new FormData();
+    formData.append("evidencia",imagen);
+
+    const endpoint = `${BASE_URL}subir_evidencia_api.php`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData
+    });
+
+    if(response.ok){
+      const imagenSubida = await response.json();
+      return await imagenSubida;
+    }else{
+      throw new Error(`${response.status}`)
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+//Crear evidencia (para el registro en base de datos)
+async function crearEvidencia(id_reporte, nombre_archivo, ruta_archivo) {
+  const datosEvidencia = {
+    titulo: nombre_archivo,
+    descripcion: ruta_archivo,
+  };
+  try {
+    const endpoint = `${BASE_URL}evidencias_api.php?id_reporte=${id_reporte}`;
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-type": "application/json" },
+      body: JSON.stringify(datosEvidencia),
     });
 
     if (response.ok) {
-      const reportes = await response.json();
+      const evidenciaCreada = await response.json();
+      return await evidenciaCreada;
     } else {
       throw new Error(`${response.status}`);
     }
@@ -450,6 +483,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       buscarPorTitulo(reporte);
+    });
+  }
+
+  if (nuevoReporteForm) {
+    nuevoReporteForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
     });
   }
 });

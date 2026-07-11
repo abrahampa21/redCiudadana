@@ -23,7 +23,7 @@ $queryCategorias->close();
   <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
   <link rel="icon" href="../src/img/icon-pages.jfif" />
   <link href="../src/output.css" rel="stylesheet" />
-  
+
   <title>Panel del ciudadano</title>
 </head>
 
@@ -88,26 +88,7 @@ $queryCategorias->close();
     </div>
   </main>
 
-  <!--If API request fails-->
-  <div
-    class="toast"
-    role="alert"
-    id="error-fetch"
-    aria-live="assertive"
-    aria-atomic="true">
-    <div class="toast-header">
-      <strong class="me-auto">⚠️ Error</strong>
-      <button
-        type="button"
-        class="btn-close"
-        id="btn-close"
-        data-bs-dismiss="toast"
-        aria-label="Close">X</button>
-    </div>
-    <div class="text-toast">
-      No se pudo procesar la información del reporte <br />
-    </div>
-  </div>
+  <?php include_once "../includes/toast.php"; ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/panelCiudadano.js"></script>

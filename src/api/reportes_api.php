@@ -39,7 +39,7 @@
 
                 $id_usuario = $_SESSION['id_usuario'];
                 $stmt = $conn->prepare("SELECT reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion FROM reporte INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria INNER JOIN estado ON reporte.id_estado = estado.id_estado INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario WHERE usuario.id_usuario = ? AND reporte.titulo LIKE ?");
-                $stmt->bind_param("is", $id_usuario,$busquedaReporte);
+                $stmt->bind_param("is", $id_usuario, $busquedaReporte);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 $reportes = $resultado->fetch_all(MYSQLI_ASSOC);
@@ -133,7 +133,7 @@
                 $stmt->bind_param("sssiiii", $titulo, $descripcion, $ubicacion, $id_usuario, $id_categoria, $id_prioridades, $id_estado);
                 if ($stmt->execute()) {
                     http_response_code(201);
-                    echo json_encode(array("mensaje" => "Reporte creado exitosamente"));
+                    echo json_encode(array("mensaje" => "Reporte creado exitosamente", "id_reporte" => $stmt->insert_id));
                 } else {
                     http_response_code(500);
                     echo json_encode(array("mensaje" => "Error al crear el reporte " . $stmt->error));
