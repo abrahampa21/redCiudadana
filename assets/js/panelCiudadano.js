@@ -27,7 +27,12 @@ const date = new Date();
 const toastElement = document.getElementById("error-fetch");
 const toastBtnClose = document.getElementById("btn-close");
 const reportesContainer = document.getElementById("reportes-container");
-const BASE_URL ="http://localhost/redCiudadana/src/api/";
+const estadoSelect = document.getElementById("estado-select");
+const categoriaSelect = document.getElementById("categoria-select");
+const buscarReporte = document.getElementById("buscar-reporte");
+const cleanFilters = document.getElementById("clean-filter");
+
+const BASE_URL = "http://localhost/redCiudadana/src/api/";
 
 //Para mostrar la fecha en el dashboard
 if (dashDate) {
@@ -296,11 +301,10 @@ async function crearReporte() {
   }
 }
 
-
 //Crear evidencia
 async function crearEvidencia() {
   try {
-        //const endpoint = `${BASE_URL}evidencias_api.php`;
+    //const endpoint = `${BASE_URL}evidencias_api.php`;
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-type": "application/json" },
@@ -317,32 +321,33 @@ async function crearEvidencia() {
 }
 
 //Obtener información del ciudadano logueado
-async function obtenerCiudadanoPorId(){
+async function obtenerCiudadanoPorId() {
   try {
     const endpoint = `${BASE_URL}usuarios_api.php?id_usuario=`;
     const response = await fetch(endpoint);
-    if(response.ok){
+    if (response.ok) {
       const ciudadano = await response.json();
-      return ciudadano
-    }else{
+      return ciudadano;
+    } else {
       throw new Error(`${response.status}`);
     }
   } catch (error) {
-    showToast(error.message)
+    showToast(error.message);
   }
 }
 
 //Actualizar información del usuario
 
 // ======= FUNCIONES AUXILIARES/REUTILIZABLES ============
-async function poblarFormularioEdicion(){
+async function poblarFormularioEdicion() {
   const ciudadano = await obtenerCiudadanoPorId();
-  if(ciudadano){
-        document.getElementById("nombre").value = ciudadano.nombre;
+  console.log(ciudadano);
+  if (ciudadano) {
+    document.getElementById("nombre").value = ciudadano.nombre;
     document.getElementById("correo").value = ciudadano.correo;
     document.getElementById("telefono").value = ciudadano.telefono;
     document.getElementById("fecha-registro").value = ciudadano.fecha_registro;
-    document.getElementById("rol").value = ciudadano.tipo;
+    document.getElementById("rol").value = ciudadano.nombre_rol;
   }
 }
 
@@ -351,49 +356,62 @@ document.addEventListener("DOMContentLoaded", () => {
   if (reportesContainer) {
     obtenerReportes();
   }
-});
 
-//Evento para filtrar por estado
-const estadoSelect = document.getElementById("estado-select");
-estadoSelect.addEventListener("change", () => {
-  const estado = estadoSelect.value;
-  if (estado === "default") {
-    reportesContainer.innerHTML = "";
-    obtenerReportes();
-  } else {
-    filtrarPorEstado(estado);
-  }
-});
-
-//Evento para filtrar por categoría
-const categoriaSelect = document.getElementById("categoria-select");
-categoriaSelect.addEventListener("change", () => {
-  const categoria = categoriaSelect.value;
-  if (categoria === "default") {
-    reportesContainer.innerHTML = "";
-    obtenerReportes();
-  } else {
-    filtrarPorCategoria(categoria);
-  }
-});
-
-//Limpiar los filtros/busqueda
-const cleanFilters = document.getElementById("clean-filter");
-cleanFilters.addEventListener("click", () => {
-  reportesContainer.innerHTML = "";
-  obtenerReportes();
-});
-
-//Evento para buscar reporte conforme vaya escribiendo el usuario
-const buscarReporte = document.getElementById("buscar-reporte");
-buscarReporte.addEventListener("input", () => {
-  const reporte = buscarReporte.value.trim();
-
-  if(reporte == ""){
-    reportesContainer.innerHTML = "";
-    obtenerReportes();
-    return;
+  const misDatosForm = document.getElementById("mis-datos-form");
+  if (misDatosForm) {
+    obtenerCiudadanoPorId().then((id) => {
+      if (id) {
+        poblarFormularioEdicion(id);
+      }
+    });
   }
 
-  buscarPorTitulo(reporte);
+  if (estadoSelect) {
+    //Evento para filtrar por estado
+    estadoSelect.addEventListener("change", () => {
+      const estado = estadoSelect.value;
+      if (estado === "default") {
+        reportesContainer.innerHTML = "";
+        obtenerReportes();
+      } else {
+        filtrarPorEstado(estado);
+      }
+    });
+  }
+
+  if (categoriaSelect) {
+    //Evento para filtrar por categoría
+    categoriaSelect.addEventListener("change", () => {
+      const categoria = categoriaSelect.value;
+      if (categoria === "default") {
+        reportesContainer.innerHTML = "";
+        obtenerReportes();
+      } else {
+        filtrarPorCategoria(categoria);
+      }
+    });
+  }
+
+  if (cleanFilters) {
+    //Limpiar los filtros/busqueda
+    cleanFilters.addEventListener("click", () => {
+      reportesContainer.innerHTML = "";
+      obtenerReportes();
+    });
+  }
+
+  if (buscarReporte) {
+    //Evento para buscar reporte conforme vaya escribiendo el usuario
+    buscarReporte.addEventListener("input", () => {
+      const reporte = buscarReporte.value.trim();
+
+      if (reporte == "") {
+        reportesContainer.innerHTML = "";
+        obtenerReportes();
+        return;
+      }
+
+      buscarPorTitulo(reporte);
+    });
+  }
 });

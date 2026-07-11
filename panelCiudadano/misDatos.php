@@ -21,7 +21,7 @@
         </p>
       </div>
       <div class="container-form w-full flex items-center justify-center mt-6">
-        <form id="edit-form" class="bg-white rounded-xl p-7 max-w-[150] mx-auto">
+        <form id="mis-datos-form" class="bg-white rounded-xl p-7 max-w-[150] mx-auto">
           <div class="div-input nombre-completo">
             <label for="nombre">Nombre completo</label>
             <input type="text" id="nombre" readonly>
