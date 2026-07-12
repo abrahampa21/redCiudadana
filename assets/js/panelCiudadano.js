@@ -416,6 +416,36 @@ async function poblarFormularioEdicion() {
   }
 }
 
+async function handlerCrearReporte(){
+  const reporteForm = document.getElementById("nuevo-reporte");
+  const titulo = reporteForm.titulo.value.trim();
+  const descripcion = reporteForm.descripcion.value.trim();
+  const ubicacion = reporteForm.ubicacion.value.trim();
+  const id_categoria = reporteForm.id_categoria.value;
+  const evidencia = reporteForm.evidencia.files[0];
+
+  if(!titulo || !descripcion || !ubicacion || !id_categoria || !evidencia){
+      showToast("Todos los campos son obligatorios");
+      return;
+  }
+
+  try{
+    // Subiendo la evidencia
+    const {nombre_archivo, ruta_archivo} = await subirEvidenciaImagen(evidencia);
+
+    //Subiendo el reporte
+    const {id_reporte} = await crearReporte({titulo,descripcion,ubicacion,id_categoria,id_prioridades:null,id_estado: 1});
+
+    //Creando la evidencia asociada al reporte
+    await crearEvidencia(id_reporte,nombre_archivo,ruta_archivo);
+
+    showToast("Reporte creado exitosamente");
+    reporteForm.reset()
+  }catch(error){
+    console.error(error.message);
+  }
+}
+
 //Evento que carga la función obtenerReportes si encuentra el contenedor
 document.addEventListener("DOMContentLoaded", () => {
   if (reportesContainer) {
@@ -486,10 +516,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  //Evento para crear nuevo reporte
   if (nuevoReporteForm) {
-    nuevoReporteForm.addEventListener("submit", async (e) => {
+    nuevoReporteForm.addEventListener("submit", (e) => {
       e.preventDefault();
-
+      handlerCrearReporte();
     });
   }
 });

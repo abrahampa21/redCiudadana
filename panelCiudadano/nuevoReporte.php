@@ -61,7 +61,7 @@ $queryCategorias->close();
           <div class="report-details">
             <div class="div-input categoria">
               <label for="categoria">Categoría *</label>
-              <select value="" title="Categoría" name="id_categoria">
+              <select value="" title="Categoría" id="id_categoria">
                 <option value="">Selecciona...</option>
                 <?php
                 foreach ($categorias as $categoria) {
