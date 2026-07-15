@@ -1,4 +1,5 @@
 const BASE_URL = "http://localhost/redCiudadana/src/api/";
+const BASE_URL_UPLOADS = "http://localhost/redciudadana/src/"; //Para las imágenes
 const days = [
   "domingo",
   "lunes",
@@ -89,7 +90,6 @@ function createReporteCard(reporte) {
   const cardReporte = document.createElement("div");
   cardReporte.classList.add("card-reporte");
 
-  //Estados y colores
   const estados = {
     Pendiente: "bg-yellow-100 text-yellow-800",
     "En proceso": "bg-blue-100 text-blue-800",
@@ -100,27 +100,28 @@ function createReporteCard(reporte) {
   const estadoBG =
     estados[reporte.nombre_estado] || "bg-slate-100 text-slate-800";
 
+  const imagenSrc = reporte.ruta_archivo
+    ? `${BASE_URL_UPLOADS}${reporte.ruta_archivo}`
+    : "ruta/a/imagen-default.png";
+
   cardReporte.innerHTML = `
     <div class='card-body flex flex-col gap-4 rounded-lg'>
-      <img src='#' class='w-full h-44 object-cover bg-slate-100' alt='Imagen como evidencia del reporte'>
+      <img src='${imagenSrc}' class='w-full object-center object-contain bg-slate-100' alt='Imagen como evidencia del reporte'>
       <h2 class='text-lg font-semibold text-slate-800 line-clamp-2'>${reporte.titulo}</h2>
       <h3 class='inline-block px-3 py-1 rounded-full font-medium ${estadoBG}'>
         ${reporte.nombre_estado}
       </h3>
-      <button class='btn-details mt-auto w-full bg-[#1f2a4d] hover:bg-[#16203b] text-white font-medium py-2.5 rounded-lg transition-colors duration-200 cursor-pointer' >Más detalles</button>
+      <button class='btn-details mt-auto w-full bg-[#1f2a4d] hover:bg-[#16203b] text-white font-medium py-2.5 rounded-lg transition-colors duration-200 cursor-pointer'>Más detalles</button>
     </div>
   `;
 
   reportesContainer.appendChild(cardReporte);
 
   const btnDetails = cardReporte.querySelector(".btn-details");
-
-  //Evento para la llamada a la función de abrir modal
   btnDetails.addEventListener("click", () => {
     abrirModal(reporte);
   });
 }
-
 //======== FUNCIONES Y VALIDACIÓN PARA MODAL ============
 //Abrir modal
 function abrirModal(reporte) {
@@ -132,6 +133,11 @@ function abrirModal(reporte) {
     reporte.nombre_categoria;
   document.getElementById("detalle-descripcion").textContent =
     reporte.descripcion;
+
+  const detalleImagen = document.getElementById("detalle-imagen");
+  detalleImagen.src = reporte.ruta_archivo
+    ? `${BASE_URL_UPLOADS}${reporte.ruta_archivo}`
+    : "ruta/a/imagen-default.png";
 
   modalReporte.classList.remove("hidden");
   modalReporte.classList.add("flex");
@@ -305,22 +311,22 @@ async function crearReporte(datos) {
 }
 
 //Subir la imagen de la evidencia
-async function subirEvidenciaImagen(imagen){
+async function subirEvidenciaImagen(imagen) {
   try {
     const formData = new FormData();
-    formData.append("evidencia",imagen);
+    formData.append("evidencia", imagen);
 
     const endpoint = `${BASE_URL}subir_evidencia_api.php`;
     const response = await fetch(endpoint, {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
-    if(response.ok){
+    if (response.ok) {
       const imagenSubida = await response.json();
       return await imagenSubida;
-    }else{
-      throw new Error(`${response.status}`)
+    } else {
+      throw new Error(`${response.status}`);
     }
   } catch (error) {
     showToast(error.message);
@@ -416,7 +422,7 @@ async function poblarFormularioEdicion() {
   }
 }
 
-async function handlerCrearReporte(){
+async function handlerCrearReporte() {
   const reporteForm = document.getElementById("nuevo-reporte");
   const titulo = reporteForm.titulo.value.trim();
   const descripcion = reporteForm.descripcion.value.trim();
@@ -424,24 +430,32 @@ async function handlerCrearReporte(){
   const id_categoria = reporteForm.id_categoria.value;
   const evidencia = reporteForm.evidencia.files[0];
 
-  if(!titulo || !descripcion || !ubicacion || !id_categoria || !evidencia){
-      showToast("Todos los campos son obligatorios");
-      return;
+  if (!titulo || !descripcion || !ubicacion || !id_categoria || !evidencia) {
+    showToast("Todos los campos son obligatorios");
+    return;
   }
 
-  try{
+  try {
     // Subiendo la evidencia
-    const {nombre_archivo, ruta_archivo} = await subirEvidenciaImagen(evidencia);
+    const { nombre_archivo, ruta_archivo } =
+      await subirEvidenciaImagen(evidencia);
 
     //Subiendo el reporte
-    const {id_reporte} = await crearReporte({titulo,descripcion,ubicacion,id_categoria,id_prioridades:null,id_estado: 1});
+    const { id_reporte } = await crearReporte({
+      titulo,
+      descripcion,
+      ubicacion,
+      id_categoria,
+      id_prioridades: null,
+      id_estado: 1,
+    });
 
     //Creando la evidencia asociada al reporte
-    await crearEvidencia(id_reporte,nombre_archivo,ruta_archivo);
+    await crearEvidencia(id_reporte, nombre_archivo, ruta_archivo);
 
     showToast("Reporte creado exitosamente");
-    reporteForm.reset()
-  }catch(error){
+    reporteForm.reset();
+  } catch (error) {
     console.error(error.message);
   }
 }

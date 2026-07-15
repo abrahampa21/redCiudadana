@@ -54,7 +54,6 @@ $query->close();
       </div>
       <div class="search-container py-5 px-7">
         <div class="filters flex items-center gap-2.5 p-3 justify-between bg-white rounded-[10px] mb-4 flex-wrap">
-<!--140px-->
           <input type="text" id="buscar-reporte" class="flex-1 min-w-35 px-3 py-1.5 rounded-[7px] text-[0.82rem] outline-none" placeholder="Buscar..." />
           <select name="id_estado" id="estado-select" aria-label="filter-estado">
             <option value="default">Estado: Todos</option>
@@ -84,7 +83,7 @@ $query->close();
   </main>
 
   <!-- Modal detalles del Reporte -->
-  <div id="modal-reporte" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div id="modal-reporte" class="fixed inset-0  z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
     <div class="bg-white w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
       <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
         <h2 class="text-2xl font-bold text-slate-800">
@@ -96,22 +95,24 @@ $query->close();
         </button>
       </div>
       <div class="p-6 space-y-6">
-        <img id="detalle-imagen"
-          src="#"
-          class="w-full h-32 object-cover rounded-xl bg-slate-100"
-          alt="Imagen del reporte">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <p class="text-sm text-slate-500">Título</p>
-            <h3 id="detalle-titulo" class="text-xl font-semibold text-slate-800"></h3>
-          </div>
-          <div>
-            <p class="text-sm text-slate-500">Estado</p>
-            <span id="detalle-estado" class="inline-block mt-1 px-3 py-1 rounded-full font-medium"></span>
-          </div>
-          <div>
-            <p class="text-sm text-slate-500">Categoría</p>
-            <p id="detalle-categoria" class="text-slate-700 font-medium"></p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <img id="detalle-imagen"
+            src="#"
+            class="w-full h-56 object-cover rounded-xl bg-slate-100"
+            alt="Imagen del reporte">
+          <div class="grid grid-cols-1 gap-5">
+            <div>
+              <p class="text-sm text-slate-500">Título</p>
+              <h3 id="detalle-titulo" class="text-xl font-semibold text-slate-800"></h3>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500">Estado</p>
+              <span id="detalle-estado" class="inline-block mt-1 px-3 py-1 rounded-full font-medium"></span>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500">Categoría</p>
+              <p id="detalle-categoria" class="text-slate-700 font-medium"></p>
+            </div>
           </div>
         </div>
         <div>
@@ -129,7 +130,7 @@ $query->close();
   </div>
 
   <?php include_once "../includes/toast.php"; ?>
-  
+
   <script src="../assets/js/panelCiudadano.js"></script>
 </body>
 
