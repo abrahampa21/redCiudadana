@@ -42,8 +42,20 @@ async function obtenerTodoReportes(){
 //Filtrar reporte por prioridad
 
 //Buscar usuario 
-
-
+async function buscarUsuarioPorNombre(nombre) {
+  try {
+    const endpoint = `../src/api/usuarios_api.php?nombre=${encodeURIComponent(nombre)}`;
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error("Error en la solicitud");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al buscar usuario:", error);
+    throw error;
+  }
+}
 
 //=========EVENTOS=========
 
