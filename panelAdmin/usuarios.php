@@ -25,6 +25,18 @@
           <h1 class="page-title">Gestión de Usuarios</h1>
           <div class="page-sub">Activa, desactiva o promueve usuarios desde aquí.</div>
         </div>
+        <div style="padding:0 28px">
+        <div class="filters" style="margin-top: 20px;">
+          <input class="filter-input" placeholder="Buscar..." id="f-search" oninput="renderReportes()">
+          <select class="filter-select" id="f-cat" onchange="renderReportes()">
+            <option value="">Todos los estados</option>
+            <div class="toast" id="toast"></div>
+            <option>Activo</option>
+            <option>Inactivo</option>
+          </select>
+
+        </div>
+        </div>
 
         <div class="card table-shell">
           <table>
