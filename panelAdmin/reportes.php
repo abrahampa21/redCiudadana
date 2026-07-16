@@ -1,3 +1,6 @@
+
+<?php include_once "../includes/sidebarAdmin.php"; ?>
+
 <!doctype html>
 <html lang="es">
   <head>
@@ -56,16 +59,7 @@
 
     <div class="toast" id="toast"></div>
 
-    <script>
-      fetch("../includes/sidebarAdmin.html")
-        .then((response) => response.text())
-        .then((data) => {
-          document.getElementById("sidebar-container").innerHTML = data;
-          if (window.initAdminPage) {
-            window.initAdminPage();
-          }
-        });
-    </script>
+    
     <script src="../assets/js/panelAdmin.js"></script>
   </body>
 </html>
