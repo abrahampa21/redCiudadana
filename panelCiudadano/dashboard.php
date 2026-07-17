@@ -1,7 +1,7 @@
-
 <?php include_once "../includes/sidebarCiudadano.php"; ?>
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,7 +43,7 @@
             </div>
             <div
               class="stat-num text-[2rem] font-bold text-slate-800"
-              id="d-total">
+              id="total">
               0
             </div>
           </div>
@@ -61,7 +61,7 @@
             </div>
             <div
               class="stat-num text-[2rem] font-bold text-slate-800"
-              id="d-pend">
+              id="pendientes">
               0
             </div>
           </div>
@@ -79,7 +79,7 @@
             </div>
             <div
               class="stat-num text-[2rem] font-bold text-slate-800"
-              id="d-proc">
+              id="en-proceso">
               0
             </div>
           </div>
@@ -97,7 +97,25 @@
             </div>
             <div
               class="stat-num text-[2rem] font-bold text-slate-800"
-              id="d-res">
+              id="resueltos">
+              0
+            </div>
+          </div>
+          <div class="stat-card bg-white rounded-xl border border-slate-200">
+            <div
+              class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5">
+              <svg
+                viewBox="0 0 24 24"
+                fill="#ef4444"
+                class="w-5 h-5 shrink-0">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+              </svg>
+              <span class="text-red-800">Rechazados</span>
+            </div>
+            <div
+              class="stat-num text-[2rem] font-bold text-slate-800"
+              id="rechazados">
               0
             </div>
           </div>
@@ -109,9 +127,7 @@
             Mis reportes recientes
           </h3>
           <div id="recent-list">
-            <p class="empty-msg text-slate-500 text-[0.85rem]">
-              No hay reportes aún.
-            </p>
+
           </div>
         </div>
       </div>

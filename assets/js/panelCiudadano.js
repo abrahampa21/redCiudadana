@@ -169,6 +169,53 @@ if (cerrarModalBtn && cerrarModalFooterBtn && modalReporteEl) {
   });
 }
 
+//========== DASHBOARD ==========
+//Para mostrar los últimos 5 en el dashboard
+function mostrarReportesRecientes(reportes) {
+  const reportesContainer = document.getElementById("recent-list");
+  reportesContainer.innerHTML = "";
+
+  if (reportes.length === 0) {
+    reportesContainer.innerHTML = `<p class="empty-msg text-slate-500 text-[0.85rem]">
+    No hay reportes aún. </p>`;
+    return;
+  }
+
+  const estados = {
+    Pendiente: "bg-yellow-100 text-yellow-800",
+    "En proceso": "bg-blue-100 text-blue-800",
+    Resuelto: "bg-green-100 text-green-800",
+    Rechazado: "bg-red-100 text-red-800",
+  };
+
+  reportes.forEach((reporte) => {
+    const estadoBG =
+      estados[reporte.nombre_estado] || "bg-slate-100 text-slate-800";
+    const item = document.createElement("div");
+    item.classList.add(
+      "flex",
+      "items-center",
+      "justify-between",
+      "py-3",
+      "border-b",
+      "border-slate-100",
+      "last:border-0",
+    );
+
+    item.innerHTML = `
+      <div>
+        <p class='font-medium text-slate-800 text-sm'>${reporte.titulo}</p>
+        <p class='text-xs text-slate-500'>${reporte.nombre_categoria}</p>
+      </div>
+      <span class='inline-block px-3 py-1 rounded-full text-xs font-medium ${estadoBG}'>
+        ${reporte.nombre_estado}
+      </span>
+    `;
+
+    reportesContainer.appendChild(item);
+  });
+}
+
 //======== APIS PARA CIUDADANOS =============
 //Mostrar reportes
 async function obtenerReportes() {
@@ -189,6 +236,48 @@ async function obtenerReportes() {
       reportes.forEach((reporte) => {
         createReporteCard(reporte);
       });
+    } else {
+      throw new Error(`${response.status}`);
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function reportesDashboard() {
+  try {
+    const endpoint = `${BASE_URL}reportes_api.php?id_usuario=`;
+    const response = await fetch(endpoint);
+
+    if (response.ok) {
+      const reportes = await response.json();
+
+      //Counters
+      const total = reportes.length;
+      const pendientes = reportes.filter(
+        (reporte) => reporte.nombre_estado === "Pendiente",
+      ).length;
+      const enProceso = reportes.filter(
+        (reporte) => reporte.nombre_estado === "En proceso",
+      ).length;
+      const resueltos = reportes.filter(
+        (reporte) => reporte.nombre_estado === "Resuelto",
+      ).length;
+      const rechazados = reportes.filter(
+        (reporte) => reporte.nombre_estado === "Rechazado",
+      ).length;
+
+      document.getElementById("total").textContent = total;
+      document.getElementById("pendientes").textContent = pendientes;
+      document.getElementById("en-proceso").textContent = enProceso;
+      document.getElementById("resueltos").textContent = resueltos;
+      document.getElementById("rechazados").textContent = rechazados;
+
+      const recientes = [...reportes]
+        .sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion))
+        .slice(0, 5);
+
+      mostrarReportesRecientes(recientes);
     } else {
       throw new Error(`${response.status}`);
     }
@@ -464,6 +553,11 @@ async function handlerCrearReporte() {
 document.addEventListener("DOMContentLoaded", () => {
   if (reportesContainer) {
     obtenerReportes();
+  }
+
+  const dashboardTotal = document.getElementById("total");
+  if (dashboardTotal) {
+    reportesDashboard();
   }
 
   const misDatosForm = document.getElementById("mis-datos-form");
