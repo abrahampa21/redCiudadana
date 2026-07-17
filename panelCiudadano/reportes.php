@@ -34,7 +34,7 @@ $query->close();
   <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
   <link rel="icon" href="../src/img/icon-pages.jfif" />
   <link href="../src/output.css" rel="stylesheet" />
-  <title>Panel del ciudadano</title>
+  <title>Panel del Ciudadano</title>
 </head>
 
 <body>

@@ -36,11 +36,6 @@ const cleanFilters = document.getElementById("clean-filter");
 
 const nuevoReporteForm = document.getElementById("nuevo-reporte");
 
-//Para mostrar la fecha en el dashboard
-if (dashDate) {
-  dashDate.textContent = `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
-}
-
 //Para el menu toggle responsivo
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
@@ -60,22 +55,36 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//Evento para formulario de nuevoReporte.php
-// const nuevoReporteForm = document.getElementById("nuevo-reporte");
-
-// nuevoReporteForm.addEventListener("submit", (e) => {
-//   e.preventDefault();
-// });
-
 //=========== FUNCIONES DE TOAST ============
 //Mostrar toast
-function showToast(message) {
+function showToast(message, type = "error") {
   if (!toastElement) return;
-  const textToast = document.querySelector(".toast-body");
-  textToast.textContent = message;
-  toastElement.classList.add("show");
-}
 
+  const textToast = document.querySelector(".toast-body");
+  const iconToast = document.querySelector(".toast-icon");
+  const titleToast = document.querySelector(".toast-title-text");
+
+  textToast.textContent = message;
+
+  // Quitar clases de tipo anteriores
+  toastElement.classList.remove("toast-success", "toast-error");
+
+  if (type === "success") {
+    toastElement.classList.add("toast-success");
+    iconToast.textContent = "✅";
+    titleToast.textContent = "Éxito";
+  } else {
+    toastElement.classList.add("toast-error");
+    iconToast.textContent = "⚠️";
+    titleToast.textContent = "Error";
+  }
+
+  toastElement.classList.add("show");
+
+  // Ocultar automáticamente después de unos segundos
+  clearTimeout(showToast._timeoutId);
+  showToast._timeoutId = setTimeout(hideToast, 4000);
+}
 function hideToast() {
   toastElement.classList.remove("show");
 }
@@ -192,15 +201,7 @@ function mostrarReportesRecientes(reportes) {
     const estadoBG =
       estados[reporte.nombre_estado] || "bg-slate-100 text-slate-800";
     const item = document.createElement("div");
-    item.classList.add(
-      "flex",
-      "items-center",
-      "justify-between",
-      "py-3",
-      "border-b",
-      "border-slate-100",
-      "last:border-0",
-    );
+    item.classList.add("flex", "items-center", "justify-between", "py-3");
 
     item.innerHTML = `
       <div>
@@ -480,7 +481,7 @@ async function actualizarDatosCiudadano(correo, numeroTelefono) {
     });
 
     if (response.ok) {
-      showToast("Datos actualizados correctamente");
+      showToast("Datos actualizados correctamente","success");
       return;
     } else {
       const errorData = await response.json().catch(() => null);
@@ -542,7 +543,7 @@ async function handlerCrearReporte() {
     //Creando la evidencia asociada al reporte
     await crearEvidencia(id_reporte, nombre_archivo, ruta_archivo);
 
-    showToast("Reporte creado exitosamente");
+    showToast("Reporte creado exitosamente","success");
     reporteForm.reset();
   } catch (error) {
     console.error(error.message);
@@ -553,6 +554,11 @@ async function handlerCrearReporte() {
 document.addEventListener("DOMContentLoaded", () => {
   if (reportesContainer) {
     obtenerReportes();
+  }
+
+  //Para mostrar la fecha en el dashboard
+  if (dashDate) {
+    dashDate.textContent = `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
   }
 
   const dashboardTotal = document.getElementById("total");

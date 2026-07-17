@@ -161,7 +161,7 @@ body {
   top: 15px;
   left: 15px;
   z-index: 2000;
-  background: #1a2540;
+  background: #000;
   color: white;
   border: none;
   border-radius: 8px;
@@ -206,7 +206,7 @@ body {
   padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 5rem;
+  gap: 2rem;
 }
 
 .stat-card {
@@ -241,8 +241,8 @@ body {
   color: #fff;
 }
 
-.reportes-container{
-  box-shadow: 0 3px 10px rgba(15, 23, 42, .05);
+.reportes-container {
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
 }
 
 .reportes .filters {
@@ -334,11 +334,11 @@ body {
   margin-bottom: 6px;
 }
 
-.nuevo-reporte .required-text p{
-  color:#062147;
+.nuevo-reporte .required-text p {
+  color: #062147;
 }
 
-/*Toast error*/
+/*Toast*/
 .toast {
   position: fixed;
   bottom: 45px;
@@ -348,6 +348,7 @@ body {
   opacity: 0;
   background-color: #fff;
   border-radius: 8px;
+  border-left: 4px solid #ef4444;
   transform: translateY(-16px);
   transition: all 0.4s ease;
   z-index: 9999;
@@ -356,6 +357,17 @@ body {
 .toast-header {
   display: flex;
   justify-content: space-between;
+}
+
+.toast-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast-icon {
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 .toast .btn-close {
@@ -371,6 +383,17 @@ body {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
+}
+
+/* Variantes por tipo */
+.toast.toast-success {
+  background-color: #dcfce7; /* verde claro */
+  border-left-color: #22c55e;
+}
+
+.toast.toast-error {
+  background-color: #fee2e2; /* rojo claro */
+  border-left-color: #ef4444;
 }
 
 /*Responsividad*/
