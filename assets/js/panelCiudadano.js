@@ -25,14 +25,19 @@ const months = [
 ];
 const dashDate = document.getElementById("dash-date");
 const date = new Date();
-// Toast
+// Toast constants
 const toastElement = document.getElementById("error-fetch");
 const toastBtnClose = document.getElementById("btn-close");
+//Dashboard constants
 const reportesContainer = document.getElementById("reportes-container");
 const estadoSelect = document.getElementById("estado-select");
 const categoriaSelect = document.getElementById("categoria-select");
 const buscarReporte = document.getElementById("buscar-reporte");
 const cleanFilters = document.getElementById("clean-filter");
+//Modal constants
+const btnLogout = document.getElementById("btn-logout");
+const modalLogout = document.getElementById("modal-logout");
+const cancelarLogout = document.getElementById("cancelar-logout");
 
 const nuevoReporteForm = document.getElementById("nuevo-reporte");
 
@@ -481,7 +486,7 @@ async function actualizarDatosCiudadano(correo, numeroTelefono) {
     });
 
     if (response.ok) {
-      showToast("Datos actualizados correctamente","success");
+      showToast("Datos actualizados correctamente", "success");
       return;
     } else {
       const errorData = await response.json().catch(() => null);
@@ -543,7 +548,7 @@ async function handlerCrearReporte() {
     //Creando la evidencia asociada al reporte
     await crearEvidencia(id_reporte, nombre_archivo, ruta_archivo);
 
-    showToast("Reporte creado exitosamente","success");
+    showToast("Reporte creado exitosamente", "success");
     reporteForm.reset();
   } catch (error) {
     console.error(error.message);
@@ -636,5 +641,26 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       handlerCrearReporte();
     });
+  }
+
+  //======== MODAL CIERRE DE SESIÓN ======
+  if(btnLogout && modalLogout && cancelarLogout){
+    btnLogout.addEventListener("click", (e) => {
+      e.preventDefault();
+      modalLogout.classList.remove("hidden");
+      modalLogout.classList.add("flex");
+    })
+
+    cancelarLogout.addEventListener("click", () => {
+      modalLogout.classList.remove("flex");
+      modalLogout.classList.add("hidden");
+    })
+
+    modalLogout.addEventListener("click", e => {
+      if(e.target.id === "modal-logout"){
+        modalLogout.classList.remove("flex");
+        modalLogout.classList.add("hidden");
+      }
+    })
   }
 });
