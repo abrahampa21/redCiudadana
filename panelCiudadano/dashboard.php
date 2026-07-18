@@ -1,4 +1,3 @@
-<?php include_once "../includes/sidebarCiudadano.php"; ?>
 <!doctype html>
 <html lang="en">
 
@@ -12,7 +11,8 @@
 </head>
 
 <body>
-
+  
+  <?php include_once "../includes/sidebarCiudadano.php"; ?>
   <main class="main-container">
     <div class="page" id="page-dashboard">
       <!-- Encabezado -->
