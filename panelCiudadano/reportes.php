@@ -78,7 +78,7 @@ $query->close();
       </div>
 
       <div class="reportes-list">
-        <div class="text-center bg-white rounded-xl p-6 reportes-container overflow-hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6"" id="reportes-container">
+        <div class="text-center bg-white rounded-xl p-6 reportes-container overflow-hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 auto-rows-fr"" id="reportes-container">
         </div>
       </div>
     </div>

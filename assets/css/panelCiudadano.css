@@ -319,6 +319,7 @@ body {
   border: 1px solid #e2e8f0;
 }
 
+
 /*NUEVO REPORTE*/
 .nuevo-reporte h1 {
   color: #1e293b;
@@ -378,10 +379,10 @@ body {
 /*Toast*/
 .toast {
   position: fixed;
-  bottom: 45px;
-  right: 10px;
+  bottom: 25px;
+  right: 5px;
   padding: 1rem;
-  width: 350px;
+  width: 320px;
   opacity: 0;
   background-color: #fff;
   border-radius: 8px;

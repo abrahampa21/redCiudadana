@@ -128,8 +128,8 @@ function createReporteCard(reporte) {
     : "ruta/a/imagen-default.png";
 
   cardReporte.innerHTML = `
-    <div class='card-body flex flex-col gap-4 rounded-lg'>
-      <img src='${imagenSrc}' class='w-full object-center object-contain bg-slate-100' alt='Imagen como evidencia del reporte'>
+    <div class='card-body h-full shadow-sm overflow-hidden flex flex-col gap-4 rounded-lg'>
+      <img src='${imagenSrc}' class='w-full h-56 object-center object-cover bg-slate-100' alt='Imagen como evidencia del reporte'>
       <h2 class='text-lg font-semibold text-slate-800 line-clamp-2'>${reporte.titulo}</h2>
       <h3 class='inline-block px-3 py-1 rounded-full font-medium ${estadoBG}'>
         ${reporte.nombre_estado}
