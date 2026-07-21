@@ -41,6 +41,15 @@ const cancelarLogout = document.getElementById("cancelar-logout");
 
 const nuevoReporteForm = document.getElementById("nuevo-reporte");
 
+//Spinner
+function mostrarSpinner() {
+  document.getElementById("spinner").classList.remove("hidden");
+}
+
+function ocultarSpinner() {
+  document.getElementById("spinner").classList.add("hidden");
+}
+
 //Para el menu toggle responsivo
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
@@ -229,6 +238,8 @@ async function obtenerReportes() {
     const endpoint = `${BASE_URL}reportes_api.php?id_usuario=`;
     const response = await fetch(endpoint);
 
+    mostrarSpinner();
+
     if (response.ok) {
       const reportes = await response.json();
 
@@ -247,6 +258,8 @@ async function obtenerReportes() {
     }
   } catch (error) {
     showToast(error.message);
+  }finally{
+    ocultarSpinner();
   }
 }
 
@@ -386,6 +399,9 @@ async function obtenerEvidencias() {
 
 //Crear reportes
 async function crearReporte(datos) {
+  mostrarSpinner();
+  const btn = document.getElementById("submit-reporte");
+  btn.disabled = true;
   try {
     const endpoint = `${BASE_URL}reportes_api.php`;
     const response = await fetch(endpoint, {
@@ -402,6 +418,9 @@ async function crearReporte(datos) {
     }
   } catch (error) {
     showToast(error.message);
+  }finally{
+    btn.disabled = false;
+    ocultarSpinner();
   }
 }
 
@@ -475,6 +494,11 @@ async function actualizarDatosCiudadano(correo, numeroTelefono) {
     correo: correo,
     telefono: numeroTelefono,
   };
+  const btn = document.getElementById("btn-edit");
+  btn.disabled = true;
+  btn.style.backgroundColor = "#444";
+  mostrarSpinner();
+
   try {
     const endpoint = `${BASE_URL}/usuarios_api.php?id_usuario=`;
     const response = await fetch(endpoint, {
@@ -498,6 +522,10 @@ async function actualizarDatosCiudadano(correo, numeroTelefono) {
     }
   } catch (error) {
     showToast(error.message);
+  }finally{
+    btn.disabled = false;
+    btn.style.backgroundColor = "";
+    ocultarSpinner();
   }
 }
 

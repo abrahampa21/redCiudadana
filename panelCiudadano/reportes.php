@@ -40,6 +40,8 @@ $query->close();
 <body>
 
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/spinner.php"; ?>
+
   <!-- Reportes-->
   <main class="main-container reportes">
     <div class="container">

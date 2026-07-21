@@ -12,6 +12,8 @@
 
 <body>
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/spinner.php"; ?>
+
   <main class="main-container nuevo-reporte">
     <div class="container">
       <div class="text">
