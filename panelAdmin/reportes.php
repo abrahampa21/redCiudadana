@@ -71,7 +71,7 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody id="users-tbody"></tbody>
+                <tbody id="reportes-tbody"></tbody>
               </table>
             </div>
           <!-- </div> -->
