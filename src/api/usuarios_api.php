@@ -58,21 +58,21 @@ switch ($method) {
         if (isset($_GET['id_usuario'])) {
             $id_usuario = intval($_GET['id_usuario']);
             $data = json_decode(file_get_contents("php://input"), true);
-            $id_rol = intval($data['id_rol'] ?? 0);
+            $activo = intval($data['activo'] ?? 0);
 
             if (!empty($id_usuario)) {
-                $stmt = $conn->prepare("UPDATE usuario SET id_rol = COALESCE(NULLIF(?, ''), id_rol) WHERE id_usuario = ?");
-                $stmt->bind_param("ii", $id_rol, $id_usuario);
+                $stmt = $conn->prepare("UPDATE usuario SET activo = COALESCE(NULLIF(?, ''), activo) WHERE id_usuario = ?");
+                $stmt->bind_param("ii", $activo, $id_usuario);
                 if ($stmt->execute()) {
                     http_response_code(200);
-                    echo json_encode(array("mensaje" => "Rol cambiado exitosamente"));
+                    echo json_encode(array("mensaje" => "Estado del usuario cambiado exitosamente"));
                 } else {
                     http_response_code(500);
-                    echo json_encode(array("mensaje" => "Error al actualizar el rol del usuario " . $stmt->error));
+                    echo json_encode(array("mensaje" => "Error al actualizar la cuenta del usuario " . $stmt->error));
                 }
             } else {
                 http_response_code(400);
-                echo json_encode(array("mensaje" => "El id del rol del usuario es necesario"));
+                echo json_encode(array("mensaje" => "El estado de la cuenta usuario es necesario"));
             }
         }
         //modificar celular y correo de un usuario
