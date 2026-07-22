@@ -43,10 +43,10 @@
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Usuario</th>
                 <th>Email</th>
-                <th>Rol</th>
+                <th>Teléfono</th>
                 <th>Estado</th>
+                <th>Fecha de registro</th>
                 <th>Acciones</th>
               </tr>
             </thead>

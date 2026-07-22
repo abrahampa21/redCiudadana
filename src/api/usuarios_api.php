@@ -38,7 +38,7 @@ switch ($method) {
             //Obtener usuarios por id_rol
             //http://localhost/redciudadana/src/api/usuarios_api.php?id_rol=
             $id_rol = intval($_GET["id_rol"] ?? 0);
-            $stmt = $conn->prepare("SELECT nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_rol = ?");
+            $stmt = $conn->prepare("SELECT id_usuario, nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_rol = ?");
             $stmt->bind_param("i", $id_rol);
             $stmt->execute();
             $resultado = $stmt->get_result();
