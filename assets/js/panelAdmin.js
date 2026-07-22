@@ -26,13 +26,11 @@ const months = [
 //============FUNCIONES API==============
 
 //Todos los reportes, todos los usuarios
-async function obtenerTodoReportes(){
-  try{
+async function obtenerTodoReportes() {
+  try {
     const endpoint = "../src/api/reportes_api.php";
     const response = await fetch(endpoint);
-  }catch{
-
-  }
+  } catch {}
 }
 
 //Informacion completa en modal
@@ -41,28 +39,27 @@ async function obtenerTodoReportes(){
 
 //Filtrar reporte por prioridad
 
-//Buscar usuario 
-
+//Buscar usuario
 
 //Mostrar usuarios que sean ciudadanos en formato tabla en el panel de administracion
-async function getUsuariosCiudadanos(){
+async function getUsuariosCiudadanos() {
   const tbody = document.getElementById("users-tbody");
   if (!tbody) {
     return;
   }
-  try{
+  try {
     const endpoint = `../src/api/usuarios_api.php?id_rol=1`;
     const response = await fetch(endpoint);
     const data = await response.json();
     tbody.innerHTML = "";
 
-   data.forEach(usuario => {
-  const tr = document.createElement("tr");
-  const estado = usuario.activo == 1 ? "Activo" : "Inactivo";
-  const textoBoton = usuario.activo == 1 ? "Deshabilitar" : "Habilitar";
-  const claseBoton = usuario.activo == 1 ? "btn-primary" : "btn-habilitar";
+    data.forEach((usuario) => {
+      const tr = document.createElement("tr");
+      const estado = usuario.activo == 1 ? "Activo" : "Inactivo";
+      const textoBoton = usuario.activo == 1 ? "Deshabilitar" : "Habilitar";
+      const claseBoton = usuario.activo == 1 ? "btn-primary" : "btn-habilitar";
 
-  tr.innerHTML = `
+      tr.innerHTML = `
     <td>${usuario.nombre}</td>
     <td>${usuario.correo}</td>
     <td>${usuario.telefono}</td>
@@ -75,23 +72,27 @@ async function getUsuariosCiudadanos(){
       </button>
     </td>
   `;
-  tbody.appendChild(tr);
-});
-  }catch(error){
+      tbody.appendChild(tr);
+    });
+  } catch (error) {
     console.error("Error al obtener los usuarios:", error.status);
-    return []
+    return [];
   }
 }
 
+//Funcion para deshabilitar o habilitar un usuario
 async function deshabilitarUsuario(id, activoActual, btn) {
   const nuevoEstado = activoActual == 1 ? 0 : 1;
 
   try {
-    const response = await fetch(`../src/api/usuarios_api.php?id_usuario=${id}&accion=estado`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ activo: nuevoEstado })
-    });
+    const response = await fetch(
+      `../src/api/usuarios_api.php?id_usuario=${id}&accion=estado`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: nuevoEstado }),
+      },
+    );
 
     const data = await response.json();
 
@@ -108,20 +109,44 @@ async function deshabilitarUsuario(id, activoActual, btn) {
     btn.classList.remove(nuevoEstado == 1 ? "btn-habilitar" : "btn-primary");
     btn.classList.add(nuevoEstado == 1 ? "btn-primary" : "btn-habilitar");
 
-    btn.setAttribute("onclick", `deshabilitarUsuario(${id}, ${nuevoEstado}, this)`);
-
+    btn.setAttribute(
+      "onclick",
+      `deshabilitarUsuario(${id}, ${nuevoEstado}, this)`,
+    );
   } catch (error) {
     console.error("Error al actualizar usuario:", error);
   }
 }
 
+//GET para obtener el total de reportes por categoría
+async function getReportesPorCategoria() {
+  try {
+    const endpoint = "../src/api/reportes_api.php?groupby=categoria";
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al obtener los reportes por categoría:", error);
+    return [];
+  }
+}
+//Mostrar el total de reportes por categoría en el panel de administracion
+function mostrarReportesPorCategoria(data) {
+  data.forEach(cat => {
+    const span = document.querySelector(`[data-id-categoria="${cat.id_categoria}"]`);
+    if (span) span.textContent = `${cat.total} reportes`;
+  });
+}
 
-
+//Inicializar la página de categorías
+async function initCategoriasPage() {
+  const data = await getReportesPorCategoria();
+  mostrarReportesPorCategoria(data);
+}
 
 //=========EVENTOS=========
-
-
 document.addEventListener("DOMContentLoaded", () => {
-getUsuariosCiudadanos();
-
+  getUsuariosCiudadanos();
+  getReportesPorCategoria();
+  initCategoriasPage();
 });
