@@ -56,29 +56,66 @@ async function getUsuariosCiudadanos(){
     const data = await response.json();
     tbody.innerHTML = "";
 
-    data.forEach(usuario => {
-      const tr = document.createElement("tr");
-      // El campo activo usa valores booleanos (1 para activo, 0 para inactivo) y se usó operador ternario para mostrar el estado en texto.
-      const estado = usuario.activo == 1 ? "Activo" : "Inactivo"; 
+   data.forEach(usuario => {
+  const tr = document.createElement("tr");
+  const estado = usuario.activo == 1 ? "Activo" : "Inactivo";
+  const textoBoton = usuario.activo == 1 ? "Deshabilitar" : "Habilitar";
+  const claseBoton = usuario.activo == 1 ? "btn-primary" : "btn-habilitar";
 
-      tr.innerHTML = `
-        <td>${usuario.nombre}</td>
-        <td>${usuario.correo}</td>
-        <td>${usuario.telefono}</td>
-        <td>${estado}</td>
-        <td>${usuario.fecha_registro}</td>
-        <td>
-          <button class="btn btn-primary btn-sm" data-id="${usuario.id_usuario}" onclick="deshabilitarUsuario(${usuario.id_usuario})">Deshabilitar</button>
-
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
+  tr.innerHTML = `
+    <td>${usuario.nombre}</td>
+    <td>${usuario.correo}</td>
+    <td>${usuario.telefono}</td>
+    <td>${estado}</td>
+    <td>${usuario.fecha_registro}</td>
+    <td>
+      <button class="btn ${claseBoton} btn-sm" data-id="${usuario.id_usuario}"
+        onclick="deshabilitarUsuario(${usuario.id_usuario}, ${usuario.activo}, this)">
+        ${textoBoton}
+      </button>
+    </td>
+  `;
+  tbody.appendChild(tr);
+});
   }catch(error){
     console.error("Error al obtener los usuarios:", error.status);
     return []
   }
 }
+
+async function deshabilitarUsuario(id, activoActual, btn) {
+  const nuevoEstado = activoActual == 1 ? 0 : 1;
+
+  try {
+    const response = await fetch(`../src/api/usuarios_api.php?id_usuario=${id}&accion=estado`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ activo: nuevoEstado })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Error al actualizar:", data.mensaje);
+      return;
+    }
+
+    const tr = btn.closest("tr");
+    tr.children[3].textContent = nuevoEstado == 1 ? "Activo" : "Inactivo";
+
+    btn.textContent = nuevoEstado == 1 ? "Deshabilitar" : "Habilitar";
+
+    btn.classList.remove(nuevoEstado == 1 ? "btn-habilitar" : "btn-primary");
+    btn.classList.add(nuevoEstado == 1 ? "btn-primary" : "btn-habilitar");
+
+    btn.setAttribute("onclick", `deshabilitarUsuario(${id}, ${nuevoEstado}, this)`);
+
+  } catch (error) {
+    console.error("Error al actualizar usuario:", error);
+  }
+}
+
+
 
 
 //=========EVENTOS=========

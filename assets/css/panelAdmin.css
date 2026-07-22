@@ -363,6 +363,19 @@ table {
   left: -15px;
 }
 
+.btn-habilitar {
+  background-color: #28a745; /* verde */
+  border-color: #28a745;
+  color: white;
+  left: -15px;
+  position: relative;
+}
+
+.btn-habilitar:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
 th {
   text-align: left;
   padding: 10px 12px;
