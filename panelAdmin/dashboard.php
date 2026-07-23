@@ -1,7 +1,3 @@
-
-<?php include_once "../includes/sidebarAdmin.php"; ?>
-
-
 <!doctype html>
 <html lang="es">
   <head>
@@ -17,6 +13,7 @@
     <title>Panel del administrador</title>
   </head>
   <body>
+    <?php include_once "../includes/sidebarAdmin.php"; ?>
     <button class="menu-toggle" id="menuToggle">☰</button>
     <div class="overlay" id="overlay"></div>
     <div id="sidebar-container"></div>
@@ -100,7 +97,7 @@
                     d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
                   />
                 </svg>
-                <span class="text-red-500">Alta Prioridad</span>
+                <span class="text-red-500">Rechazados</span>
               </div>
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"

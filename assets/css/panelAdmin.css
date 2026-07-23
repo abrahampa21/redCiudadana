@@ -45,15 +45,15 @@ textarea {
 .sidebar .logo-content {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 18px 16px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.09);
 }
 
 .sidebar .brand-icon {
-  width: 32px;
+  width: 50px;
   height: 32px;
-  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,12 +63,12 @@ textarea {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 3px;
 }
 
 .sidebar .project-name {
   color: #fffff0;
-  font-size: 0.95rem;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -79,18 +79,21 @@ textarea {
   padding: 12px 0;
 }
 
+
+
 .sidebar .link-element {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  font-size: 0.88rem;
-  font-weight: 500;
-  cursor: pointer;
-  border-radius: 0;
-  transition: all 0.2s;
   margin: 1px 0;
+
+  font-size: 15px;
+  font-weight: 500;
+
   text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .sidebar .link-element a {
@@ -103,16 +106,17 @@ textarea {
 }
 
 .sidebar .link-element svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   fill: rgba(255, 255, 255, 0.6);
   transition: all 0.2s;
 }
 
-.sidebar .link-element:hover{
+.sidebar .link-element:hover {
   background: rgba(255, 255, 255, 0.07);
 }
+
 .sidebar .link-element.active {
   background: rgba(255, 255, 255, 0.12);
 }
@@ -127,23 +131,37 @@ textarea {
   fill: #fff;
 }
 
-.sidebar .user-info:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 0.5rem;
-  transition: all 0.5s;
+.user-role {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.72rem;
 }
 
-
+.user-role-icon {
+  width: 12px;
+  height: 12px;
+  fill: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
 
 .sidebar-user {
   padding: 14px 16px;
   border-top: 2px solid rgba(255, 255, 255, 0.07);
 }
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 0.5rem;
+  transition: all 0.3s;
 }
 
 .avatar {
@@ -165,6 +183,7 @@ textarea {
   font-size: 0.82rem;
   font-weight: 600;
 }
+
 .user-role {
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.72rem;
@@ -188,10 +207,83 @@ textarea {
   width: 16px;
   height: 16px;
 }
+
 .logout-btn:hover {
   color: #fca5a5;
 }
 
+/*Loading spinner*/
+.spinner-container {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ddd;
+  border-top: 6px solid #0b74b8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-container p {
+  margin-top: 15px;
+  color: white;
+  font-size: 18px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*Movil menu*/
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #1a2540;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+/*Dark background when menu gets open*/
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1400;
+}
+
+.overlay.active {
+  display: block;
+}
+
+.overlay.open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /*============= DASHBOARD ==========*/
 .dashboard svg {
@@ -230,6 +322,11 @@ textarea {
   color: #64748b;
 }
 
+#dash-date {
+  text-transform: capitalize;
+}
+
+/*============= TARJETAS ==========*/
 .stat-card,
 .stat-circle-card,
 .card,
@@ -317,6 +414,7 @@ textarea {
 
 .dashboard .card {
   padding: 1rem;
+  margin: 8px;
 }
 
 .dashboard .card h3 {
@@ -345,35 +443,11 @@ textarea {
   height: 18px;
 }
 
-#dash-date {
-  text-transform: capitalize;
-}
-
+/*============= TABLAS ==========*/
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
-}
-
-.btn.btn-primary.btn-sm {
-  background: #dc2626;
-  color: #fff;
-  border: 1px solid #dc2626;
-  position: relative;
-  left: -15px;
-}
-
-.btn-habilitar {
-  background-color: #28a745; /* verde */
-  border-color: #28a745;
-  color: white;
-  left: -15px;
-  position: relative;
-}
-
-.btn-habilitar:hover {
-  background-color: #218838;
-  border-color: #1e7e34;
 }
 
 th {
@@ -395,6 +469,19 @@ tr:last-child td {
   border-bottom: none;
 }
 
+.reportes-shell,
+.table-shell {
+  padding: 0;
+  overflow: auto;
+}
+
+.empty-msg,
+.reportes-empty {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/*============= BADGES ==========*/
 .badge {
   display: inline-block;
   padding: 3px 10px;
@@ -469,6 +556,7 @@ tr:last-child td {
   color: #dc2626;
 }
 
+/*============= BOTONES ==========*/
 .btn-sm {
   padding: 5px 12px;
   border-radius: 6px;
@@ -500,6 +588,49 @@ tr:last-child td {
   flex-wrap: wrap;
 }
 
+/* Botón deshabilitar (rojo) / habilitar (verde) usado en la tabla de usuarios */
+.btn.btn-primary.btn-sm {
+  background: #dc2626;
+  color: #fff;
+  border: 1px solid #dc2626;
+  position: relative;
+  left: -15px;
+}
+
+.btn-habilitar {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff;
+  left: -15px;
+  position: relative;
+}
+
+.btn-habilitar:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a2540;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-new:hover {
+  background: #0f172a;
+}
+
+/*============= TOPBAR ==========*/
 .topbar {
   background: #fff;
   border-bottom: 1px solid #e2e8f0;
@@ -546,26 +677,7 @@ tr:last-child td {
   font-weight: 600;
 }
 
-.btn-new {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #1a2540;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s;
-}
-
-.btn-new:hover {
-  background: #0f172a;
-}
-
+/*============= FILTROS ==========*/
 .filters {
   display: flex;
   align-items: center;
@@ -621,18 +733,7 @@ tr:last-child td {
   font-family: inherit;
 }
 
-.reportes-shell,
-.table-shell {
-  padding: 0;
-  overflow: auto;
-}
-
-.empty-msg,
-.reportes-empty {
-  color: #64748b;
-  font-size: 0.85rem;
-}
-
+/*============= CATEGORÍAS ==========*/
 .cat-card {
   padding: 8px 0;
   max-width: 560px;
@@ -664,6 +765,7 @@ tr:last-child td {
   text-align: center;
 }
 
+/*============= FORMULARIOS (form-card general) ==========*/
 .form-card {
   padding: 28px;
   max-width: 640px;
@@ -737,40 +839,90 @@ tr:last-child td {
   margin-right: 8px;
 }
 
-.menu-toggle {
-  display: none;
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 2000;
-  background: #1a2540;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
-  font-size: 1.6rem;
-  cursor: pointer;
+/*============= EDITAR PERFIL (admin) ==========*/
+/* Nota: se usa "editar-perfil" en vez de "nuevo-reporte" porque esa sección
+   (creación de reportes) no existe en el panel del administrador. */
+.dashboard.editar-perfil .container {
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1400;
+.editar-perfil .text h1 {
+  color: #1e293b;
+  
 }
 
-.overlay.active {
-  display: block;
+.editar-perfil .text p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin:10px
 }
 
-.overlay.open {
+.editar-perfil .container-form form {
+  width: 80%;
+  max-width: 80%;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  padding: 20px;
+}
+
+.editar-perfil .div-input {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 1rem;
 }
 
+.editar-perfil .div-input label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.editar-perfil .div-input input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.editar-perfil .div-input input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.editar-perfil .div-input input[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.editar-perfil .required-text p {
+  font-size: 0.78rem;
+  color: #64748b;
+  padding-bottom: 10px;
+}
+
+.editar-perfil .btn-edit {
+  background-color: #1a2540;
+  color: #fff;
+  padding: 11px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.editar-perfil .btn-edit:hover {
+  background-color: #0f172a;
+}
+
+/*============= MODALES ==========*/
 .modal {
   background: #fff;
   border-radius: 14px;
@@ -819,28 +971,6 @@ tr:last-child td {
   border: none;
 }
 
-.toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: #1a2540;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  z-index: 999;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: all 0.3s;
-  pointer-events: none;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -852,6 +982,66 @@ tr:last-child td {
   }
 }
 
+/*Toast*/
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 5px;
+  padding: 1rem;
+  width: 320px;
+  opacity: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+  transform: translateY(-16px);
+  transition: all 0.4s ease;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.toast-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toast-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.toast .btn-close {
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Variantes por tipo */
+.toast.toast-success {
+  background-color: #dcfce7;
+  border-left-color: #22c55e;
+}
+
+.toast.toast-error {
+  background-color: #fee2e2;
+  border-left-color: #ef4444;
+}
+
+/*Responsividad*/
 @media (max-width: 900px) {
   .stat-grid,
   .stat-row,
