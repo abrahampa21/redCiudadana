@@ -102,7 +102,7 @@ if (isset($_POST["login-button"])) {
   $pass = trim(htmlspecialchars($_POST['password']));
   $passSec = sha1($pass);
 
-  $login = $conn->prepare("SELECT id_usuario, correo, password FROM usuario WHERE correo = ? AND password = ? AND id_rol = 2 LIMIT 1");
+  $login = $conn->prepare("SELECT id_usuario, correo, password, nombre FROM usuario WHERE correo = ? AND password = ? AND id_rol = 2 LIMIT 1");
   if (!$login) {
     echo "<script>alert('Error en la consulta: " . $conn->error . "')</script>";
   } else {
