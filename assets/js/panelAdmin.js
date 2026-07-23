@@ -64,6 +64,7 @@ function obtenerEtiquetaEstado(valor) {
   if (texto.includes("pendiente")) return "pendiente";
   if (texto.includes("proceso")) return "en proceso";
   if (texto.includes("resuelto")) return "resuelto";
+  if (texto.includes("rechazado")) return "rechazado";
   return texto;
 }
 
@@ -132,8 +133,12 @@ function abrirModalReporte(reporte) {
   const estado = obtenerEtiquetaEstado(reporte.nombre_estado || reporte.id_estado);
   const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
   const categoria = reporte.nombre_categoria || "Sin categoría";
-  const evidencia = reporte.ruta_archivo
-    ? `<p><strong>Evidencia:</strong> <a href="${reporte.ruta_archivo}" target="_blank" rel="noopener noreferrer">Ver archivo adjunto</a></p>`
+  const rutaEvidencia = reporte.ruta_archivo || "";
+  const esImagen = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(rutaEvidencia);
+  const evidencia = rutaEvidencia
+    ? esImagen
+      ? `<div style="margin-top:12px;"><strong>Imagen del reporte:</strong><br><img src="${rutaEvidencia}" alt="Imagen del reporte" style="max-width:100%;max-height:320px;border-radius:12px;margin-top:8px;object-fit:contain;" /></div>`
+      : `<p><strong>Evidencia:</strong> <a href="${rutaEvidencia}" target="_blank" rel="noopener noreferrer">Ver archivo adjunto</a></p>`
     : "<p><strong>Evidencia:</strong> No se adjuntó evidencia.</p>";
 
   contenido.innerHTML = `
