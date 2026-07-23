@@ -1,3 +1,10 @@
+<?php
+session_start();
+require_once("../src/config/connection.php");
+
+$nombre_usuario = $_SESSION["nombre"];
+?>
+
 <aside class="sidebar fixed" id="sidebar">
   <div class="logo-content">
     <div class="brand-icon">
@@ -39,9 +46,9 @@
   </nav>
   <div class="sidebar-user">
     <div class="user-info">
-      <div class="avatar" id="sb-avatar">A</div>
+      <div class="avatar" id="sb-avatar"><?= htmlspecialchars(strtoupper(substr($nombre_usuario, 0, 1))); ?></div>
       <div>
-        <div class="user-name" id="sb-name">Administrador</div>
+        <div class="user-name" id="sb-name"><?= htmlspecialchars($nombre_usuario) ?></div>
         <div class="user-role" id="sb-role">Admin</div>
       </div>
     </div>
