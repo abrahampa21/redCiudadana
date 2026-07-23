@@ -258,7 +258,7 @@ async function obtenerReportes() {
     }
   } catch (error) {
     showToast(error.message);
-  }finally{
+  } finally {
     ocultarSpinner();
   }
 }
@@ -418,7 +418,7 @@ async function crearReporte(datos) {
     }
   } catch (error) {
     showToast(error.message);
-  }finally{
+  } finally {
     btn.disabled = false;
     ocultarSpinner();
   }
@@ -500,7 +500,7 @@ async function actualizarDatosCiudadano(correo, numeroTelefono) {
   mostrarSpinner();
 
   try {
-    const endpoint = `${BASE_URL}/usuarios_api.php?id_usuario=`;
+    const endpoint = `${BASE_URL}usuarios_api.php?id_usuario=&accion=datos`;
     const response = await fetch(endpoint, {
       method: "PATCH",
       headers: {
@@ -518,11 +518,11 @@ async function actualizarDatosCiudadano(correo, numeroTelefono) {
         errorData?.mensaje ||
         response.statusText ||
         "Error al actualizar los datos";
-      showToast(message);
+      showToast(mensaje);
     }
   } catch (error) {
     showToast(error.message);
-  }finally{
+  } finally {
     btn.disabled = false;
     btn.style.backgroundColor = "";
     ocultarSpinner();
@@ -672,23 +672,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   //======== MODAL CIERRE DE SESIÓN ======
-  if(btnLogout && modalLogout && cancelarLogout){
+  if (btnLogout && modalLogout && cancelarLogout) {
     btnLogout.addEventListener("click", (e) => {
       e.preventDefault();
       modalLogout.classList.remove("hidden");
       modalLogout.classList.add("flex");
-    })
+    });
 
     cancelarLogout.addEventListener("click", () => {
       modalLogout.classList.remove("flex");
       modalLogout.classList.add("hidden");
-    })
+    });
 
-    modalLogout.addEventListener("click", e => {
-      if(e.target.id === "modal-logout"){
+    modalLogout.addEventListener("click", (e) => {
+      if (e.target.id === "modal-logout") {
         modalLogout.classList.remove("flex");
         modalLogout.classList.add("hidden");
       }
-    })
+    });
   }
 });
