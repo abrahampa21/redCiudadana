@@ -27,31 +27,27 @@
         </div>
         <div style="padding:0 28px">
         <div class="filters" style="margin-top: 20px;">
-          <input class="filter-input" placeholder="Buscar..." id="f-search" oninput="renderReportes()">
-          <select class="filter-select" id="f-cat" onchange="renderReportes()">
-            <option value="">Todos los estados</option>
-            <div class="toast" id="toast"></div>
-            <option>Activo</option>
-            <option>Inactivo</option>
-          </select>
-
+          <p style="margin:0; font-weight:600;">Buscar ciudadanos activos o inactivos</p>
         </div>
         </div>
 
-        <div class="card table-shell">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Email</th>
-                <th>Teléfono</th>
-                <th>Estado</th>
-                <th>Fecha de registro</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="users-tbody"></tbody>
-          </table>
+        <div class="card table-shell" style="padding:16px 24px; gap:12px; display:flex; flex-direction:column;">
+          <input id="search-users" class="filter-input" type="search" placeholder="Buscar usuario por nombre, correo o teléfono" />
+          <div style="overflow-x:auto; width:100%;">
+            <table id="tabla-usuarios" style="min-width:720px; width:100%;">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Teléfono</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
