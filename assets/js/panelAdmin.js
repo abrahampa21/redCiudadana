@@ -1,3 +1,5 @@
+const BASE_URL = "http://localhost/redCiudadana/src/api/";
+
 const days = [
   "domingo",
   "lunes",
@@ -28,7 +30,7 @@ const months = [
 //Todos los reportes, todos los usuarios
 async function obtenerTodoReportes() {
   try {
-    const endpoint = "../src/api/reportes_api.php";
+    const endpoint = `${BASE_URL}reportes_api.php`;
     const response = await fetch(endpoint);
   } catch {}
 }
@@ -48,7 +50,7 @@ async function getUsuariosCiudadanos() {
     return;
   }
   try {
-    const endpoint = `../src/api/usuarios_api.php?id_rol=1`;
+    const endpoint = `${BASE_URL}usuarios_api.php?id_rol=1`;
     const response = await fetch(endpoint);
     const data = await response.json();
     tbody.innerHTML = "";
@@ -60,6 +62,7 @@ async function getUsuariosCiudadanos() {
       const claseBoton = usuario.activo == 1 ? "btn-primary" : "btn-habilitar";
 
       tr.innerHTML = `
+      <tr>
     <td>${usuario.nombre}</td>
     <td>${usuario.correo}</td>
     <td>${usuario.telefono}</td>
@@ -71,6 +74,7 @@ async function getUsuariosCiudadanos() {
         ${textoBoton}
       </button>
     </td>
+      </tr>
   `;
       tbody.appendChild(tr);
     });
@@ -86,7 +90,7 @@ async function deshabilitarUsuario(id, activoActual, btn) {
 
   try {
     const response = await fetch(
-      `../src/api/usuarios_api.php?id_usuario=${id}&accion=estado`,
+      `${BASE_URL}usuarios_api.php?id_usuario=${id}&accion=estado`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -121,7 +125,7 @@ async function deshabilitarUsuario(id, activoActual, btn) {
 //GET para obtener el total de reportes por categoría
 async function getReportesPorCategoria() {
   try {
-    const endpoint = "../src/api/reportes_api.php?groupby=categoria";
+    const endpoint = `${BASE_URL}reportes_api.php?groupby=categoria`;
     const response = await fetch(endpoint);
     const data = await response.json();
     return data;
@@ -132,8 +136,10 @@ async function getReportesPorCategoria() {
 }
 //Mostrar el total de reportes por categoría en el panel de administracion
 function mostrarReportesPorCategoria(data) {
-  data.forEach(cat => {
-    const span = document.querySelector(`[data-id-categoria="${cat.id_categoria}"]`);
+  data.forEach((cat) => {
+    const span = document.querySelector(
+      `[data-id-categoria="${cat.id_categoria}"]`,
+    );
     if (span) span.textContent = `${cat.total} reportes`;
   });
 }
