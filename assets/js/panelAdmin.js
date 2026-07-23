@@ -1,3 +1,5 @@
+const BASE_URL = "http://localhost/redCiudadana/src/api/";
+
 const days = [
   "domingo",
   "lunes",
@@ -23,146 +25,12 @@ const months = [
   "diciembre",
 ];
 
-const BASE_URL = "http://localhost/redCiudadana/src/api/";
-const BASE_URL_UPLOADS = "http://localhost/redCiudadana/src/";
-const PRIORITY_LABELS = {
-  1: "Baja",
-  2: "Media",
-  3: "Alta",
-};
+//============FUNCIONES API==============
 
-const PRIORITY_IDS = {
-  "baja": 1,
-  "media": 2,
-  "alta": 3,
-};
-
-const STATUS_CLASSES = {
-  Pendiente: "bg-slate-100 text-amber-800",
-  "En Proceso": "bg-slate-100 text-sky-800",
-  Resuelto: "bg-slate-100 text-emerald-800",
-};
-
-const STATUS_IDS = {
-  "pendiente": 1,
-  "en proceso": 2,
-  "resuelto": 3,
-};
-
-// Muestra un mensaje temporal en pantalla con la clase CSS de toast.
-function showToast(message, duration = 2500) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  if (toast.timeoutId) {
-    clearTimeout(toast.timeoutId);
-  }
-
-  toast.timeoutId = setTimeout(() => {
-    toast.classList.remove("show");
-  }, duration);
-}
-
-// Normaliza texto para comparaciones de búsqueda y filtros.
-function normalizeText(value) {
-  return String(value ?? "").trim().toLowerCase();
-}
-
-// Convierte el id de prioridad en un label legible.
-function getPriorityLabel(id) {
-  return PRIORITY_LABELS[id] ?? "Desconocida";
-}
-
-// Devuelve la clase CSS del estado para el badge del modal.
-function getStatusClass(nombreEstado) {
-  return STATUS_CLASSES[nombreEstado] ?? "bg-slate-100 text-slate-700";
-}
-
-function getReportFilters() {
-  return {
-    search: normalizeText(document.getElementById("f-search")?.value),
-    estado: normalizeText(document.getElementById("f-estado")?.value),
-    categoria: normalizeText(document.getElementById("f-cat")?.value),
-    prioridad: normalizeText(document.getElementById("f-prio")?.value),
-  };
-}
-
-// Comprueba si un reporte cumple todos los filtros activos.
-function matchesReportFilters(reporte, filters) {
-  if (filters.search) {
-    const haystack = [
-      reporte.titulo,
-      reporte.descripcion,
-      reporte.ubicacion,
-      reporte.nombre_categoria,
-      reporte.nombre_estado,
-      reporte.nombre_ciudadano,
-    ]
-      .map(normalizeText)
-      .join(" ");
-
-    if (!haystack.includes(filters.search)) {
-      return false;
-    }
-  }
-
-  if (filters.estado) {
-    const estadoId = STATUS_IDS[filters.estado];
-    if (!estadoId || parseInt(reporte.id_estado, 10) !== estadoId) {
-      return false;
-    }
-  }
-
-  if (filters.categoria && normalizeText(reporte.nombre_categoria) !== filters.categoria) {
-    return false;
-  }
-
-  if (filters.prioridad) {
-    const prioridadId = PRIORITY_IDS[filters.prioridad];
-    if (!prioridadId || parseInt(reporte.id_prioridades, 10) !== prioridadId) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// Crea una fila de tabla para un reporte y añade el botón de detalles.
-function buildReportRow(reporte) {
-  const prioridadLabel = getPriorityLabel(reporte.id_prioridades);
-  const tr = document.createElement("tr");
-
-  tr.innerHTML = `
-    <td>${reporte.titulo ?? "Sin título"}</td>
-    <td>${reporte.nombre_categoria ?? "Sin categoría"}</td>
-    <td>${reporte.ubicacion ?? "Sin ubicación"}</td>
-    <td>${prioridadLabel}</td>
-    <td>${reporte.nombre_estado ?? "Sin estado"}</td>
-    <td>
-      <button class="btn-details">Detalles</button>
-    </td>
-  `;
-
-  const button = tr.querySelector("button");
-  button.addEventListener("click", () => openReportModal(reporte));
-
-  return tr;
-}
-
-// Carga los reportes desde la API y renderiza la tabla con los filtros aplicados.
-async function renderReportes() {
-  const tbody = document.getElementById("reportes-tbody");
-  if (!tbody) return;
-
-  const filters = getReportFilters();
-  const endpoint = `${BASE_URL}reportes_api.php`;
-
-  tbody.innerHTML = `<tr><td colspan="6" class="text-center">Cargando reportes...</td></tr>`;
-
+//Todos los reportes, todos los usuarios
+async function obtenerTodoReportes() {
   try {
+    const endpoint = `${BASE_URL}reportes_api.php`;
     const response = await fetch(endpoint);
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}`);
@@ -340,26 +208,13 @@ window.closeModal = closeModal;
 // Carga usuarios ciudadanos desde la API y los filtra según la búsqueda.
 async function renderUsuarios() {
   const tbody = document.getElementById("users-tbody");
-  if (!tbody || !document.getElementById("tabla-usuarios")) return;
-
-  const search = normalizeText(document.getElementById("search-users")?.value);
-  const endpoint = `${BASE_URL}usuarios_api.php?id_rol=1`;
-
+  if (!tbody) {
+    return;
+  }
   try {
-    if (!Array.isArray(window.adminUsuarios)) {
-      window.adminUsuarios = await fetch(endpoint).then((response) => {
-        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-        return response.json();
-      });
-    }
-
-    const usuarios = Array.isArray(window.adminUsuarios) ? window.adminUsuarios : [];
-    const results = usuarios.filter((usuario) => {
-      if (!search) return true;
-      const haystack = [usuario.nombre, usuario.correo, usuario.telefono].map(normalizeText).join(" ");
-      return haystack.includes(search);
-    });
-
+    const endpoint = `${BASE_URL}usuarios_api.php?id_rol=1`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
     tbody.innerHTML = "";
     if (!results.length) {
       tbody.innerHTML = `<tr><td colspan="6" class="text-center">No se encontraron usuarios.</td></tr>`;
@@ -373,17 +228,20 @@ async function renderUsuarios() {
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${usuario.nombre ?? "-"}</td>
-        <td>${usuario.correo ?? "-"}</td>
-        <td>${usuario.telefono ?? "-"}</td>
-        <td>Ciudadano</td>
-        <td>${activo ? "Activo" : "Inactivo"}</td>
-        <td>
-          <button class="btn ${claseBoton} btn-sm" onclick="deshabilitarUsuario(${usuario.id_usuario}, ${activo ? 1 : 0}, this)">
-            ${textoBoton}
-          </button>
-        </td>
-      `;
+      <tr>
+    <td>${usuario.nombre}</td>
+    <td>${usuario.correo}</td>
+    <td>${usuario.telefono}</td>
+    <td>${estado}</td>
+    <td>${usuario.fecha_registro}</td>
+    <td>
+      <button class="btn ${claseBoton} btn-sm" data-id="${usuario.id_usuario}"
+        onclick="deshabilitarUsuario(${usuario.id_usuario}, ${usuario.activo}, this)">
+        ${textoBoton}
+      </button>
+    </td>
+      </tr>
+  `;
       tbody.appendChild(tr);
     });
   } catch (error) {
@@ -399,7 +257,7 @@ async function deshabilitarUsuario(id, activoActual, btn) {
 
   try {
     const response = await fetch(
-      `../src/api/usuarios_api.php?id_usuario=${id}&accion=estado`,
+      `${BASE_URL}usuarios_api.php?id_usuario=${id}&accion=estado`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -437,7 +295,7 @@ async function deshabilitarUsuario(id, activoActual, btn) {
 //GET para obtener el total de reportes por categoría
 async function getReportesPorCategoria() {
   try {
-    const endpoint = "../src/api/reportes_api.php?groupby=categoria";
+    const endpoint = `${BASE_URL}reportes_api.php?groupby=categoria`;
     const response = await fetch(endpoint);
     const data = await response.json();
     return data;
@@ -448,8 +306,10 @@ async function getReportesPorCategoria() {
 }
 //Mostrar el total de reportes por categoría en el panel de administracion
 function mostrarReportesPorCategoria(data) {
-  data.forEach(cat => {
-    const span = document.querySelector(`[data-id-categoria="${cat.id_categoria}"]`);
+  data.forEach((cat) => {
+    const span = document.querySelector(
+      `[data-id-categoria="${cat.id_categoria}"]`,
+    );
     if (span) span.textContent = `${cat.total} reportes`;
   });
 }
