@@ -57,7 +57,7 @@
           <!-- <div class="card"> -->
             <!-- <p class="empty-msg">No se encontraron reportes.</p> -->
             <div class="card table-shell">
-              <table>
+              <table id="tabla-reportes">
                 <thead>
                   <tr>
                     <th>Titulo</th>
@@ -77,6 +77,54 @@
     </div>
     </div>
   </main>
+
+  <div id="modal-reporte" class="overlay" aria-hidden="true">
+    <div class="modal">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 style="margin:0; font-size:1.15rem;">Detalle del reporte</h2>
+        <button class="btn-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <img id="detalle-imagen" src="https://via.placeholder.com/640x400?text=Sin+evidencia" alt="Foto del reporte" style="width:100%; height:220px; object-fit:cover; border-radius:14px; margin-bottom:16px; background:#f3f4f6;" />
+      <div style="display:grid; gap:12px;">
+        <div>
+          <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Título</p>
+          <h3 id="detalle-titulo" style="margin:0; font-size:1.1rem;">-</h3>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Estado</p>
+            <span id="detalle-estado" style="display:inline-block; margin-top:4px; padding:6px 12px; border-radius:999px; font-size:0.85rem; background:#e2e8f0; color:#1f2937;"></span>
+          </div>
+          <div>
+            <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Prioridad</p>
+            <p id="detalle-prioridad" style="margin:4px 0 0 0; font-weight:700;"></p>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Categoría</p>
+          <p id="detalle-categoria" style="margin:0; font-weight:600;"></p>
+        </div>
+        <div>
+          <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Ubicación</p>
+          <p id="detalle-ubicacion" style="margin:0;"></p>
+        </div>
+        <div>
+          <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Descripción</p>
+          <p id="detalle-descripcion" style="margin:0; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; white-space:pre-wrap;"></p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Reportado por</p>
+            <p id="detalle-ciudadano" style="margin:0;"></p>
+          </div>
+          <div>
+            <p class="text-sm" style="margin:0 0 4px 0; color:#64748b;">Fecha</p>
+            <p id="detalle-fecha" style="margin:0;"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="toast" id="toast"></div>
 

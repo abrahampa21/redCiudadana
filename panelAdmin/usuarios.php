@@ -26,20 +26,23 @@
           <div class="page-sub">Activa, desactiva o promueve usuarios desde aquí.</div>
         </div>
 
-        <div class="card table-shell">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Usuario</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="users-tbody"></tbody>
-          </table>
+        <div class="card table-shell" style="padding:16px 24px; gap:12px; display:flex; flex-direction:column;">
+          <input id="search-users" class="filter-input" type="search" placeholder="Buscar usuario por nombre, correo o teléfono" />
+          <div style="overflow-x:auto; width:100%;">
+            <table id="tabla-usuarios" style="min-width:720px; width:100%;">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Usuario</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
