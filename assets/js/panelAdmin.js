@@ -76,7 +76,7 @@ function getPriorityLabel(id) {
   return PRIORITY_LABELS[id] ?? "Desconocida";
 }
 
-// Devuelve la selección actual de filtros desde el DOM.
+// Devuelve la clase CSS del estado para el badge del modal.
 function getStatusClass(nombreEstado) {
   return STATUS_CLASSES[nombreEstado] ?? "bg-slate-100 text-slate-700";
 }
@@ -154,7 +154,7 @@ function buildReportRow(reporte) {
 
 // Carga los reportes desde la API y renderiza la tabla con los filtros aplicados.
 async function renderReportes() {
-  const tbody = document.getElementById("users-tbody");
+  const tbody = document.getElementById("reportes-tbody");
   if (!tbody) return;
 
   const filters = getReportFilters();
@@ -326,7 +326,16 @@ function closeReportModal() {
   document.body.style.overflow = "";
 }
 
+function closeModal() {
+  const modalOverlay = document.getElementById("modal-overlay");
+  if (!modalOverlay) return;
+
+  modalOverlay.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
 window.closeReportModal = closeReportModal;
+window.closeModal = closeModal;
 
 // Carga usuarios ciudadanos desde la API y los filtra según la búsqueda.
 async function renderUsuarios() {
@@ -358,14 +367,22 @@ async function renderUsuarios() {
     }
 
     results.forEach((usuario) => {
+      const activo = usuario.activo === "1" || usuario.activo === 1;
+      const textoBoton = activo ? "Deshabilitar" : "Habilitar";
+      const claseBoton = activo ? "btn-primary" : "btn-habilitar";
+
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${usuario.nombre ?? "-"}</td>
         <td>${usuario.correo ?? "-"}</td>
         <td>${usuario.telefono ?? "-"}</td>
         <td>Ciudadano</td>
-        <td>${usuario.activo === "1" || usuario.activo === 1 ? "Activo" : "Inactivo"}</td>
-        <td>-</td>
+        <td>${activo ? "Activo" : "Inactivo"}</td>
+        <td>
+          <button class="btn ${claseBoton} btn-sm" onclick="deshabilitarUsuario(${usuario.id_usuario}, ${activo ? 1 : 0}, this)">
+            ${textoBoton}
+          </button>
+        </td>
       `;
       tbody.appendChild(tr);
     });
@@ -376,6 +393,74 @@ async function renderUsuarios() {
   }
 }
 
+// Funcion para deshabilitar o habilitar un usuario
+async function deshabilitarUsuario(id, activoActual, btn) {
+  const nuevoEstado = activoActual == 1 ? 0 : 1;
+
+  try {
+    const response = await fetch(
+      `../src/api/usuarios_api.php?id_usuario=${id}&accion=estado`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: nuevoEstado }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Error al actualizar:", data.mensaje);
+      return;
+    }
+
+    const tr = btn.closest("tr");
+    const cells = tr.querySelectorAll("td");
+    if (cells.length >= 5) {
+      cells[4].textContent = nuevoEstado == 1 ? "Activo" : "Inactivo";
+    }
+
+    btn.textContent = nuevoEstado == 1 ? "Deshabilitar" : "Habilitar";
+
+    btn.classList.remove(nuevoEstado == 1 ? "btn-habilitar" : "btn-primary");
+    btn.classList.add(nuevoEstado == 1 ? "btn-primary" : "btn-habilitar");
+
+    btn.setAttribute(
+      "onclick",
+      `deshabilitarUsuario(${id}, ${nuevoEstado}, this)`,
+    );
+  } catch (error) {
+    console.error("Error al actualizar usuario:", error);
+  }
+}
+
+//GET para obtener el total de reportes por categoría
+async function getReportesPorCategoria() {
+  try {
+    const endpoint = "../src/api/reportes_api.php?groupby=categoria";
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al obtener los reportes por categoría:", error);
+    return [];
+  }
+}
+//Mostrar el total de reportes por categoría en el panel de administracion
+function mostrarReportesPorCategoria(data) {
+  data.forEach(cat => {
+    const span = document.querySelector(`[data-id-categoria="${cat.id_categoria}"]`);
+    if (span) span.textContent = `${cat.total} reportes`;
+  });
+}
+
+//Inicializar la página de categorías
+async function initCategoriasPage() {
+  const data = await getReportesPorCategoria();
+  mostrarReportesPorCategoria(data);
+}
+
+//=========EVENTOS=========
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("tabla-reportes")) {
     renderReportes();
@@ -389,9 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderUsuarios();
   }
 
-  document.addEventListener("keyup", (event) => {
-    if (event.key === "Escape") {
-      closeReportModal();
-    }
-  });
+  if (document.querySelector("[data-id-categoria]")) {
+    initCategoriasPage();
+  }
 });

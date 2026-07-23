@@ -24,11 +24,12 @@ $queryCategorias->close();
   <link rel="icon" href="../src/img/icon-pages.jfif" />
   <link href="../src/output.css" rel="stylesheet" />
 
-  <title>Panel del ciudadano</title>
+  <title>Panel del Ciudadano</title>
 </head>
 
 <body>
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/spinner.php"; ?>
   <!-- Nuevo Reporte -->
   <main class="main-container nuevo-reporte">
     <div class="container">
@@ -82,7 +83,7 @@ $queryCategorias->close();
           <div class="required-text mb-4">
             <p class="text-[1.1rem]">Los campos marcados con * son obligatorios.</p>
           </div>
-          <button type="submit" name="reporte-btn" class="w-full border-none rounded-lg font-semibold cursor-pointer mt-1">Enviar reporte</button>
+          <button type="submit" name="reporte-btn" class="w-full border-none rounded-lg font-semibold cursor-pointer mt-1" id="submit-reporte">Enviar reporte</button>
         </form>
       </div>
     </div>

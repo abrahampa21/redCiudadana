@@ -25,16 +25,15 @@
           <h1 class="page-title">Categorías</h1>
           <div class="page-sub">Cantidad de reportes agrupados por categoría.</div>
         </div>
-
+        
+        <!-- CONTENIDO DE LA SECCIÓN DE CATEGORÍAS -->
         <div class="cat-card">
-          <div class="cat-row"><span>Baches</span><span class="cat-count" id="c-baches">0 reportes</span></div>
-          <div class="cat-row"><span>Alumbrado</span><span class="cat-count" id="c-alumbrado">0 reportes</span></div>
-          <div class="cat-row"><span>Basura</span><span class="cat-count" id="c-basura">0 reportes</span></div>
-          <div class="cat-row"><span>Seguridad</span><span class="cat-count" id="c-seguridad">0 reportes</span></div>
-          <div class="cat-row"><span>Agua</span><span class="cat-count" id="c-agua">0 reportes</span></div>
-          <div class="cat-row"><span>Áreas verdes</span><span class="cat-count" id="c-areas">0 reportes</span></div>
-          <div class="cat-row"><span>Tránsito</span><span class="cat-count" id="c-transito">0 reportes</span></div>
-          <div class="cat-row"><span>Otro</span><span class="cat-count" id="c-otro">0 reportes</span></div>
+          <div class="cat-row"><span>Alumbrado</span><span class="cat-count" data-id-categoria="1">0 reportes</span></div>
+          <div class="cat-row"><span>Seguridad</span><span class="cat-count" data-id-categoria="2">0 reportes</span></div>
+          <div class="cat-row"><span>Agua</span><span class="cat-count" data-id-categoria="3">0 reportes</span></div>
+          <div class="cat-row"><span>Áreas verdes</span><span class="cat-count" data-id-categoria="4">0 reportes</span></div>
+          <div class="cat-row"><span>Tránsito</span><span class="cat-count" data-id-categoria="5">0 reportes</span></div>
+          <div class="cat-row"><span>Baches y vialidad</span><span class="cat-count" data-id-categoria="6">0 reportes</span></div>
           <div class="cat-footer">Las categorías se administran desde la estructura del sistema.</div>
         </div>
       </div>

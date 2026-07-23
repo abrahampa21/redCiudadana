@@ -127,6 +127,12 @@ textarea {
   fill: #fff;
 }
 
+.sidebar .user-info:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 0.5rem;
+  transition: all 0.5s;
+}
+
 
 
 .sidebar-user {
@@ -297,6 +303,12 @@ textarea {
   border: 3px solid #86efac;
 }
 
+.circle-red {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 3px solid #fca5a5;
+}
+
 .stat-circle-label {
   font-size: 0.82rem;
   color: #64748b;
@@ -341,6 +353,27 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
+}
+
+.btn.btn-primary.btn-sm {
+  background: #dc2626;
+  color: #fff;
+  border: 1px solid #dc2626;
+  position: relative;
+  left: -15px;
+}
+
+.btn-habilitar {
+  background-color: #28a745; /* verde */
+  border-color: #28a745;
+  color: white;
+  left: -15px;
+  position: relative;
+}
+
+.btn-habilitar:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
 }
 
 th {
@@ -479,9 +512,38 @@ tr:last-child td {
 }
 
 .topbar-title {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;
+}
+
+.reportes-archived-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid #4a4a4b;
+  padding: 6px 12px;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.reportes-archived-link:hover {
+  transition: background 0.5s;
+  background: #f1f5f9;
+}
+
+.reportes-archived svg {
+  width: 16px;
+  height: 16px;
+  fill: #22262b;
+}
+
+.reportes-archived-text {
+  font-size: 0.82rem;
+  color: #605e5e;
+  font-weight: 600;
 }
 
 .btn-new {

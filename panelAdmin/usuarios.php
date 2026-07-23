@@ -25,6 +25,11 @@
           <h1 class="page-title">Gestión de Usuarios</h1>
           <div class="page-sub">Activa, desactiva o promueve usuarios desde aquí.</div>
         </div>
+        <div style="padding:0 28px">
+        <div class="filters" style="margin-top: 20px;">
+          <p style="margin:0; font-weight:600;">Buscar ciudadanos activos o inactivos</p>
+        </div>
+        </div>
 
         <div class="card table-shell" style="padding:16px 24px; gap:12px; display:flex; flex-direction:column;">
           <input id="search-users" class="filter-input" type="search" placeholder="Buscar usuario por nombre, correo o teléfono" />
@@ -33,8 +38,8 @@
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>Usuario</th>
-                  <th>Email</th>
+                  <th>Correo</th>
+                  <th>Teléfono</th>
                   <th>Rol</th>
                   <th>Estado</th>
                   <th>Acciones</th>

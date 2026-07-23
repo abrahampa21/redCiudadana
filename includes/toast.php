@@ -1,4 +1,4 @@
-  <!--To show messages from API requests-->
+<!--To show messages from API or others-->
   <div
     class="toast"
     role="alert"
@@ -6,7 +6,10 @@
     aria-live="assertive"
     aria-atomic="true">
     <div class="toast-header">
-      <strong class="me-auto">⚠️ Error</strong>
+      <strong class="me-auto toast-title">
+        <span class="toast-icon">⚠️</span>
+        <span class="toast-title-text">Error</span>
+      </strong>
       <button
         type="button"
         class="btn-close"

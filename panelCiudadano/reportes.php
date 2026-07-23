@@ -34,12 +34,14 @@ $query->close();
   <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
   <link rel="icon" href="../src/img/icon-pages.jfif" />
   <link href="../src/output.css" rel="stylesheet" />
-  <title>Panel del ciudadano</title>
+  <title>Panel del Ciudadano</title>
 </head>
 
 <body>
 
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/spinner.php"; ?>
+
   <!-- Reportes-->
   <main class="main-container reportes">
     <div class="container">
@@ -76,7 +78,7 @@ $query->close();
       </div>
 
       <div class="reportes-list">
-        <div class="text-center bg-white rounded-xl p-6 reportes-container overflow-hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6"" id="reportes-container">
+        <div class="text-center bg-white rounded-xl p-6 reportes-container overflow-hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 auto-rows-fr"" id="reportes-container">
         </div>
       </div>
     </div>

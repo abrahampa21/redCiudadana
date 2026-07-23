@@ -7,11 +7,13 @@
   <link rel="stylesheet" href="../assets/css/panelCiudadano.css" />
   <link rel="icon" href="../src/img/icon-pages.jfif" />
   <link href="../src/output.css" rel="stylesheet" />
-  <title>Panel del ciudadano</title>
+  <title>Panel del Ciudadano</title>
 </head>
 
 <body>
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/spinner.php"; ?>
+
   <main class="main-container nuevo-reporte">
     <div class="container">
       <div class="text">
