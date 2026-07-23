@@ -73,8 +73,37 @@ switch ($method) {
                 $stmt->close();
                 $conn->close();
             }
-
-
+            else
+        
+            //Endpoint para obtener el conteo de reportes por estado
+            if (isset($_GET['groupby']) && $_GET['groupby'] === 'estado') { 
+                $stmt = $conn->prepare("SELECT estado.id_estado, estado.nombre AS nombre_categoria, COUNT(reporte.id_reporte) AS total
+        FROM estado
+        LEFT JOIN reporte ON reporte.id_estado = estado.id_estado
+        GROUP BY estado.id_estado, estado.nombre");
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                $conteos = $resultado->fetch_all(MYSQLI_ASSOC);
+                echo json_encode($conteos);
+                $stmt->close();
+                $conn->close();
+            } //Endpoint para obtener los reportes mas recientes en el dashboard, en base a su fecha de creación y limitando a 3 resultados
+            elseif (isset($_GET['recent']) && $_GET['recent'] === 'true') {
+                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+                FROM reporte 
+                INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
+                INNER JOIN estado ON reporte.id_estado = estado.id_estado 
+                INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario 
+                LEFT JOIN evidencias ON reporte.id_reporte = evidencias.id_reporte
+                ORDER BY reporte.fecha_creacion DESC LIMIT 3");
+                $stmt->execute();
+                $resultado = $stmt->get_result();
+                $reportesRecientes = $resultado->fetch_all(MYSQLI_ASSOC);
+                echo json_encode($reportesRecientes);
+                $stmt->close();
+                $conn->close();
+            }
+            
             //filtrar categoria (admin y ciudadano)
             //endpoint http://localhost/redciudadana/src/api/reportes_api.php?id_categoria=2
             elseif (isset($_GET['id_categoria'])) {

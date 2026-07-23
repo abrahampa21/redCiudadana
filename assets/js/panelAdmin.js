@@ -316,6 +316,8 @@ async function getUsuariosCiudadanos() {
   }
 }
 
+
+
 //Funcion para deshabilitar o habilitar un usuario
 async function deshabilitarUsuario(id, activoActual, btn) {
   const nuevoEstado = activoActual == 1 ? 0 : 1;
@@ -366,6 +368,22 @@ async function getReportesPorCategoria() {
     return [];
   }
 }
+
+//GET para obtener el total de reportes por estado
+async function getReportesPorEstado() {
+  try {
+    const endpoint = `${BASE_URL}reportes_api.php?groupby=estado`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al obtener los reportes por estado:", error);
+    return [];
+  }
+}
+
+
+
 //Mostrar el total de reportes por categoría en el panel de administracion
 function mostrarReportesPorCategoria(data) {
   data.forEach((cat) => {
@@ -376,10 +394,57 @@ function mostrarReportesPorCategoria(data) {
   });
 }
 
+
+
+//Mostrar los reportes recientes en el dashboard del panel de administracion
+async function getReportesRecientes() {
+  try {
+    const endpoint = `${BASE_URL}reportes_api.php?recent=true`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    const recentReportsContainer = document.getElementById("recent-reports");
+
+    if (recentReportsContainer) {
+      recentReportsContainer.innerHTML = "";
+      data.forEach((reporte) => {
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded-lg shadow";
+        div.innerHTML = `
+        <div class="card-content">
+          <h4 class="font-bold">${reporte.titulo}</h4>
+          <p>${reporte.descripcion}</p>
+          <p><strong>Ubicación:</strong> ${reporte.ubicacion}</p>
+          <p><strong>Fecha de creación:</strong> ${reporte.fecha_creacion}</p>
+          </div>
+        `;
+        recentReportsContainer.appendChild(div);
+      });
+    }
+  } catch (error) {
+    console.error("Error al obtener los reportes recientes:", error);
+  }
+}
+
+//Mostrar el total de reportes por estado en el panel de administracion
+function mostrarReportesPorEstado(data) {
+  data.forEach((estado) => {
+    const span = document.querySelector(`[data-id-estado="${estado.id_estado}"]`);
+    if (span) span.textContent = `${estado.total} reportes`;
+  });
+}
+
+
+//=========INICIALIZACIÓN=========
 //Inicializar la página de categorías
 async function initCategoriasPage() {
   const data = await getReportesPorCategoria();
   mostrarReportesPorCategoria(data);
+}
+
+//Inicializar la página de dashboard
+async function initDashboardPage() {
+  const dataEstado = await getReportesPorEstado();
+  mostrarReportesPorEstado(dataEstado);
 }
 
 //=========EVENTOS=========
@@ -392,7 +457,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     await getUsuariosCiudadanos();
     renderReportes();
   }
+  if (document.getElementById("recent-reports")) {
+    await getReportesRecientes();
+  }
 
   getReportesPorCategoria();
   initCategoriasPage();
+  initDashboardPage();
 });

@@ -322,6 +322,13 @@ textarea {
   color: #64748b;
 }
 
+.page-recents {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: -8px;
+  margin-top: -10px;
+}
+
 #dash-date {
   text-transform: capitalize;
 }
@@ -335,6 +342,14 @@ textarea {
   background: #fff;
   border-radius: 0.9rem;
   border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.card-content {
+  border: 2.5px solid #e2e8f0;
+  padding: 20px;
+  margin-top: 13px;
+  border-radius: 0.9rem;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
 }
 
@@ -418,9 +433,9 @@ textarea {
 }
 
 .dashboard .card h3 {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+
 }
 
 .stat-label {
@@ -433,8 +448,8 @@ textarea {
 }
 
 .stat-num {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 600;
   color: #1e293b;
 }
 
@@ -862,7 +877,7 @@ tr:last-child td {
 .editar-perfil .container-form form {
   width: 80%;
   max-width: 80%;
-  border: 1px solid #e2e8f0;
+  border: 1.8px solid #e2e8f0;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
   padding: 20px;
 }

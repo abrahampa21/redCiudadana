@@ -48,8 +48,7 @@
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
                 id="d-pend"
-              >
-                0
+              ><span data-id-estado="1">0</span> 
               </div>
             </div>
             <div class="stat-card bg-white rounded-xl border border-slate-200">
@@ -66,8 +65,7 @@
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
                 id="d-proc"
-              >
-                0
+              ><span data-id-estado="2">0</span>
               </div>
             </div>
             <div class="stat-card bg-white rounded-xl border border-slate-200">
@@ -84,8 +82,7 @@
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
                 id="d-res"
-              >
-                0
+              ><span data-id-estado="3">0</span>
               </div>
             </div>
             <div class="stat-card bg-white rounded-xl border border-slate-200">
@@ -103,7 +100,7 @@
                 class="stat-num text-[2rem] font-bold text-slate-800"
                 id="d-alta"
               >
-                0
+                <span data-id-estado="4">0</span>
               </div>
             </div>
           </div>
@@ -113,7 +110,10 @@
             <h3 class="text-base font-bold mb-4 text-slate-800">
               Reportes Recientes
             </h3>
-            <div id="recent-list">
+            <div class="page-recents">
+              Ver los últimos reportes creados.
+            </div>
+            <div id="recent-reports" class="flex flex-col gap-2">
               <p class="empty-msg text-slate-500 text-[0.85rem]">
                 No hay reportes aún.
               </p>
