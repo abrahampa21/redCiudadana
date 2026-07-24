@@ -1,16 +1,6 @@
 <?php
 require_once("../src/config/connection.php");
 
-//Obtener categorias
-$query = $conn->prepare("SELECT id_categoria, nombre FROM categoria");
-$query->execute();
-$result = $query->get_result();
-$categorias = [];
-
-while ($row = $result->fetch_assoc()) {
-  $categorias[] = $row;
-}
-$query->close();
 
 //Obtener estados
 $query = $conn->prepare("SELECT id_estado, nombre FROM estado");
@@ -67,11 +57,6 @@ $query->close();
           </select>
           <select name="id_categoria" id="categoria-select" aria-label="filter-categoria">
             <option value="default">Categoría: Todas</option>
-            <?php
-            foreach ($categorias as $categoria) {
-              echo "<option value='{$categoria['id_categoria']}'>{$categoria['nombre']}</option>";
-            }
-            ?>
           </select>
           <button class="clear-btn text-sm font-semibold cursor-pointer whitespace-nowrap bg-none border-0" id="clean-filter">Limpiar</button>
         </div>

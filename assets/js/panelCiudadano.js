@@ -377,6 +377,39 @@ async function buscarPorTitulo(reporte) {
   }
 }
 
+//Obtener categorías
+async function obtenerCategorias() {
+  try {
+    const endpoint = `${BASE_URL}categorias_api.php`;
+    const response = await fetch(endpoint);
+
+    if (response.ok) {
+      const categorias = await response.json();
+      return categorias;
+    } else {
+      throw new Error(response.status);
+    }
+  } catch (error) {
+    showToast(error.message);
+    return [];
+  }
+}
+
+async function cargarCategoriasEnSelect(select, categorias) {
+  if (!select) return;
+
+  const primeraOpcion = select.firstElementChild.outerHTML;
+  select.innerHTML = primeraOpcion;
+
+  categorias.forEach((categoria) => {
+    const option = document.createElement("option");
+    option.value = categoria.id_categoria;
+    option.textContent = categoria.nombre;
+
+    select.appendChild(option);
+  });
+}
+
 //Mostrar evidencia
 async function obtenerEvidencias() {
   try {
@@ -584,7 +617,7 @@ async function handlerCrearReporte() {
 }
 
 //Evento que carga la función obtenerReportes si encuentra el contenedor
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (reportesContainer) {
     obtenerReportes();
   }
@@ -627,10 +660,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+
+  const categorias = await obtenerCategorias();
+
   if (categoriaSelect) {
-    //Evento para filtrar por categoría
+    cargarCategoriasEnSelect(categoriaSelect, categorias);
+
     categoriaSelect.addEventListener("change", () => {
       const categoria = categoriaSelect.value;
+
       if (categoria === "default") {
         reportesContainer.innerHTML = "";
         obtenerReportes();
@@ -638,6 +676,12 @@ document.addEventListener("DOMContentLoaded", () => {
         filtrarPorCategoria(categoria);
       }
     });
+  }
+
+  const categoriaNuevoReporte = document.getElementById("id_categoria");
+
+  if (categoriaNuevoReporte) {
+    cargarCategoriasEnSelect(categoriaNuevoReporte, categorias);
   }
 
   if (cleanFilters) {

@@ -1,17 +1,6 @@
 <?php
 require_once("../src/config/connection.php");
 
-//Obtener categorías para mostrarlas en el select
-$queryCategorias = $conn->prepare("SELECT id_categoria, nombre FROM categoria");
-$queryCategorias->execute();
-$result = $queryCategorias->get_result();
-$categorias = [];
-
-while ($row = $result->fetch_assoc()) {
-  $categorias[] = $row;
-}
-
-$queryCategorias->close();
 ?>
 
 <!doctype html>
@@ -62,13 +51,8 @@ $queryCategorias->close();
           <div class="report-details">
             <div class="div-input categoria">
               <label for="categoria">Categoría *</label>
-              <select value="" title="Categoría" id="id_categoria">
+              <select value="" title="Categoría" id="id_categoria" name="id_categoria">
                 <option value="">Selecciona...</option>
-                <?php
-                foreach ($categorias as $categoria) {
-                  echo "<option value='{$categoria['id_categoria']}'>${categoria['nombre']}</option>";
-                }
-                ?>
               </select>
             </div>
           </div>
