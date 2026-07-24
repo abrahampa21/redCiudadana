@@ -25,6 +25,63 @@ const months = [
   "diciembre",
 ];
 
+
+
+//===SPINER===
+//Spinner
+function mostrarSpinner() {
+  document.getElementById("spinner").classList.remove("hidden");
+}
+
+function ocultarSpinner() {
+  document.getElementById("spinner").classList.add("hidden");
+}
+
+//===TOAST===
+// Toast constants
+const toastElement = document.getElementById("error-fetch");
+const toastBtnClose = document.getElementById("btn-close");
+
+//==FUNCIONES DEL TOAST==
+//=========== FUNCIONES DE TOAST ============
+//Mostrar toast
+function showToast(message, type = "error") {
+  if (!toastElement) return;
+
+  const textToast = document.querySelector(".toast-body");
+  const iconToast = document.querySelector(".toast-icon");
+  const titleToast = document.querySelector(".toast-title-text");
+
+  textToast.textContent = message;
+
+  // Quitar clases de tipo anteriores
+  toastElement.classList.remove("toast-success", "toast-error");
+
+  if (type === "success") {
+    toastElement.classList.add("toast-success");
+    iconToast.textContent = "✅";
+    titleToast.textContent = "Éxito";
+  } else {
+    toastElement.classList.add("toast-error");
+    iconToast.textContent = "⚠️";
+    titleToast.textContent = "Error";
+  }
+
+  toastElement.classList.add("show");
+
+  // Ocultar automáticamente después de unos segundos
+  clearTimeout(showToast._timeoutId);
+  showToast._timeoutId = setTimeout(hideToast, 4000);
+}
+function hideToast() {
+  toastElement.classList.remove("show");
+}
+
+if (toastBtnClose) {
+  toastBtnClose.addEventListener("click", hideToast);
+}
+
+
 //============FUNCIONES API==============
 
 let reportesCache = [];
@@ -130,7 +187,9 @@ function abrirModalReporte(reporte) {
     return;
   }
 
-  const estado = obtenerEtiquetaEstado(reporte.nombre_estado || reporte.id_estado);
+  const estado = obtenerEtiquetaEstado(
+    reporte.nombre_estado || reporte.id_estado,
+  );
   const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
   const categoria = reporte.nombre_categoria || "Sin categoría";
   const rutaEvidencia = reporte.ruta_archivo || "";
@@ -184,17 +243,30 @@ async function renderReportes() {
   const tbodyReportes = document.getElementById("reportes-tbody");
 
   if (tbodyReportes) {
-    const reportes = reportesCache.length > 0 ? reportesCache : await obtenerTodoReportes();
-    const textoBusqueda = normalizarTexto(document.getElementById("f-search")?.value);
-    const estadoFiltro = normalizarTexto(document.getElementById("f-estado")?.value);
-    const categoriaFiltro = normalizarTexto(document.getElementById("f-cat")?.value);
-    const prioridadFiltro = normalizarTexto(document.getElementById("f-prio")?.value);
+    const reportes =
+      reportesCache.length > 0 ? reportesCache : await obtenerTodoReportes();
+    const textoBusqueda = normalizarTexto(
+      document.getElementById("f-search")?.value,
+    );
+    const estadoFiltro = normalizarTexto(
+      document.getElementById("f-estado")?.value,
+    );
+    const categoriaFiltro = normalizarTexto(
+      document.getElementById("f-cat")?.value,
+    );
+    const prioridadFiltro = normalizarTexto(
+      document.getElementById("f-prio")?.value,
+    );
 
     const reportesFiltrados = reportes.filter((reporte) => {
       const titulo = normalizarTexto(reporte.titulo);
       const ubicacion = normalizarTexto(reporte.ubicacion);
-      const categoria = normalizarTexto(reporte.nombre_categoria || reporte.id_categoria);
-      const estado = obtenerEtiquetaEstado(reporte.nombre_estado || reporte.id_estado);
+      const categoria = normalizarTexto(
+        reporte.nombre_categoria || reporte.id_categoria,
+      );
+      const estado = obtenerEtiquetaEstado(
+        reporte.nombre_estado || reporte.id_estado,
+      );
       const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
 
       const coincideBusqueda =
@@ -203,17 +275,25 @@ async function renderReportes() {
         ubicacion.includes(textoBusqueda) ||
         categoria.includes(textoBusqueda);
       const coincideEstado = !estadoFiltro || estado === estadoFiltro;
-      const coincideCategoria = !categoriaFiltro || categoria === categoriaFiltro;
-      const coincidePrioridad = !prioridadFiltro || prioridad === prioridadFiltro;
+      const coincideCategoria =
+        !categoriaFiltro || categoria === categoriaFiltro;
+      const coincidePrioridad =
+        !prioridadFiltro || prioridad === prioridadFiltro;
 
-      return coincideBusqueda && coincideEstado && coincideCategoria && coincidePrioridad;
+      return (
+        coincideBusqueda &&
+        coincideEstado &&
+        coincideCategoria &&
+        coincidePrioridad
+      );
     });
 
     tbodyReportes.innerHTML = "";
 
     if (!reportesFiltrados.length) {
       const filaVacia = document.createElement("tr");
-      filaVacia.innerHTML = '<td colspan="6" style="text-align:center;">No se encontraron reportes.</td>';
+      filaVacia.innerHTML =
+        '<td colspan="6" style="text-align:center;">No se encontraron reportes.</td>';
       tbodyReportes.appendChild(filaVacia);
       return;
     }
@@ -226,7 +306,8 @@ async function renderReportes() {
         reporte.nombre_categoria || "Sin categoría",
         reporte.ubicacion || "Sin ubicación",
         obtenerEtiquetaPrioridad(reporte.id_prioridades) || "Sin prioridad",
-        obtenerEtiquetaEstado(reporte.nombre_estado || reporte.id_estado) || "Sin estado",
+        obtenerEtiquetaEstado(reporte.nombre_estado || reporte.id_estado) ||
+          "Sin estado",
       ];
 
       celdas.forEach((valor) => {
@@ -253,8 +334,12 @@ async function renderReportes() {
 
   if (tbodyUsuarios) {
     const filas = Array.from(tbodyUsuarios.querySelectorAll("tr"));
-    const textoBusqueda = normalizarTexto(document.getElementById("f-search")?.value);
-    const estadoFiltro = normalizarTexto(document.getElementById("f-cat")?.value);
+    const textoBusqueda = normalizarTexto(
+      document.getElementById("f-search")?.value,
+    );
+    const estadoFiltro = normalizarTexto(
+      document.getElementById("f-cat")?.value,
+    );
 
     filas.forEach((fila) => {
       const nombre = normalizarTexto(fila.children[0]?.textContent || "");
@@ -321,8 +406,6 @@ async function getUsuariosCiudadanos() {
   }
 }
 
-
-
 //Funcion para deshabilitar o habilitar un usuario
 async function deshabilitarUsuario(id, activoActual, btn) {
   const nuevoEstado = activoActual == 1 ? 0 : 1;
@@ -387,8 +470,6 @@ async function getReportesPorEstado() {
   }
 }
 
-
-
 //Mostrar el total de reportes por categoría en el panel de administracion
 function mostrarReportesPorCategoria(data) {
   data.forEach((cat) => {
@@ -398,8 +479,6 @@ function mostrarReportesPorCategoria(data) {
     if (span) span.textContent = `${cat.total} reportes`;
   });
 }
-
-
 
 //Mostrar los reportes recientes en el dashboard del panel de administracion
 async function getReportesRecientes() {
@@ -433,11 +512,86 @@ async function getReportesRecientes() {
 //Mostrar el total de reportes por estado en el panel de administracion
 function mostrarReportesPorEstado(data) {
   data.forEach((estado) => {
-    const span = document.querySelector(`[data-id-estado="${estado.id_estado}"]`);
+    const span = document.querySelector(
+      `[data-id-estado="${estado.id_estado}"]`,
+    );
     if (span) span.textContent = `${estado.total} reportes`;
   });
 }
 
+//=========MIS DATOS (EDITAR DATOS ADMIN)=========
+//Actualizar los datos del admin (correo y número de teléfono)
+async function actualizarDatosAdmin(correo, numeroTelefono) {
+  const datosActualizados = {
+    correo: correo,
+    telefono: numeroTelefono,
+  };
+  const btn = document.getElementById("btn-edit");
+  btn.disabled = true;
+  btn.style.backgroundColor = "#444";
+  mostrarSpinner();
+
+  try {
+    const endpoint = `${BASE_URL}usuarios_api.php?id_usuario=&accion=datos`;
+    const response = await fetch(endpoint, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(datosActualizados),
+    });
+
+    if (response.ok) {
+      showToast("Datos actualizados correctamente", "success");
+      return;
+    } else {
+      const errorData = await response.json().catch(() => null);
+      const mensaje =
+        errorData?.mensaje ||
+        response.statusText ||
+        "Error al actualizar los datos";
+      showToast(mensaje);
+    }
+  } catch (error) {
+    showToast(error.message);
+  } finally {
+    btn.disabled = false;
+    btn.style.backgroundColor = "";
+    ocultarSpinner();
+  }
+}
+
+//Obtener información del Admin logueado
+async function obtenerAdminPorId() {
+  try {
+    const endpoint = `${BASE_URL}usuarios_api.php?id_usuario=`;
+    const response = await fetch(endpoint);
+    if (response.ok) {
+      const admin = await response.json();
+      return admin;
+    } else {
+      throw new Error(`${response.status}`);
+    }
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+//Poblar el formulario de edición con los datos del administrador
+async function poblarFormularioEdicion() {
+  const administrador = await obtenerAdminPorId();
+  if (administrador) {
+    document.getElementById("nombre").value = administrador.nombre;
+    document.getElementById("correo").value = administrador.correo;
+    document.getElementById("telefono").value = administrador.telefono;
+    document.getElementById("fecha-registro").value =
+      administrador.fecha_registro;
+    document.getElementById("rol").value = administrador.nombre_rol;
+  } else {
+    console.log(
+      "Ocurrió un error al llenar el formulario: administrador no encontrado",
+    );
+  }
+}
 
 //=========INICIALIZACIÓN=========
 //Inicializar la página de categorías
@@ -457,6 +611,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (document.getElementById("reportes-tbody")) {
     await renderReportes();
   }
+
+const misDatosAdminForm = document.getElementById("mis-datos-form");
+  if (misDatosAdminForm) {
+    await obtenerAdminPorId().then((id) => {
+      if (id) {
+        poblarFormularioEdicion(id);
+      }
+    });
+    misDatosAdminForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const correo = document.getElementById("correo").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      actualizarDatosAdmin(correo, telefono);
+    });
+  }
+
 
   if (document.getElementById("users-tbody")) {
     await getUsuariosCiudadanos();
