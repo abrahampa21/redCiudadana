@@ -45,7 +45,7 @@
             <input type="text" id="rol" class="capitalize" readonly>
           </div>
           <div class="required-text mb-4">
-            <p class="text-[1.1rem]">Los campos marcados con * pueden modificarse.</p>
+            <p class="text-[1rem]">Los campos marcados con * pueden modificarse.</p>
           </div>
           <button type="submit" class="btn-edit w-full border-none rounded-lg font-semibold cursor-pointer mt-1" id="btn-edit">Guardar cambios</button>
         </form>

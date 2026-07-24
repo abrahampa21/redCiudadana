@@ -13,7 +13,7 @@ switch ($method) {
     case 'GET':
         //Retornar todas las categorías
         // http://localhost/redCiudadana/src/api/categorias_api.php
-        $query = $conn->prepare("SELECT nombre,descripcion FROM categoria");
+        $query = $conn->prepare("SELECT id_categoria,nombre,descripcion FROM categoria");
         $query->execute();
         $resultado = $query->get_result();
         $categorias = $resultado->fetch_all(MYSQLI_ASSOC);

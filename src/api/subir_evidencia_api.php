@@ -17,7 +17,7 @@ if ($method === "POST") {
 
     $archivo = $_FILES["evidencia"];
     $extension = strtolower(pathinfo($archivo["name"], PATHINFO_EXTENSION));
-    $permitidos = ["jpg","jpeg","png","webp","heic","hevc"];
+    $permitidos = ["jpg","jpeg","png","webp","heic","hevc","jfif"];
 
     if(!in_array($extension,$permitidos)){
         http_response_code(400);
