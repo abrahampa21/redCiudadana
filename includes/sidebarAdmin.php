@@ -5,6 +5,9 @@ require_once("../src/config/connection.php");
 $nombre_usuario = $_SESSION["nombre"];
 ?>
 
+<!--Movil menu-->
+<button class="menu-toggle" id="menuToggle">☰</button>
+
 <aside class="sidebar fixed" id="sidebar">
   <div class="logo-content">
     <div class="brand-icon">
@@ -59,7 +62,7 @@ $nombre_usuario = $_SESSION["nombre"];
       </div>
     </div>
     </a>
-    <a class="logout-btn" href="../src/logoutAdmin.php">
+    <a class="logout-btn" id="btn-logout" href="../src/logoutAdmin.php">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
         <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
       </svg>
@@ -67,3 +70,8 @@ $nombre_usuario = $_SESSION["nombre"];
     </a>
   </div>
 </aside>
+
+<?php include_once "modalLogoutAdmin.php"; ?>
+
+
+<div class="overlay" id="overlay"></div>

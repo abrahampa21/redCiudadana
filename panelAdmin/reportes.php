@@ -13,9 +13,8 @@
 
 <body>
   <?php include_once "../includes/sidebarAdmin.php"; ?>
-  <button class="menu-toggle" id="menuToggle">☰</button>
-  <div class="overlay" id="overlay"></div>
-  <div id="sidebar-container"></div>
+ 
+
 
   <!-- REPORTES -->
   <main class="dashboard">

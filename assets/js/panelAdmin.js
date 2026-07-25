@@ -25,7 +25,10 @@ const months = [
   "diciembre",
 ];
 
-
+//Modal constants
+const btnLogout = document.getElementById("btn-logout");
+const modalLogout = document.getElementById("modal-logout");
+const cancelarLogout = document.getElementById("cancelar-logout");
 
 //===SPINER===
 //Spinner
@@ -80,6 +83,25 @@ function hideToast() {
 if (toastBtnClose) {
   toastBtnClose.addEventListener("click", hideToast);
 }
+
+//Para el menu toggle responsivo
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.getElementById("menuToggle");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+
+  if (!menuToggle || !sidebar || !overlay) return;
+
+  menuToggle.addEventListener("click", () => {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+  });
+
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+  });
+});
 
 
 //============FUNCIONES API==============
@@ -636,6 +658,27 @@ const misDatosAdminForm = document.getElementById("mis-datos-form");
     await getReportesRecientes();
   }
 
+  //======== MODAL CIERRE DE SESIÓN ======
+  if (btnLogout && modalLogout && cancelarLogout) {
+    btnLogout.addEventListener("click", (e) => {
+      e.preventDefault();
+      modalLogout.classList.remove("hidden");
+      modalLogout.classList.add("flex");
+    });
+
+    cancelarLogout.addEventListener("click", () => {
+      modalLogout.classList.remove("flex");
+      modalLogout.classList.add("hidden");
+    });
+
+    modalLogout.addEventListener("click", (e) => {
+      if (e.target.id === "modal-logout") {
+        modalLogout.classList.remove("flex");
+        modalLogout.classList.add("hidden");
+      }
+    });
+  }
+  
   getReportesPorCategoria();
   initCategoriasPage();
   initDashboardPage();
