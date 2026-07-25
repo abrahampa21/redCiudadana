@@ -41,6 +41,11 @@ const cancelarLogout = document.getElementById("cancelar-logout");
 
 const nuevoReporteForm = document.getElementById("nuevo-reporte");
 
+//Variables para la paginación
+let todosLosReportes = [];
+let paginaActual = 1;
+const REPORTES_POR_PAGINA = 6;
+
 //Spinner
 function mostrarSpinner() {
   document.getElementById("spinner").classList.remove("hidden");
@@ -231,6 +236,70 @@ function mostrarReportesRecientes(reportes) {
   });
 }
 
+//Renderizado de páginas
+function renderizarPagina() {
+  reportesContainer.innerHTML = "";
+
+  const inicio = (paginaActual - 1) * REPORTES_POR_PAGINA;
+  const fin = inicio + REPORTES_POR_PAGINA;
+  const reportesPagina = todosLosReportes.slice(inicio, fin);
+
+  reportesPagina.forEach((reporte) => {
+    createReporteCard(reporte);
+  });
+
+  renderizarControlesPaginacion();
+}
+
+//Botones de paginación
+function renderizarControlesPaginacion() {
+  const paginacionContainer = document.getElementById("paginacion");
+  paginacionContainer.innerHTML = "";
+
+  const totalPaginas = Math.ceil(todosLosReportes.length / REPORTES_POR_PAGINA);
+
+  if (totalPaginas <= 1) return; // No mostrar nada si cabe todo en una página
+
+  // Botón anterior
+  const btnAnterior = document.createElement("button");
+  btnAnterior.textContent = "←";
+  btnAnterior.disabled = paginaActual === 1;
+  btnAnterior.className =
+    "px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer";
+  btnAnterior.addEventListener("click", () => {
+    paginaActual--;
+    renderizarPagina();
+  });
+  paginacionContainer.appendChild(btnAnterior);
+
+  // Botones numerados
+  for (let i = 1; i <= totalPaginas; i++) {
+    const btnPagina = document.createElement("button");
+    btnPagina.textContent = i;
+    btnPagina.className =
+      i === paginaActual
+        ? "px-3 py-1.5 rounded-lg bg-[#1f2a4d] text-white font-medium cursor-pointer"
+        : "px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 cursor-pointer";
+    btnPagina.addEventListener("click", () => {
+      paginaActual = i;
+      renderizarPagina();
+    });
+    paginacionContainer.appendChild(btnPagina);
+  }
+
+  // Botón siguiente
+  const btnSiguiente = document.createElement("button");
+  btnSiguiente.textContent = "→";
+  btnSiguiente.disabled = paginaActual === totalPaginas;
+  btnSiguiente.className =
+    "px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer";
+  btnSiguiente.addEventListener("click", () => {
+    paginaActual++;
+    renderizarPagina();
+  });
+  paginacionContainer.appendChild(btnSiguiente);
+}
+
 //======== APIS PARA CIUDADANOS =============
 //Mostrar reportes
 async function obtenerReportes() {
@@ -242,17 +311,18 @@ async function obtenerReportes() {
 
     if (response.ok) {
       const reportes = await response.json();
+      todosLosReportes = reportes;
+      paginaActual = 1;
 
       if (reportes.length === 0) {
         reportesContainer.innerHTML = `
           <p class='col-span-full text-slate-500 text-center py-8'>Aún no tienes reportes registrados.</p>
         `;
+        document.getElementById("paginacion").innerHTML = "";
         return;
       }
 
-      reportes.forEach((reporte) => {
-        createReporteCard(reporte);
-      });
+      renderizarPagina();
     } else {
       throw new Error(`${response.status}`);
     }
@@ -313,16 +383,16 @@ async function filtrarPorEstado(estado) {
 
     if (response.ok) {
       const reportes = await response.json();
-      reportesContainer.innerHTML = "";
+      todosLosReportes = reportes;
+      paginaActual = 1;
 
-      //En caso de no tener ningún reporte de ese estado
       if (reportes.length === 0) {
+        reportesContainer.innerHTML = "";
+        document.getElementById("paginacion").innerHTML = "";
         return;
       }
 
-      reportes.forEach((reporte) => {
-        createReporteCard(reporte);
-      });
+      renderizarPagina();
     } else {
       throw new Error(`${response.status}`);
     }
@@ -339,16 +409,16 @@ async function filtrarPorCategoria(categoria) {
 
     if (response.ok) {
       const reportes = await response.json();
-      reportesContainer.innerHTML = "";
+      todosLosReportes = reportes;
+      paginaActual = 1;
 
-      //En caso de no tener ningún reporte de esa categoria
       if (reportes.length === 0) {
+        reportesContainer.innerHTML = "";
+        document.getElementById("paginacion").innerHTML = "";
         return;
       }
 
-      reportes.forEach((reporte) => {
-        createReporteCard(reporte);
-      });
+      renderizarPagina();
     } else {
       throw new Error(`${response.status}`);
     }
@@ -365,10 +435,16 @@ async function buscarPorTitulo(reporte) {
 
     if (response.ok) {
       const reportes = await response.json();
-      reportesContainer.innerHTML = "";
-      reportes.forEach((reporte) => {
-        createReporteCard(reporte);
-      });
+      todosLosReportes = reportes;
+      paginaActual = 1;
+
+      if (reportes.length === 0) {
+        reportesContainer.innerHTML = "";
+        document.getElementById("paginacion").innerHTML = "";
+        return;
+      }
+
+      renderizarPagina();
     } else {
       throw new Error(`${response.status}`);
     }
@@ -659,7 +735,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
-
 
   const categorias = await obtenerCategorias();
 
