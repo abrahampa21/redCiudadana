@@ -219,16 +219,16 @@ switch ($method) {
         }
         break;
     case 'PATCH':
-        //cambiar estado del reporte
+        //cambiar estado y prioridad del reporte
         //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_reporte=2
         if (isset($_GET['id_reporte'])) {
             $id_reporte = intval($_GET['id_reporte']);
             $data = json_decode(file_get_contents("php://input"), true);
             $id_estado = intval($data['id_estado'] ?? 0);
-
+            $id_prioridades = intval($data['id_prioridades'] ?? 0);
             if (!empty($id_estado)) {
-                $stmt = $conn->prepare("UPDATE reporte SET id_estado = COALESCE(NULLIF(?, ''), id_estado) WHERE id_reporte = ?");
-                $stmt->bind_param("ii", $id_estado, $id_reporte);
+                $stmt = $conn->prepare("UPDATE reporte SET id_estado = COALESCE(NULLIF(?, ''), id_estado) , id_prioridades = COALESCE(NULLIF(?, ''), id_prioridades) WHERE id_reporte = ?");
+                $stmt->bind_param("ii", $id_estado, $id_prioridades, $id_reporte);
                 if ($stmt->execute()) {
                     http_response_code(200);
                     echo json_encode(array("mensaje" => "Estado cambiado exitosamente"));
