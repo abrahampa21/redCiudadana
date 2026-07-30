@@ -228,7 +228,7 @@ switch ($method) {
             $id_prioridades = intval($data['id_prioridades'] ?? 0);
             if (!empty($id_estado)) {
                 $stmt = $conn->prepare("UPDATE reporte SET id_estado = COALESCE(NULLIF(?, ''), id_estado) , id_prioridades = COALESCE(NULLIF(?, ''), id_prioridades) WHERE id_reporte = ?");
-                $stmt->bind_param("ii", $id_estado, $id_prioridades, $id_reporte);
+                $stmt->bind_param("iii", $id_estado, $id_prioridades, $id_reporte);
                 if ($stmt->execute()) {
                     http_response_code(200);
                     echo json_encode(array("mensaje" => "Estado cambiado exitosamente"));

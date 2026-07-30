@@ -40,6 +40,36 @@ function ocultarSpinner() {
   document.getElementById("spinner").classList.add("hidden");
 }
 
+//===DARK MODE===
+const darkModeToggle = document.getElementById("dark-mode-toggle");
+
+// Función para cambiar el ícono del botón según el modo
+function actualizarIconoDarkMode() {
+  if (!darkModeToggle) return;
+
+  const isDarkMode = document.body.classList.contains("dark");
+  const icon = darkModeToggle.querySelector("svg");
+
+  if (isDarkMode) {
+    // Ícono de sol
+    icon.innerHTML = '<circle cx="320" cy="320" r="120"/><path d="M320 40v80M320 520v80M600 320h-80M120 320H40M512.5 127.5l-56.6 56.6M184.1 455.9l-56.6 56.6M512.5 512.5l-56.6-56.6M184.1 184.1l-56.6-56.6" stroke="currentColor" stroke-width="40" stroke-linecap="round" fill="none"/>';
+    darkModeToggle.classList.add("active");
+  } else {
+    // Ícono de luna
+    icon.innerHTML = '<path d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C388.8 576 451.3 548.8 497.3 504.6C504.6 497.6 506.7 486.7 502.6 477.5C498.5 468.3 488.9 462.6 478.8 463.4C473.9 463.8 469 464 464 464C362.4 464 280 381.6 280 280C280 207.9 321.5 145.4 382.1 115.2C391.2 110.7 396.4 100.9 395.2 90.8C394 80.7 386.6 72.5 376.7 70.3C358.4 66.2 339.4 64 320 64z"/>';
+    darkModeToggle.classList.remove("active");
+  }
+}
+
+// Alterna el modo al hacer clic
+if (darkModeToggle) {
+  darkModeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    actualizarIconoDarkMode();
+  });
+}
+
 //===TOAST===
 // Toast constants
 const toastElement = document.getElementById("error-fetch");
@@ -102,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.classList.remove("active");
   });
 });
-
 
 //============FUNCIONES API==============
 
@@ -200,19 +229,52 @@ function crearModalDetalleReporte() {
   return modal;
 }
 
+//Cerrar el modal de detalle de reporte
+function cerrarModalReporte() {
+  const modal = document.getElementById("modal-detalle-reporte");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+//===== SELECTS DE PRIORIDAD Y ESTADO EN EL MODAL =====
+
+let reporteModalActual = null;
+
+// Prioridades fijas (coinciden con obtenerEtiquetaPrioridad: 1=baja, 2=media, 3=alta)
+const PRIORIDADES_OPCIONES = [
+  { id: 1, nombre: "Baja" },
+  { id: 2, nombre: "Media" },
+  { id: 3, nombre: "Alta" },
+];
+
+function construirOpcionesPrioridad(idActual) {
+  return PRIORIDADES_OPCIONES.map(
+    (p) =>
+      `<option value="${p.id}" ${Number(idActual) === p.id ? "selected" : ""}>${p.nombre}</option>`,
+  ).join("");
+}
+
+// Reutiliza el endpoint existente (groupby=estado) para sacar la lista de estados reales
+async function construirOpcionesEstado(idActual) {
+  const estados = await getReportesPorEstado(); // [{id_estado, nombre_categoria, total}]
+  return estados
+    .map(
+      (e) =>
+        `<option value="${e.id_estado}" ${Number(idActual) === Number(e.id_estado) ? "selected" : ""}>${e.nombre_categoria}</option>`,
+    )
+    .join("");
+}
+
 //Mostrar información completa de un reporte en modal
-function abrirModalReporte(reporte) {
+async function abrirModalReporte(reporte) {
+  reporteModalActual = reporte;
+
   const modal = crearModalDetalleReporte();
   const contenido = document.getElementById("modal-detalle-contenido");
 
-  if (!contenido) {
-    return;
-  }
+  if (!contenido) return;
 
-  const estado = obtenerEtiquetaEstado(
-    reporte.nombre_estado || reporte.id_estado,
-  );
-  const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
   const categoria = reporte.nombre_categoria || "Sin categoría";
   const rutaEvidencia = reporte.ruta_archivo || "";
   const esImagen = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(rutaEvidencia);
@@ -222,26 +284,139 @@ function abrirModalReporte(reporte) {
       : `<p><strong>Evidencia:</strong> <a href="${rutaEvidencia}" target="_blank" rel="noopener noreferrer">Ver archivo adjunto</a></p>`
     : "<p><strong>Evidencia:</strong> No se adjuntó evidencia.</p>";
 
+  const opcionesPrioridad = construirOpcionesPrioridad(reporte.id_prioridades);
+  const opcionesEstado = await construirOpcionesEstado(reporte.id_estado);
+
   contenido.innerHTML = `
     <h2 style="margin:0 0 12px;font-size:1.3rem;">${reporte.titulo || "Reporte"}</h2>
     <p style="margin:0 0 10px;"><strong>Descripción:</strong> ${reporte.descripcion || "Sin descripción"}</p>
     <p style="margin:0 0 10px;"><strong>Categoría:</strong> ${categoria}</p>
     <p style="margin:0 0 10px;"><strong>Ubicación:</strong> ${reporte.ubicacion || "Sin ubicación"}</p>
-    <p style="margin:0 0 10px;"><strong>Prioridad:</strong> ${prioridad || "Sin prioridad"}</p>
-    <p style="margin:0 0 10px;"><strong>Estado:</strong> ${estado || "Sin estado"}</p>
+
+    <div style="margin:0 0 10px;">
+      <label style="display:block;font-weight:bold;margin-bottom:4px;">Prioridad:</label>
+      <select id="select-prioridad-modal" class="filter-select" style="width:100%;">
+        ${opcionesPrioridad}
+      </select>
+    </div>
+
+    <div style="margin:0 0 10px;">
+      <label style="display:block;font-weight:bold;margin-bottom:4px;">Estado:</label>
+      <select id="select-estado-modal" class="filter-select" style="width:100%;">
+        ${opcionesEstado}
+      </select>
+    </div>
+
     <p style="margin:0 0 10px;"><strong>Ciudadano:</strong> ${reporte.nombre_ciudadano || "Sin asignar"}</p>
     <p style="margin:0 0 10px;"><strong>Fecha de creación:</strong> ${reporte.fecha_creacion || "Sin fecha"}</p>
     ${evidencia}
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+      <button type="button" id="btn-cancelar-reporte" style="background:#dc2626;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:600;cursor:pointer;">Cancelar</button>
+      <button type="button" id="btn-confirmar-reporte" style="background:#16a34a;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:600;cursor:pointer;">Guardar</button>
+    </div>
   `;
 
   modal.style.display = "flex";
+
+  document.getElementById("btn-cancelar-reporte").addEventListener("click", cerrarModalReporte);
+  document.getElementById("btn-confirmar-reporte").addEventListener("click", solicitarConfirmacionCambios);
 }
 
-//Cerrar el modal de detalle de reporte
-function cerrarModalReporte() {
-  const modal = document.getElementById("modal-detalle-reporte");
-  if (modal) {
+//===== MODAL DE CONFIRMACIÓN DE CAMBIOS =====
+
+function crearModalConfirmacionCambios() {
+  let modal = document.getElementById("modal-confirmar-cambios");
+
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "modal-confirmar-cambios";
     modal.style.display = "none";
+    modal.style.position = "fixed";
+    modal.style.inset = "0";
+    modal.style.background = "rgba(15, 23, 42, 0.65)";
+    modal.style.alignItems = "center";
+    modal.style.justifyContent = "center";
+    modal.style.zIndex = "10000";
+    modal.style.padding = "20px";
+
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,0.2);">
+        <h3 style="margin:0 0 8px;font-size:1.05rem;">¿Confirmar estos cambios?</h3>
+        <p style="margin:0 0 20px;color:#64748b;font-size:0.88rem;">Se actualizará el estado y/o la prioridad del reporte.</p>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <button type="button" id="btn-confirmacion-no" style="border:1.5px solid #e2e8f0;background:#fff;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;">Cancelar</button>
+          <button type="button" id="btn-confirmacion-si" style="background:#16a34a;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;">Sí, confirmar</button>
+        </div>
+      </div>
+    `;
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) cerrarModalConfirmacionCambios();
+    });
+
+    document.body.appendChild(modal);
+  }
+
+  return modal;
+}
+
+function cerrarModalConfirmacionCambios() {
+  const modal = document.getElementById("modal-confirmar-cambios");
+  if (modal) modal.style.display = "none";
+}
+
+function solicitarConfirmacionCambios() {
+  const modal = crearModalConfirmacionCambios();
+  modal.style.display = "flex";
+
+  document.getElementById("btn-confirmacion-no").onclick = cerrarModalConfirmacionCambios;
+  document.getElementById("btn-confirmacion-si").onclick = async () => {
+    await guardarCambiosReporte();
+    cerrarModalConfirmacionCambios();
+  };
+}
+
+async function guardarCambiosReporte() {
+  if (!reporteModalActual) return;
+
+  const idEstadoSeleccionado = document.getElementById("select-estado-modal").value;
+  const idPrioridadSeleccionada = document.getElementById("select-prioridad-modal").value;
+
+  await cambiarEstadoPrioridadReporte(
+    reporteModalActual.id_reporte,
+    idEstadoSeleccionado,
+    idPrioridadSeleccionada,
+  );
+
+  cerrarModalReporte();
+  reportesCache = [];
+  await renderReportes();
+}
+
+//PATCH para cambiar el estado y prioridad de un reporte
+async function cambiarEstadoPrioridadReporte(id_reporte, id_estado, id_prioridades) {
+  try {
+    const endpoint = `${BASE_URL}reportes_api.php?id_reporte=${id_reporte}`;
+    const response = await fetch(endpoint, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id_estado,
+        id_prioridades,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Respuesta del servidor:", data);
+  } catch (error) {
+    console.error("Error al cambiar el estado y prioridad del reporte:", error);
   }
 }
 
@@ -634,7 +809,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await renderReportes();
   }
 
-const misDatosAdminForm = document.getElementById("mis-datos-form");
+  const misDatosAdminForm = document.getElementById("mis-datos-form");
   if (misDatosAdminForm) {
     await obtenerAdminPorId().then((id) => {
       if (id) {
@@ -648,7 +823,6 @@ const misDatosAdminForm = document.getElementById("mis-datos-form");
       actualizarDatosAdmin(correo, telefono);
     });
   }
-
 
   if (document.getElementById("users-tbody")) {
     await getUsuariosCiudadanos();
@@ -678,7 +852,12 @@ const misDatosAdminForm = document.getElementById("mis-datos-form");
       }
     });
   }
-  
+  const darkModeGuardado = localStorage.getItem("darkMode") === "true";
+  if (darkModeGuardado) {
+    document.body.classList.add("dark");
+  }
+  actualizarIconoDarkMode();
+
   getReportesPorCategoria();
   initCategoriasPage();
   initDashboardPage();
