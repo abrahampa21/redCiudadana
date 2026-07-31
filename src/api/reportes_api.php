@@ -136,7 +136,6 @@ switch ($method) {
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
                 INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario 
-                INNER JOIN prioridades ON reporte.id_prioridades = prioridades.id_prioridades 
                 LEFT JOIN evidencias ON reporte.id_reporte = evidencias.id_reporte
                 WHERE reporte.id_estado = ?");
                 $stmt->bind_param("i", $id_estado);
