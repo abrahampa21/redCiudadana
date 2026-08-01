@@ -159,6 +159,7 @@ function abrirModal(reporte) {
   document.getElementById("detalle-estado").textContent = reporte.nombre_estado;
   document.getElementById("detalle-categoria").textContent =
     reporte.nombre_categoria;
+  document.getElementById("detalle-ubicacion").textContent = reporte.ubicacion
   document.getElementById("detalle-descripcion").textContent =
     reporte.descripcion;
 

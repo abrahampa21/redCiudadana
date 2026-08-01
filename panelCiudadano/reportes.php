@@ -102,6 +102,10 @@ $query->close();
               <p class="text-sm text-slate-500">Categoría</p>
               <p id="detalle-categoria" class="text-slate-700 font-medium"></p>
             </div>
+            <div>
+              <p class="text-sm text-slate-500">Ubicación</p>
+              <p id="detalle-ubicacion" class="text-slate-700 font-medium"></p>
+            </div>
           </div>
         </div>
         <div>
