@@ -17,6 +17,7 @@ switch ($method) {
         $query->execute();
         $resultado = $query->get_result();
         $categorias = $resultado->fetch_all(MYSQLI_ASSOC);
+        http_response_code(200);
         echo json_encode($categorias);
         $query->close();
         $conn->close();

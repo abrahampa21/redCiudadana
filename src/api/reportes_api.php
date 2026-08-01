@@ -17,7 +17,8 @@ switch ($method) {
         if (isset($_GET['id_usuario'])) {
             if (!isset($_SESSION['id_usuario'])) {
                 http_response_code(401);
-                echo json_encode(array("Mensaje" => "No autorizado"));
+                echo json_encode(array("mensaje" => "No autorizado"));
+                exit;
             }
 
             $id_usuario = $_SESSION['id_usuario'];
@@ -99,6 +100,7 @@ switch ($method) {
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 $reportesRecientes = $resultado->fetch_all(MYSQLI_ASSOC);
+                http_response_code(200);
                 echo json_encode($reportesRecientes);
                 $stmt->close();
                 $conn->close();
@@ -119,9 +121,11 @@ switch ($method) {
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
+                    http_response_code(200);
                     $categorias = $resultado->fetch_all(MYSQLI_ASSOC);
                     echo json_encode($categorias);
                 } else {
+                    http_response_code(404);
                     echo json_encode([]);
                 }
                 $stmt->close();
@@ -142,9 +146,11 @@ switch ($method) {
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
+                    http_response_code(200);
                     $estado = $resultado->fetch_all(MYSQLI_ASSOC);
                     echo json_encode($estado);
                 } else {
+                    http_response_code(404);
                     echo json_encode([]);
                 }
                 $stmt->close();
@@ -159,9 +165,11 @@ switch ($method) {
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
+                    http_response_code(200);
                     $prioridad = $resultado->fetch_assoc();
                     echo json_encode($prioridad);
                 } else {
+                    http_response_code(404);
                     echo json_encode(array("mensaje" => "Prioridad no existente"));
                 }
                 $stmt->close();
@@ -182,6 +190,7 @@ switch ($method) {
                 while ($row = $resultado->fetch_assoc()) {
                     $reportes[] = $row;
                 }
+                http_response_code(200);
                 $respuesta = json_encode($reportes);
                 echo $respuesta;
                 $stmt->close();
@@ -199,6 +208,12 @@ switch ($method) {
         $id_categoria = $data['id_categoria'] ?? null;
         $id_prioridades = $data['id_prioridades'] ?? null;
         $id_estado = $data['id_estado'] ?? null;
+
+        if (!isset($_SESSION['id_usuario'])) {
+            http_response_code(401);
+            echo json_encode(array("mensaje" => "No autorizado"));
+            break;
+        }
 
         $id_usuario = $_SESSION['id_usuario'];
 
@@ -225,7 +240,10 @@ switch ($method) {
             $data = json_decode(file_get_contents("php://input"), true);
             $id_estado = intval($data['id_estado'] ?? 0);
             $id_prioridades = intval($data['id_prioridades'] ?? 0);
-            if (!empty($id_estado)) {
+            if (empty($id_estado) && empty($id_prioridades)) {
+                http_response_code(400);
+                echo json_encode(array("mensaje" => "Debe enviar al menos un cambio de estado o prioridad"));
+            } elseif (!empty($id_estado)) {
                 $stmt = $conn->prepare("UPDATE reporte SET id_estado = COALESCE(NULLIF(?, ''), id_estado) , id_prioridades = COALESCE(NULLIF(?, ''), id_prioridades) WHERE id_reporte = ?");
                 $stmt->bind_param("iii", $id_estado, $id_prioridades, $id_reporte);
                 if ($stmt->execute()) {

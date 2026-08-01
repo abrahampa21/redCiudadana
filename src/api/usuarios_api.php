@@ -17,7 +17,8 @@ switch ($method) {
         if (isset($_GET["id_usuario"])) {
             if (!isset($_SESSION['id_usuario'])) {
                 http_response_code(401);
-                echo json_encode(array("Mensaje" => "Datos no autorizados"));
+                echo json_encode(array("mensaje" => "Datos no autorizados"));
+                exit;
             }
 
             $id_usuario = $_SESSION['id_usuario'];
@@ -26,6 +27,7 @@ switch ($method) {
             $stmt->execute();
             $resultado = $stmt->get_result();
             if ($resultado->num_rows > 0) {
+                http_response_code(200);
                 $usuario = $resultado->fetch_assoc();
                 echo json_encode($usuario);
             } else {
@@ -46,6 +48,7 @@ switch ($method) {
             while ($row = $resultado->fetch_assoc()) {
                 $usuarios[] = $row;
             }
+            http_response_code(200);
             $respuesta = json_encode($usuarios);
             echo $respuesta;
             $stmt->close();

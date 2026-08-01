@@ -1,4 +1,5 @@
 const BASE_URL = "http://localhost/redCiudadana/src/api/";
+const BASE_URL_UPLOADS = "http://localhost/redCiudadana/src/";
 
 const days = [
   "domingo",
@@ -162,6 +163,25 @@ function normalizarTexto(valor) {
   return (valor ?? "").toString().trim().toLowerCase();
 }
 
+//Resolver la ruta de la evidencia para mostrarla correctamente
+function obtenerRutaEvidencia(ruta) {
+  if (!ruta) return "";
+
+  if (/^https?:\/\//i.test(ruta)) {
+    return ruta;
+  }
+
+  if (ruta.startsWith("/")) {
+    return `http://localhost/redCiudadana${ruta}`;
+  }
+
+  if (ruta.startsWith("src/")) {
+    return `${BASE_URL_UPLOADS}${ruta}`;
+  }
+
+  return `${BASE_URL_UPLOADS}${ruta}`;
+}
+
 //Obtener la etiqueta de estado normalizada
 function obtenerEtiquetaEstado(valor) {
   const texto = normalizarTexto(valor);
@@ -209,9 +229,10 @@ function crearModalDetalleReporte() {
     modal.style.justifyContent = "center";
     modal.style.zIndex = "9999";
     modal.style.padding = "20px";
+    modal.style.overflowY = "auto";
 
     modal.innerHTML = `
-      <div style="background:#fff;border-radius:16px;max-width:620px;width:100%;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,0.2);position:relative;">
+      <div style="background:#fff;border-radius:16px;max-width:720px;width:min(100%, 720px);max-height:min(90vh, 900px);overflow:auto;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,0.2);position:relative;">
         <button type="button" onclick="cerrarModalReporte()" style="position:absolute;top:14px;right:14px;border:none;background:#f1f5f9;border-radius:999px;padding:6px 10px;cursor:pointer;">✕</button>
         <div id="modal-detalle-contenido"></div>
       </div>
@@ -276,11 +297,11 @@ async function abrirModalReporte(reporte) {
   if (!contenido) return;
 
   const categoria = reporte.nombre_categoria || "Sin categoría";
-  const rutaEvidencia = reporte.ruta_archivo || "";
-  const esImagen = /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(rutaEvidencia);
+  const rutaEvidencia = obtenerRutaEvidencia(reporte.ruta_archivo || "");
+  const esImagen = /\.(png|jpe?g|gif|webp|bmp|svg|jfif)$/i.test(rutaEvidencia);
   const evidencia = rutaEvidencia
     ? esImagen
-      ? `<div style="margin-top:12px;"><strong>Imagen del reporte:</strong><br><img src="${rutaEvidencia}" alt="Imagen del reporte" style="max-width:100%;max-height:320px;border-radius:12px;margin-top:8px;object-fit:contain;" /></div>`
+      ? `<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"><strong>Imagen del reporte:</strong><div style="width:100%;max-width:100%;max-height:280px;overflow:hidden;border-radius:12px;background:#f8fafc;display:flex;align-items:center;justify-content:center;"><img src="${rutaEvidencia}" alt="Imagen del reporte" style="max-width:100%;max-height:280px;width:auto;height:auto;object-fit:contain;display:block;" /></div></div>`
       : `<p><strong>Evidencia:</strong> <a href="${rutaEvidencia}" target="_blank" rel="noopener noreferrer">Ver archivo adjunto</a></p>`
     : "<p><strong>Evidencia:</strong> No se adjuntó evidencia.</p>";
 
