@@ -669,12 +669,102 @@ async function getReportesPorEstado() {
 
 //Mostrar el total de reportes por categoría en el panel de administracion
 function mostrarReportesPorCategoria(data) {
+  const container = document.getElementById("st-cats");
+
+  if (container) {
+    if (!Array.isArray(data) || !data.length) {
+      container.innerHTML = '<p class="empty-msg">Sin datos</p>';
+      return;
+    }
+
+    container.innerHTML = "";
+    data.forEach((cat) => {
+      const row = document.createElement("div");
+      row.className = "priority-row";
+      row.innerHTML = `
+        <span>${cat.nombre_categoria || "Sin categoría"}</span>
+        <span>${cat.total ?? 0}</span>
+      `;
+      container.appendChild(row);
+    });
+    return;
+  }
+
   data.forEach((cat) => {
     const span = document.querySelector(
       `[data-id-categoria="${cat.id_categoria}"]`,
     );
     if (span) span.textContent = `${cat.total} reportes`;
   });
+}
+
+//Mostrar el total de reportes por estado en el panel de administracion
+function mostrarReportesPorEstado(data) {
+  const estadoPendiente = document.getElementById("st-pend");
+  const estadoProceso = document.getElementById("st-proc");
+  const estadoResuelto = document.getElementById("st-res");
+  const estadoRechazado = document.getElementById("st-rechazado");
+
+  if (Array.isArray(data)) {
+    data.forEach((estado) => {
+      const nombreEstado = normalizarTexto(estado.nombre_categoria || estado.nombre || "");
+
+      if (nombreEstado.includes("pendiente") && estadoPendiente) {
+        estadoPendiente.textContent = estado.total ?? 0;
+      }
+
+      if (nombreEstado.includes("proceso") && estadoProceso) {
+        estadoProceso.textContent = estado.total ?? 0;
+      }
+
+      if (nombreEstado.includes("resuelto") && estadoResuelto) {
+        estadoResuelto.textContent = estado.total ?? 0;
+      }
+
+      if (nombreEstado.includes("rechazado") && estadoRechazado) {
+        estadoRechazado.textContent = estado.total ?? 0;
+      }
+    });
+  }
+
+  data.forEach((estado) => {
+    const span = document.querySelector(
+      `[data-id-estado="${estado.id_estado}"]`,
+    );
+    if (span) span.textContent = `${estado.total} reportes`;
+  });
+}
+
+//Mostrar el total de reportes por prioridad en el panel de administracion
+function mostrarReportesPorPrioridad(reportes) {
+  const baja = document.getElementById("st-baja");
+  const media = document.getElementById("st-media");
+  const alta = document.getElementById("st-alta");
+  const total = document.getElementById("st-total");
+
+  let totalBaja = 0;
+  let totalMedia = 0;
+  let totalAlta = 0;
+
+  reportes.forEach((reporte) => {
+    const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
+
+    if (prioridad === "baja") totalBaja += 1;
+    if (prioridad === "media") totalMedia += 1;
+    if (prioridad === "alta") totalAlta += 1;
+  });
+
+  if (baja) baja.textContent = totalBaja;
+  if (media) media.textContent = totalMedia;
+  if (alta) alta.textContent = totalAlta;
+  if (total) total.textContent = reportes.length;
+}
+
+//Mostrar las estadísticas generales del dashboard del panel de administracion
+function mostrarEstadisticasDashboard(reportes, categorias, estados) {
+  mostrarReportesPorCategoria(categorias);
+  mostrarReportesPorEstado(estados);
+  mostrarReportesPorPrioridad(reportes);
 }
 
 //Mostrar los reportes recientes en el dashboard del panel de administracion
@@ -704,16 +794,6 @@ async function getReportesRecientes() {
   } catch (error) {
     console.error("Error al obtener los reportes recientes:", error);
   }
-}
-
-//Mostrar el total de reportes por estado en el panel de administracion
-function mostrarReportesPorEstado(data) {
-  data.forEach((estado) => {
-    const span = document.querySelector(
-      `[data-id-estado="${estado.id_estado}"]`,
-    );
-    if (span) span.textContent = `${estado.total} reportes`;
-  });
 }
 
 //=========MIS DATOS (EDITAR DATOS ADMIN)=========
@@ -799,8 +879,13 @@ async function initCategoriasPage() {
 
 //Inicializar la página de dashboard
 async function initDashboardPage() {
-  const dataEstado = await getReportesPorEstado();
-  mostrarReportesPorEstado(dataEstado);
+  const [dataEstado, dataCategoria, reportes] = await Promise.all([
+    getReportesPorEstado(),
+    getReportesPorCategoria(),
+    obtenerTodoReportes(),
+  ]);
+
+  mostrarEstadisticasDashboard(reportes, dataCategoria, dataEstado);
 }
 
 //=========EVENTOS=========
@@ -830,6 +915,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   if (document.getElementById("recent-reports")) {
     await getReportesRecientes();
+  }
+
+  if (document.getElementById("page-stats")) {
+    await initDashboardPage();
   }
 
   //======== MODAL CIERRE DE SESIÓN ======
