@@ -344,41 +344,41 @@ body {
 }
 
 /*NUEVO REPORTE*/
-.nuevo-reporte h1 {
+.forms h1 {
   color: #1e293b;
 }
 
-.nuevo-reporte .div-input {
+.forms .div-input {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
 }
 
-.nuevo-reporte form {
+.forms form {
   border: 1px solid #e2e8f0;
   width: 500px;
 }
 
-.nuevo-reporte form input:focus,
-.nuevo-reporte form textarea:focus {
+.forms form input:focus,
+.forms form textarea:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 
-.nuevo-reporte form textarea {
+.forms form textarea {
   padding: 10px;
   border: 1.5px solid #e2e8f0;
 }
 
-.nuevo-reporte form button {
+.forms form button {
   background-color: #1a2540;
   color: #fff;
   font-size: 15px;
   padding: 11px;
 }
 
-.nuevo-reporte .div-input input,
-.nuevo-reporte .div-input select {
+.forms .div-input input,
+.forms .div-input select {
   width: 100%;
   padding: 10px 14px;
   border: 1.5px solid #e2e8f0;
@@ -387,7 +387,7 @@ body {
   outline: none;
 }
 
-.nuevo-reporte form label {
+.forms form label {
   font-size: 15px;
   font-weight: 600;
   color: #1e293b;
@@ -395,8 +395,77 @@ body {
   margin-bottom: 6px;
 }
 
-.nuevo-reporte .required-text p {
+.forms .required-text p {
   color: #062147;
+}
+
+/*Mis datos*/
+
+.editar-perfil .text h1 {
+  color: #1e293b;
+  
+}
+
+.editar-perfil .text p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin:10px;
+}
+
+
+.editar-perfil .div-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.editar-perfil .div-input label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.editar-perfil .div-input input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.editar-perfil .div-input input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.editar-perfil .div-input input[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.editar-perfil .required-text p {
+  font-size: 0.78rem;
+  color: #64748b;
+  padding-bottom: 10px;
+}
+
+.editar-perfil .btn-edit {
+  background-color: #1a2540;
+  color: #fff;
+  padding: 11px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.editar-perfil .btn-edit:hover {
+  background-color: #0f172a;
 }
 
 /*Toast*/
@@ -515,7 +584,7 @@ body {
     padding: 6px 12px;
   }
 
-  .nuevo-reporte {
+  .forms {
     width: 440px;
   }
 

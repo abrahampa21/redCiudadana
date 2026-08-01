@@ -20,7 +20,7 @@ require_once("../src/config/connection.php");
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
   <?php include_once "../includes/spinner.php"; ?>
   <!-- Nuevo Reporte -->
-  <main class="main-container nuevo-reporte">
+  <main class="main-container forms nuevo-reporte">
     <div class="container">
       <div class="text">
         <h1 class="text-[1.6rem] font-bold mb-1">Crear Reporte</h1>

@@ -14,7 +14,7 @@
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
   <?php include_once "../includes/spinner.php"; ?>
 
-  <main class="main-container nuevo-reporte">
+  <main class="main-container forms editar-perfil">
     <div class="container">
       <div class="text">
         <h1 class="text-[1.6rem] font-bold mb-1">Editar Perfil</h1>
