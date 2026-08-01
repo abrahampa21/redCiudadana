@@ -34,6 +34,7 @@
             <option>Pendiente</option>
             <option>En Proceso</option>
             <option>Resuelto</option>
+            <option>Rechazado</option>
           </select>
           <select class="filter-select" id="f-cat" onchange="renderReportes()">
             <option value="">Categoría: Todas</option>

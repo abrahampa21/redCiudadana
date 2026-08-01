@@ -71,28 +71,40 @@ if (isset($_POST["btn-registro"])) {
 
 //Recuperar contraseña
 if (isset($_POST["recover-btn"])) {
-  $correo = trim(htmlspecialchars($_POST['email']));
-  $nueva_contraseña = trim(htmlspecialchars($_POST['password']));
+  $correo = strtolower(trim(htmlspecialchars($_POST['email'] ?? '')));
+  $nueva_contraseña = trim(htmlspecialchars($_POST['password'] ?? ''));
 
   if (!validar_contraseña($nueva_contraseña)) {
     $toast = true;
+    $toast_type = "error";
     $toast_message = "Contraseña no válida, debe contener mínimo 8 caracteres, 1 caracter especial y 1 letra";
   } else {
-    $securePass = sha1($nueva_contraseña);
+    $verificarCorreo = $conn->prepare("SELECT id_usuario FROM usuario WHERE LOWER(correo) = LOWER(?) AND id_rol = 2 LIMIT 1");
+    $verificarCorreo->bind_param("s", $correo);
+    $verificarCorreo->execute();
+    $resCorreo = $verificarCorreo->get_result();
 
-    $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND id_rol = 2");
-    $update->bind_param("ss", $securePass, $correo);
-
-    if ($update->execute()) {
-      $toast = true;
-      $toast_type = "success";
-      $toast_message = "Contraseña actualizada correctamente";
-    } else {
+    if ($resCorreo->num_rows === 0) {
       $toast = true;
       $toast_type = "error";
-      $toast_message = "Error al actualizar la contraseña";
+      $toast_message = "No existe una cuenta con ese correo";
+    } else {
+      $securePass = sha1($nueva_contraseña);
+      $update = $conn->prepare("UPDATE usuario SET password = ? WHERE LOWER(correo) = LOWER(?) AND id_rol = 2");
+      $update->bind_param("ss", $securePass, $correo);
+
+      if ($update->execute()) {
+        $toast = true;
+        $toast_type = "success";
+        $toast_message = "Contraseña actualizada correctamente";
+      } else {
+        $toast = true;
+        $toast_type = "error";
+        $toast_message = "Error al actualizar la contraseña";
+      }
+      $update->close();
     }
-    $update->close();
+    $verificarCorreo->close();
   }
 }
 
