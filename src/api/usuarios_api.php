@@ -39,7 +39,12 @@ switch ($method) {
         } else {
             //Obtener usuarios por id_rol
             //http://localhost/redciudadana/src/api/usuarios_api.php?id_rol=
-            $id_rol = intval($_GET["id_rol"] ?? 0);
+            $id_rol = filter_input(INPUT_GET, 'id_rol', FILTER_VALIDATE_INT);
+            if ($id_rol === false || $id_rol < 1) {
+                http_response_code(400);
+                echo json_encode(["mensaje" => "El id_rol debe ser un número válido"]);
+                break;
+            }
             $stmt = $conn->prepare("SELECT id_usuario, nombre,correo,telefono,activo,fecha_registro FROM usuario WHERE id_rol = ?");
             $stmt->bind_param("i", $id_rol);
             $stmt->execute();
@@ -63,8 +68,18 @@ switch ($method) {
         break;
     }
 
-    $id_usuario = intval($_GET['id_usuario']);
+    $id_usuario = filter_input(INPUT_GET, 'id_usuario', FILTER_VALIDATE_INT);
+    if ($id_usuario === false || $id_usuario < 1) {
+        http_response_code(400);
+        echo json_encode(["mensaje" => "El id_usuario debe ser un número válido"]);
+        break;
+    }
     $data = json_decode(file_get_contents("php://input"), true);
+    if (!is_array($data)) {
+        http_response_code(400);
+        echo json_encode(["mensaje" => "Formato de datos inválido"]);
+        break;
+    }
     $accion = $_GET['accion'] ?? '';
 
     // --- Habilitar/deshabilitar cuenta (admin) ---
@@ -101,6 +116,12 @@ switch ($method) {
         $id_usuario_sesion = $_SESSION['id_usuario'];
         $correo = trim($data['correo'] ?? "");
         $telefono = trim($data['telefono'] ?? "");
+
+        if ($correo !== '' && !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "El correo debe tener un formato válido"]);
+            break;
+        }
 
         $stmt = $conn->prepare("UPDATE usuario SET correo = COALESCE(NULLIF(?, ''), correo), telefono = COALESCE(NULLIF(?, ''), telefono) WHERE id_usuario = ?");
         $stmt->bind_param("ssi", $correo, $telefono, $id_usuario_sesion);

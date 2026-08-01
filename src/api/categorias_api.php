@@ -14,7 +14,11 @@ switch ($method) {
         //Retornar todas las categorías
         // http://localhost/redCiudadana/src/api/categorias_api.php
         $query = $conn->prepare("SELECT id_categoria,nombre,descripcion FROM categoria");
-        $query->execute();
+        if (!$query->execute()) {
+            http_response_code(500);
+            echo json_encode(["mensaje" => "No se pudieron consultar las categorías"]);
+            break;
+        }
         $resultado = $query->get_result();
         $categorias = $resultado->fetch_all(MYSQLI_ASSOC);
         http_response_code(200);

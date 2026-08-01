@@ -109,7 +109,12 @@ switch ($method) {
             //filtrar categoria (admin y ciudadano)
             //endpoint http://localhost/redciudadana/src/api/reportes_api.php?id_categoria=2
             elseif (isset($_GET['id_categoria'])) {
-                $id_categoria = intval($_GET['id_categoria'] ?? 0);
+                $id_categoria = filter_input(INPUT_GET, 'id_categoria', FILTER_VALIDATE_INT);
+                if ($id_categoria === false || $id_categoria < 1) {
+                    http_response_code(400);
+                    echo json_encode(["mensaje" => "El id_categoria debe ser un número válido"]);
+                    break;
+                }
                 $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
@@ -134,7 +139,12 @@ switch ($method) {
             //filtrar por estado (admin y ciudadano)
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_estado=2
             elseif (isset($_GET['id_estado'])) {
-                $id_estado = intval($_GET['id_estado']);
+                $id_estado = filter_input(INPUT_GET, 'id_estado', FILTER_VALIDATE_INT);
+                if ($id_estado === false || $id_estado < 1) {
+                    http_response_code(400);
+                    echo json_encode(["mensaje" => "El id_estado debe ser un número válido"]);
+                    break;
+                }
                 $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
@@ -159,7 +169,12 @@ switch ($method) {
             //filtrar por prioridad (admin)
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_prioridad=2
             elseif (isset($_GET['id_prioridad'])) {
-                $id_proridad = intval($_GET['id_prioridad']);
+                $id_proridad = filter_input(INPUT_GET, 'id_prioridad', FILTER_VALIDATE_INT);
+                if ($id_proridad === false || $id_proridad < 1) {
+                    http_response_code(400);
+                    echo json_encode(["mensaje" => "El id_prioridad debe ser un número válido"]);
+                    break;
+                }
                 $stmt = $conn->prepare("SELECT * FROM reporte WHERE id_prioridad = ?");
                 $stmt->bind_param("i", $id_prioridad);
                 $stmt->execute();
@@ -201,6 +216,11 @@ switch ($method) {
         //crear reporte (ciudadano)
         //endpoint: http://localhost/redciudadana/src/api/reportes_api.php
         $data = json_decode(file_get_contents("php://input"), true);
+        if (!is_array($data)) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "Formato de datos inválido"]);
+            break;
+        }
 
         $titulo = trim($data['titulo'] ?? "");
         $descripcion = trim($data['descripcion'] ?? "");
@@ -208,6 +228,24 @@ switch ($method) {
         $id_categoria = $data['id_categoria'] ?? null;
         $id_prioridades = $data['id_prioridades'] ?? null;
         $id_estado = $data['id_estado'] ?? null;
+
+        if (isset($data['id_categoria']) && $data['id_categoria'] !== '' && $data['id_categoria'] !== null && !filter_var($data['id_categoria'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "El id_categoria debe ser un número válido"]);
+            break;
+        }
+
+        if (isset($data['id_prioridades']) && $data['id_prioridades'] !== '' && $data['id_prioridades'] !== null && !filter_var($data['id_prioridades'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "El id_prioridades debe ser un número válido"]);
+            break;
+        }
+
+        if (isset($data['id_estado']) && $data['id_estado'] !== '' && $data['id_estado'] !== null && !filter_var($data['id_estado'], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "El id_estado debe ser un número válido"]);
+            break;
+        }
 
         if (!isset($_SESSION['id_usuario'])) {
             http_response_code(401);
@@ -236,10 +274,30 @@ switch ($method) {
         //cambiar estado y prioridad del reporte
         //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_reporte=2
         if (isset($_GET['id_reporte'])) {
-            $id_reporte = intval($_GET['id_reporte']);
+            $id_reporte = filter_input(INPUT_GET, 'id_reporte', FILTER_VALIDATE_INT);
+            if ($id_reporte === false || $id_reporte < 1) {
+                http_response_code(400);
+                echo json_encode(["mensaje" => "El id_reporte debe ser un número válido"]);
+                break;
+            }
             $data = json_decode(file_get_contents("php://input"), true);
-            $id_estado = intval($data['id_estado'] ?? 0);
-            $id_prioridades = intval($data['id_prioridades'] ?? 0);
+            if (!is_array($data)) {
+                http_response_code(400);
+                echo json_encode(["mensaje" => "Formato de datos inválido"]);
+                break;
+            }
+            $id_estado = $data['id_estado'] ?? null;
+            $id_prioridades = $data['id_prioridades'] ?? null;
+            if (isset($id_estado) && $id_estado !== '' && !filter_var($id_estado, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+                http_response_code(400);
+                echo json_encode(["mensaje" => "El id_estado debe ser un número válido"]);
+                break;
+            }
+            if (isset($id_prioridades) && $id_prioridades !== '' && !filter_var($id_prioridades, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+                http_response_code(400);
+                echo json_encode(["mensaje" => "El id_prioridades debe ser un número válido"]);
+                break;
+            }
             if (empty($id_estado) && empty($id_prioridades)) {
                 http_response_code(400);
                 echo json_encode(array("mensaje" => "Debe enviar al menos un cambio de estado o prioridad"));
@@ -262,9 +320,9 @@ switch ($method) {
     case 'DELETE':
         //eliminar reporte (admin)
         //endpoint: http://localhost/redciudadana/src/api/reportes_api.php?id_reporte=2
-        $id_reporte = $_GET['id_reporte'] ?? null;
+        $id_reporte = filter_input(INPUT_GET, 'id_reporte', FILTER_VALIDATE_INT);
 
-        if (!empty($id_reporte)) {
+        if ($id_reporte !== false && $id_reporte >= 1) {
             $stmt = $conn->prepare("DELETE FROM reporte WHERE id_reporte = ?");
             $stmt->bind_param("i", $id_reporte);
 
@@ -277,7 +335,7 @@ switch ($method) {
             }
         } else {
             http_response_code(400);
-            echo json_encode(["mensaje" => "No se recibió el id del reporte"]);
+            echo json_encode(["mensaje" => "No se recibió un id_reporte válido"]);
         }
         break;
     default:
