@@ -37,6 +37,6 @@ if ($method === "POST") {
         echo json_encode(["mensaje" => "Error al mover el archivo"]);
     }
 } else {
-    http_response_code(400);
+    http_response_code(405);
     echo json_encode(["mensaje" => "Método no válido"]);
 }

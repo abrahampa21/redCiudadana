@@ -142,7 +142,7 @@ switch ($method) {
     $conn->close();
     break;
     default:
-        http_response_code(400);
+        http_response_code(405);
         echo json_encode(array("mensaje" => "Método no válido"));
         break;
 }
