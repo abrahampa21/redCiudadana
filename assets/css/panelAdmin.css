@@ -672,6 +672,71 @@ tr:last-child td {
   background: #0f172a;
 }
 
+/*============= DARK MODE ==========*/
+
+/* Alineamos el texto a lado del botón */
+.container-dark-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: fixed;
+  top: 24px;
+  right: 65px;
+  z-index: 2000;
+ color: #1a2540;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/*Quitamos el texto a lado del botón cuando las dimensiones sean pequeñas*/
+@media (max-width: 768px) {
+  .container-dark-mode span {
+    display: none;
+  }
+}
+
+.dark-mode-toggle{
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 2000;
+  /* border: #afbcca solid 1px ; */
+  background: transparent;
+  color: #fff;
+  /* box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12); */
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.dark-mode-toggle svg {
+
+  fill: #1a2540
+}
+
+
+.dark-mode-toggle svg:hover {
+  fill: #0f172a;
+  transition: fill 0.2s;
+}
+
+
+
+.dark-mode-toggle.active svg {
+  fill: #fff;
+ /* para los <path stroke="currentColor"> del sol */
+}
+
+.dark-mode-toggle.active:hover {
+  fill: #0f172a;
+  transition: fill 0.2s;
+}
+
+
+
+
 /*============= TOPBAR ==========*/
 .topbar {
   background: #fff;
@@ -1091,7 +1156,9 @@ tr:last-child td {
   .form-row {
     grid-template-columns: repeat(2, 1fr);
   }
-
+.container-dark-mode span {
+    display: none;
+  }
   .dashboard {
     padding: 16px;
   }
@@ -1143,7 +1210,9 @@ tr:last-child td {
   .menu-toggle {
     display: block;
   }
-
+  .container-dark-mode span {
+    display: none;
+  }
   .sidebar {
     padding-top: 5rem;
     position: fixed;
@@ -1231,4 +1300,170 @@ tr:last-child td {
   .form-card {
     padding: 20px;
   }
+  .container-dark-mode span {
+    display: none;
+  }
 }
+
+/*============= DARK MODE: CONTENIDO ==========*/
+body.dark {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Tarjetas y contenedores */
+body.dark .stat-card,
+body.dark .stat-circle-card,
+body.dark .card,
+body.dark .cat-card,
+body.dark .form-card,
+body.dark .topbar,
+body.dark .filters,
+body.dark .modal {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: none;
+}
+body.dark .card-content {
+  border-color: #334155;
+}
+
+/* Textos */
+body.dark .stat-num,
+body.dark .topbar-title,
+body.dark .page-title,
+body.dark .stat-label,
+body.dark .stat-circle-label,
+body.dark .form-card label,
+body.dark .editar-perfil .div-input label {
+  color: #f1f5f9;
+}
+body.dark .empty-msg,
+body.dark .page-sub,
+body.dark .reportes-empty,
+body.dark .form-hint,
+body.dark .cat-count,
+body.dark .cat-footer,
+body.dark .reportes-archived-text,
+body.dark .editar-perfil .text p,
+body.dark .editar-perfil .required-text p,
+body.dark .modal p {
+  color: #94a3b8;
+}
+
+/* Blanco en modo oscuro: título "Editar Perfil" y texto "Ver archivados" */
+body.dark .editar-perfil .text h1,
+body.dark .reportes-archived-text {
+  color: #ffffff;
+}
+
+/* Tablas */
+body.dark th {
+  color: #94a3b8;
+}
+body.dark th,
+body.dark td {
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+/* Inputs, selects, textareas */
+body.dark .filter-input,
+body.dark .filter-select,
+body.dark .status-select,
+body.dark .form-card input,
+body.dark .form-card select,
+body.dark .form-card textarea,
+body.dark .editar-perfil .div-input input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+body.dark .editar-perfil .div-input input[readonly] {
+  background: #334155;
+  color: #94a3b8;
+}
+
+/* Bordes de filas */
+body.dark .cat-row,
+body.dark .priority-row {
+  border-color: #334155;
+}
+
+/* Botones de fondo claro */
+body.dark .btn-back,
+body.dark .btn-cancel {
+  background: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+body.dark .btn-back:hover,
+body.dark .reportes-archived-link:hover {
+  background: #334155;
+}
+body.dark .reportes-archived-link svg {
+  fill: #ffffff;
+}
+
+/* Modal de logout */
+body.dark .modal h2 {
+  color: #f1f5f9;
+}
+body.dark #cancelar-logout {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+/* Toast */
+body.dark .toast {
+  background: #1e293b;
+}
+body.dark .toast.toast-success {
+  background: #14532d;
+  border-left-color: #22c55e;
+}
+body.dark .toast.toast-error {
+  background: #7f1d1d;
+  border-left-color: #ef4444;
+}
+body.dark .toast .btn-close {
+  color: #e2e8f0;
+}
+
+/* Override de utilidades Tailwind usadas inline en las páginas */
+body.dark .bg-white { background: #1e293b !important; }
+body.dark .text-slate-800 { color: #f1f5f9 !important; }
+body.dark .text-slate-500 { color: #94a3b8 !important; }
+body.dark .border-slate-200,
+body.dark .border-slate-300 { border-color: #334155 !important; }
+
+/*============= DARK MODE: MODALES CREADOS EN JS ==========*/
+body.dark #modal-detalle-reporte > div,
+body.dark #modal-confirmar-cambios > div {
+  background: #1e293b !important;
+}
+
+/* Botón de cerrar (✕) del modal de detalle */
+body.dark #modal-detalle-reporte button[onclick="cerrarModalReporte()"] {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Título y texto del modal de confirmación */
+body.dark #modal-confirmar-cambios h3 {
+  color: #f1f5f9 !important;
+}
+
+body.dark #modal-confirmar-cambios p {
+  color: #94a3b8 !important;
+}
+
+/* Botón "Cancelar" del modal de confirmación */
+body.dark #btn-confirmacion-no {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+

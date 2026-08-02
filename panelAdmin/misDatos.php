@@ -13,6 +13,7 @@
 <body>
   <?php include_once "../includes/sidebarAdmin.php"; ?>
   <?php include_once "../includes/spinner.php"; ?>
+  <?php include_once "../includes/botonModoOscuro.php"; ?>
   <main class="dashboard editar-perfil">
     <div class="container">
       <div class="text">
