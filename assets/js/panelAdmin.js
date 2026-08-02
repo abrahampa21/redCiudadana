@@ -401,18 +401,47 @@ function solicitarConfirmacionCambios() {
 async function guardarCambiosReporte() {
   if (!reporteModalActual) return;
 
-  const idEstadoSeleccionado = document.getElementById("select-estado-modal").value;
+  const selectEstado = document.getElementById("select-estado-modal");
+  const idEstadoSeleccionado = selectEstado.value;
+  const nombreEstadoSeleccionado =
+    selectEstado.options[selectEstado.selectedIndex].text;
   const idPrioridadSeleccionada = document.getElementById("select-prioridad-modal").value;
 
-  await cambiarEstadoPrioridadReporte(
+  const guardado = await cambiarEstadoPrioridadReporte(
     reporteModalActual.id_reporte,
     idEstadoSeleccionado,
     idPrioridadSeleccionada,
   );
 
+  if (!guardado) {
+    showToast("No se pudo actualizar el reporte. Inténtalo de nuevo.");
+    return;
+  }
+
   cerrarModalReporte();
   reportesCache = [];
   await renderReportes();
+
+  // Si el nuevo estado es resuelto o rechazado, el reporte pasa directo a archivados
+  const etiqueta = normalizarTexto(nombreEstadoSeleccionado);
+  if (etiqueta.includes("resuelto") || etiqueta.includes("rechazado")) {
+    showToast(
+      `El reporte fue marcado como "${nombreEstadoSeleccionado}" y movido a Archivados.`,
+      "success",
+    );
+  }
+
+  // Si desde archivados el estado cambia a pendiente o en proceso, vuelve a reportes.php
+  const esPaginaArchivados = window.location.pathname.endsWith("archivados.php");
+  if (
+    esPaginaArchivados &&
+    (etiqueta.includes("pendiente") || etiqueta.includes("proceso"))
+  ) {
+    showToast(
+      `El reporte fue marcado como "${nombreEstadoSeleccionado}" y movido a Reportes.`,
+      "success",
+    );
+  }
 }
 
 //PATCH para cambiar el estado y prioridad de un reporte
@@ -434,10 +463,11 @@ async function cambiarEstadoPrioridadReporte(id_reporte, id_estado, id_prioridad
       throw new Error(`HTTP ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log("Respuesta del servidor:", data);
+    await response.json();
+    return true;
   } catch (error) {
     console.error("Error al cambiar el estado y prioridad del reporte:", error);
+    return false;
   }
 }
 
@@ -458,7 +488,11 @@ function clearFilters() {
 
 //Renderizar reportes y filtrar usuarios desde el panel
 async function renderReportes() {
-  const tbodyReportes = document.getElementById("reportes-tbody");
+  const esPaginaReportes = window.location.pathname.endsWith("reportes.php");
+  const esPaginaArchivados = window.location.pathname.endsWith("archivados.php");
+  const tbodyReportes = document.getElementById(
+    esPaginaArchivados ? "reportesArchivados-tbody" : "reportes-tbody",
+  );
 
   if (tbodyReportes) {
     const reportes =
@@ -486,6 +520,16 @@ async function renderReportes() {
         reporte.nombre_estado || reporte.id_estado,
       );
       const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
+
+      // En reportes.php solo se muestran reportes pendientes o en proceso
+      if (esPaginaReportes && estado !== "pendiente" && estado !== "en proceso") {
+        return false;
+      }
+
+      // En archivados.php solo se muestran reportes resueltos o rechazados
+      if (esPaginaArchivados && estado !== "resuelto" && estado !== "rechazado") {
+        return false;
+      }
 
       const coincideBusqueda =
         !textoBusqueda ||
@@ -911,7 +955,10 @@ async function initDashboardPage() {
 
 //=========EVENTOS=========
 document.addEventListener("DOMContentLoaded", async () => {
-  if (document.getElementById("reportes-tbody")) {
+  if (
+    document.getElementById("reportes-tbody") ||
+    document.getElementById("reportesArchivados-tbody")
+  ) {
     await renderReportes();
   }
 

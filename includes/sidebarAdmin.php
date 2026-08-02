@@ -4,7 +4,11 @@ require_once("../src/config/connection.php");
 
 $nombre_usuario = $_SESSION["nombre"];
 ?>
-
+<script>
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+  }
+</script>
 <!--Movil menu-->
 <button class="menu-toggle" id="menuToggle">☰</button>
 

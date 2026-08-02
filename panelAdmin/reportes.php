@@ -82,6 +82,7 @@
 
   <div class="toast" id="toast"></div>
 
+  <?php include_once "../includes/toast.php"; ?>
 
   <script src="../assets/js/panelAdmin.js"></script>
 </body>
