@@ -10,7 +10,7 @@ body {
 
 /*SIDEBAR*/
 .sidebar {
-  background-color: #1a2540;
+  background-color: #0a2e36;
   position: fixed;
   width: 190px;
   display: flex;
@@ -141,7 +141,7 @@ body {
   font-weight: 700;
   color: #fff;
   flex-shrink: 0;
-  background-color: #f59e0b;
+  background-color: #a66a1f;
 }
 
 .user-name {
@@ -198,7 +198,7 @@ body {
   width: 60px;
   height: 60px;
   border: 6px solid #ddd;
-  border-top: 6px solid #0b74b8;
+  border-top: 6px solid #0f4c5c;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -298,7 +298,7 @@ body {
 }
 
 .reportes .btn-new {
-  background-color: #1a2540;
+  background-color: #0a2e36;
   color: #fff;
 }
 
@@ -334,8 +334,8 @@ body {
 }
 
 .reportes input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  border-color: #a66a1f;
+  box-shadow: 0 0 0 4px rgba(166, 106, 31, 0.18);
 }
 
 .reportes select {
@@ -350,7 +350,7 @@ body {
 }
 
 .reportes .clear-btn {
-  color: #2563eb;
+  color: #a66a1f;
 }
 
 .reportes-list p {
@@ -380,8 +380,8 @@ body {
 
 .forms form input:focus,
 .forms form textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  border-color: #a66a1f;
+  box-shadow: 0 0 0 4px rgba(166, 106, 31, 0.18);
 }
 
 .forms form textarea {
@@ -390,7 +390,7 @@ body {
 }
 
 .forms form button {
-  background-color: #1a2540;
+  background-color: #0a2e36;
   color: #fff;
   font-size: 15px;
   padding: 11px;
@@ -459,8 +459,8 @@ body {
 }
 
 .editar-perfil .div-input input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  border-color: #a66a1f;
+  box-shadow: 0 0 0 4px rgba(166, 106, 31, 0.18);
 }
 
 .editar-perfil .div-input input[readonly] {
@@ -476,7 +476,7 @@ body {
 }
 
 .editar-perfil .btn-edit {
-  background-color: #1a2540;
+  background-color: #0a2e36;
   color: #fff;
   padding: 11px;
   font-size: 0.9rem;
@@ -484,7 +484,7 @@ body {
 }
 
 .editar-perfil .btn-edit:hover {
-  background-color: #0f172a;
+  background-color: #061e24;
 }
 
 /*Toast*/
@@ -558,7 +558,7 @@ body {
     width: 200px;
     height: 100vh;
     flex-direction: column;
-    background-color: #1a2540;
+    background-color: #0a2e36;
     transition: left 0.3s ease;
     z-index: 1500;
   }

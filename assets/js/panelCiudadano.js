@@ -119,10 +119,10 @@ function createReporteCard(reporte) {
   cardReporte.classList.add("card-reporte");
 
   const estados = {
-    Pendiente: "bg-yellow-100 text-yellow-800",
-    "En proceso": "bg-blue-100 text-blue-800",
-    Resuelto: "bg-green-100 text-green-800",
-    Rechazado: "bg-red-100 text-red-800",
+    Pendiente: "bg-[#FAEEDA] text-[#633806]",
+    "En proceso": "bg-[#E6F1FB] text-[#0C447C]",
+    Resuelto: "bg-[#EAF3DE] text-[#27500A]",
+    Rechazado: "bg-[#FCEBEB] text-[#791F1F]",
   };
 
   const estadoBG =
@@ -139,7 +139,7 @@ function createReporteCard(reporte) {
       <h3 class='inline-block px-3 py-1 rounded-full font-medium ${estadoBG}'>
         ${reporte.nombre_estado}
       </h3>
-      <button class='btn-details mt-auto w-full bg-[#1f2a4d] hover:bg-[#16203b] text-white font-medium py-2.5 rounded-lg transition-colors duration-200 cursor-pointer'>Más detalles</button>
+      <button class='btn-details mt-auto w-full bg-[#0A2E36] hover:bg-[#061E24] text-white font-medium py-2.5 rounded-lg transition-colors duration-200 cursor-pointer'>Más detalles</button>
     </div>
   `;
 
@@ -211,10 +211,10 @@ function mostrarReportesRecientes(reportes) {
   }
 
   const estados = {
-    Pendiente: "bg-yellow-100 text-yellow-800",
-    "En proceso": "bg-blue-100 text-blue-800",
-    Resuelto: "bg-green-100 text-green-800",
-    Rechazado: "bg-red-100 text-red-800",
+    Pendiente: "bg-[#FAEEDA] text-[#633806]",
+    "En proceso": "bg-[#E6F1FB] text-[#0C447C]",
+    Resuelto: "bg-[#EAF3DE] text-[#27500A]",
+    Rechazado: "bg-[#FCEBEB] text-[#791F1F]",
   };
 
   reportes.forEach((reporte) => {
@@ -279,7 +279,7 @@ function renderizarControlesPaginacion() {
     btnPagina.textContent = i;
     btnPagina.className =
       i === paginaActual
-        ? "px-3 py-1.5 rounded-lg bg-[#1f2a4d] text-white font-medium cursor-pointer"
+        ? "px-3 py-1.5 rounded-lg bg-[#0A2E36] text-white font-medium cursor-pointer"
         : "px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 cursor-pointer";
     btnPagina.addEventListener("click", () => {
       paginaActual = i;

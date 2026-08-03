@@ -7,8 +7,8 @@
 }
 
 :root {
-  --bgd-grad: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #387be7 100%);
-  --emt-bgd: #1a2540;
+  --bgd-grad: linear-gradient(135deg, #061e24 0%, #0a2e36 50%, #0f4c5c 100%);
+  --emt-bgd: #0a2e36;
 }
 
 body {
@@ -102,7 +102,7 @@ main {
 .register button:hover,
 .login button:hover,
 .recover-password button:hover {
-  background: #0f172a;
+  background: #061e24;
   transform: translateY(-2px);
 
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
@@ -111,7 +111,7 @@ main {
 .register button:hover,
 .login button:hover,
 .recover-password button:hover {
-  background-color: #0f172a;
+  background-color: #061e24;
 }
 
 .register form,
@@ -170,15 +170,15 @@ main {
 .register .go-login span,
 .login strong {
   cursor: pointer;
-  color: #2563eb;
+  color: #a66a1f;
   font-weight: 600;
 }
 
 .register form input:focus,
 .login form input:focus,
 .recover-password form input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  border-color: #a66a1f;
+  box-shadow: 0 0 0 4px rgba(166, 106, 31, 0.18);
 }
 
 #register {
@@ -187,7 +187,7 @@ main {
 
 .login strong {
   cursor: pointer;
-  color: #2563eb;
+  color: #a66a1f;
 }
 
 .login strong:hover {
@@ -195,7 +195,7 @@ main {
 }
 
 .login .forgot-pass {
-  color: #2563eb;
+  color: #a66a1f;
   cursor: pointer;
   font-weight: 700;
   margin: 1rem 0rem 0.4rem;

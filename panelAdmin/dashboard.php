@@ -36,12 +36,12 @@
               <div
                 class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5"
               >
-                <svg class="icon-sm" viewBox="0 0 24 24" fill="#f59e0b">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#633806">
                   <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
                   />
                 </svg>
-                <span class="text-amber-500">Pendientes</span>
+                <span class="text-[#633806]">Pendientes</span>
               </div>
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
@@ -53,12 +53,12 @@
               <div
                 class="stat-label flex items-center gap-2 text-sm font-semibold mb-2.5"
               >
-                <svg class="icon-sm" viewBox="0 0 24 24" fill="#3b82f6">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#0C447C">
                   <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
                   />
                 </svg>
-                <span class="text-blue-500">En Proceso</span>
+                <span class="text-[#0C447C]">En Proceso</span>
               </div>
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
@@ -70,12 +70,12 @@
               <div
                 class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5"
               >
-                <svg class="icon-sm" viewBox="0 0 24 24" fill="#22c55e">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#27500A">
                   <path
                     d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
                   />
                 </svg>
-                <span class="text-green-500">Resueltos</span>
+                <span class="text-[#27500A]">Resueltos</span>
               </div>
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
@@ -87,12 +87,12 @@
               <div
                 class="stat-label flex items-center gap-2 text-xs font-semibold mb-2.5"
               >
-                <svg class="icon-sm" viewBox="0 0 24 24" fill="#ef4444">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="#791F1F">
                   <path
                     d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
                   />
                 </svg>
-                <span class="text-red-500">Rechazados</span>
+                <span class="text-[#791F1F]">Rechazados</span>
               </div>
               <div
                 class="stat-num text-[2rem] font-bold text-slate-800"
