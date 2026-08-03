@@ -34,12 +34,23 @@ $nombre_usuario = $_SESSION["nombre"];
       <span>Reportes</span>
     </a>
 
-    <a href="../panelCiudadano/nuevoReporte.php" class="link-element">
-      <svg viewBox="0 0 24 24">
-        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-      </svg>
-      <span>Nuevo Reporte</span>
-    </a>
+    <?php
+    $activo = $_SESSION['activo'] ?? 1;
+    if ($activo == 0) : ?>
+        <a class="link-element disabled" href="#" onclick="return false;" aria-disabled="true" title="Cuenta deshabilitada">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          </svg>
+          <span>Nuevo Reporte</span>
+        </a>
+    <?php else: ?>
+        <a href="../panelCiudadano/nuevoReporte.php" class="link-element">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          </svg>
+          <span>Nuevo Reporte</span>
+        </a>
+    <?php endif; ?>
 
   </nav>
   <div class="sidebar-user">

@@ -13,6 +13,7 @@
 <body>
   
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/toast.php"; ?>
   <main class="main-container">
     <div class="page" id="page-dashboard">
       <!-- Encabezado -->
@@ -107,6 +108,34 @@
       </div>
     </div>
   </main>
+
+  <?php if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0): ?>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const toastEl = document.getElementById('error-fetch');
+        if (!toastEl) return;
+
+        const titleEl = toastEl.querySelector('.toast-title-text');
+        const iconEl = toastEl.querySelector('.toast-icon');
+        const bodyEl = toastEl.querySelector('.toast-body');
+
+        const mensaje = 'Comuniquese con el administrador del sistema para más información.';
+
+        if (bodyEl) bodyEl.textContent = mensaje;
+
+        if (typeof showToast === 'function') {
+          showToast(mensaje, 'error');
+          if (titleEl) titleEl.textContent = 'CUENTA DESHABILITADA';
+          if (iconEl) iconEl.textContent = '⛔';
+        } else {
+          toastEl.classList.add('toast-error', 'show');
+          if (titleEl) titleEl.textContent = 'CUENTA DESHABILITADA';
+          if (iconEl) iconEl.textContent = '⛔';
+          setTimeout(() => toastEl.classList.remove('show'), 4000);
+        }
+      });
+    </script>
+  <?php endif; ?>
 
   <script src="../assets/js/panelCiudadano.js"></script>
 </body>

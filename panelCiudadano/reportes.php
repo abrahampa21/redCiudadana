@@ -37,7 +37,12 @@ $query->close();
     <div class="container">
       <div class="topbar flex justify-between items-center py-3.5 px-7 flex-wrap">
         <h1 class="font-bold">Reportes</h1>
-        <a href="nuevoReporte.php" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
+        <?php $activo = $_SESSION['activo'] ?? 1; ?>
+        <?php if ($activo == 0): ?>
+          <a id="btn-new" class="btn-new disabled flex items-center py-2 px-4 rounded-lg" href="#" onclick="return false;" aria-disabled="true" title="Cuenta deshabilitada">
+        <?php else: ?>
+          <a href="nuevoReporte.php" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
+        <?php endif; ?>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
           </svg>
@@ -123,8 +128,36 @@ $query->close();
   </div>
 
   <?php include_once "../includes/toast.php"; ?>
-
   <script src="../assets/js/panelCiudadano.js"></script>
+  <?php if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0): ?>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const toastEl = document.getElementById('error-fetch');
+        if (!toastEl) return;
+
+        const titleEl = toastEl.querySelector('.toast-title-text');
+        const iconEl = toastEl.querySelector('.toast-icon');
+        const bodyEl = toastEl.querySelector('.toast-body');
+
+        const mensaje = 'Comuniquese con el administrador del sistema para más información.';
+
+        if (bodyEl) bodyEl.textContent = mensaje;
+
+        // Use showToast if available to handle classes and auto-hide; then override title/icon
+        if (typeof showToast === 'function') {
+          showToast(mensaje, 'error');
+          if (titleEl) titleEl.textContent = 'CUENTA DESHABILITADA';
+          if (iconEl) iconEl.textContent = '⛔';
+        } else {
+          // Fallback: manually show the toast
+          toastEl.classList.add('toast-error', 'show');
+          if (titleEl) titleEl.textContent = 'CUENTA DESHABILITADA';
+          if (iconEl) iconEl.textContent = '⛔';
+          setTimeout(() => toastEl.classList.remove('show'), 4000);
+        }
+      });
+    </script>
+  <?php endif; ?>
 </body>
 
 </html>
