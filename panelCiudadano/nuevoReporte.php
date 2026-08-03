@@ -1,5 +1,11 @@
 <?php
 require_once("../src/config/connection.php");
+session_start();
+
+if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0) {
+    header("Location: dashboard.php");
+    exit;
+}
 
 ?>
 
