@@ -1,5 +1,8 @@
 <?php
-session_start();
+//Not duplicate session_start with new reporte
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once("../src/config/connection.php");
 
 $nombre_usuario = $_SESSION["nombre"];

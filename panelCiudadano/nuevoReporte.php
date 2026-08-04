@@ -1,12 +1,11 @@
 <?php
-require_once("../src/config/connection.php");
 session_start();
 
 if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0) {
-    header("Location: dashboard.php");
-    exit;
-}
-
+  header("Location: dashboard.php");
+  exit;
+  }
+  
 ?>
 
 <!doctype html>
@@ -37,7 +36,7 @@ if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0) {
       </div>
       <div class="container-form w-full flex items-center justify-center mt-6">
         <!--Formulario-->
-        <form action="handler/nuevoReporteCiudadano" class="bg-white rounded-xl p-7 max-w-[150] mx-auto" id="nuevo-reporte" enctype="multipart/form-data">
+        <form class="bg-white rounded-xl p-7 max-w-[150] mx-auto" id="nuevo-reporte" enctype="multipart/form-data">
           <div class="div-input titulo">
             <label for="titulo">Título *</label>
             <input
