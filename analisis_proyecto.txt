@@ -1,0 +1,394 @@
+================================================================
+ANALISIS DE AUDITORIA - PROYECTO RED CIUDADANA
+================================================================
+Fecha: 2026-08-05
+Alcance: Solo lectura. No se modifico ningun archivo del proyecto.
+Metodo: Recorrido completo del arbol (PHP, JS, CSS, SQL, config, git).
+Nota: Los hallazgos marcados como "VERIFICADO" fueron comprobados
+      contra el estado actual del codigo, no contra documentos previos.
+
+================================================================
+SECCION 1 - ERRORES CRITICOS (fallos de diseno o ejecucion)
+================================================================
+
+────── 1.1 Recuperacion de contrasena sin verificacion = APODERAMIENTO DE CUENTA ──────
+Archivo: includes/login.php:71-109
+Codigo:
+    if (isset($_POST["recover-btn"])) {
+        $correo = trim(htmlspecialchars($_POST['email']));
+        $nueva_contraseña = trim(htmlspecialchars($_POST['password']));
+        ...
+        $verificarCorreo = $conn->prepare("SELECT id_usuario FROM usuario WHERE correo = ? AND id_rol = 1 LIMIT 1");
+        ...
+        $update = $conn->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND id_rol = 1");
+Problema: El flujo "Recuperar contrasena" NO pide ningun token, codigo, enlace de correo
+         ni verificacion de identidad. Solo se envia el correo + nueva contrasena y se
+         actualiza directamente el password del usuario.
+Impacto: CRITICO. Cualquier persona que conozca el correo de un ciudadano puede cambiar
+         su contrasena y tomar control de la cuenta. Ademas, confirma que el correo
+         existe (enumeracion de cuentas).
+Solucion: Implementar token unico de un solo uso generado por servidor y enviado al
+         correo del usuario (expiracion, un solo intento). Nunca permitir el reseteo
+         directo desde POST con solo correo + nueva clave.
+
+────── 1.2 Pagina publica de registro de ADMINISTRADORES ──────
+Archivo: loginAdmin/index.php:31-55
+Codigo:
+    $securePass = sha1($pass);
+    ...
+    INSERT INTO usuario(...,id_rol) VALUES (...,2)
+Problema: La URL publica loginAdmin/index.php permite crear cuentas con id_rol=2 (admin)
+         sin ningun token de autorizacion ni restriccion. No hay proteccion extra
+         respecto al registro de ciudadanos.
+Impacto: CRITICO. Cualquier persona puede crear una cuenta de administrador desde el
+         navegador y obtener control total del panel admin.
+Solucion: Eliminar el registro de rol 2 de una pagina publica. Los administradores se
+         crean desde un area ya autenticada (panel admin) o mediante script/clave de
+         instalacion protegida.
+
+────── 1.3 Ninguna pagina de panel valida sesion activa ──────
+Archivo: panelCiudadano/dashboard.php, panelCiudadano/reportes.php, panelAdmin/*.php,
+         includes/sidebarCiudadano.php:2-3, includes/sidebarAdmin.php:2-3
+Codigo:
+    session_start();
+    $conn->... ; // sidebars leen $_SESSION["nombre"] / $_SESSION['id_usuario'] sin isset()
+Problema: No existe un guard central que redirija al login si no hay sesion. El sidebar
+         lee $_SESSION["nombre"] y $_SESSION['id_usuario'] directamente, sin isset().
+         Entrar por URL directa a cualquier panel genera "Undefined array key".
+Impacto: ALTO. No hay frontera de autenticacion en el frontend; el acceso a los datos
+         depende por completo de que las APIs validen sesion (y varias no lo hacen).
+Solucion: Crear includes/sesion.php que exija sesion activa (isset($_SESSION['id_usuario']))
+         y redirija a ../index.php. Incluirlo en la primera linea de toda pagina de panel
+         y en todas las APIs que expongan datos.
+
+────── 1.4 includes/login.php depende de $conn externo (fatal en uso aislado) ──────
+Archivo: includes/login.php:44, 145
+Codigo:
+    $validar = $conn->prepare("SELECT correo, telefono ..."); // linea 44
+    ...
+    $conn->close(); // linea 145
+Problema: El archivo usa $conn sin incluirlo. Funciona solo porque index.php incluye
+         primero connection.php. Ejecutado de forma aislada (require_once directo)
+         lanza "Undefined variable $conn" y Fatal "Call to a member function close()
+         on null" en la linea 145.
+Impacto: MEDIO. Acoplamiento fragil; si cambia el orden de includes en index.php se
+         rompe el login completo con fatal silencioso.
+Solucion: El archivo debe llamar session_start() y require_once de connection.php por
+         su cuenta, o recibir $conn validado con isset() antes de usarlo.
+
+================================================================
+SECCION 2 - VULNERABILIDADES DE SEGURIDAD
+================================================================
+
+────── 2.1 Contrasenas con SHA-1 (crypto rota) ──────
+Archivo: includes/login.php:41, 92, 115; loginAdmin/index.php:42, 54
+Codigo:
+    $securePass = sha1($pass);
+    ...
+    if ($usuario['password'] !== $passSec) {
+Problema: Todo el esquema de autenticacion usa sha1() sin salt y comparacion en claro
+         del hash. SHA-1 esta roto criptograficamente y es trivialmente atacable por
+         diccionario/rainbow-tables.
+Impacto: ALTO. Si la base se filtra (ver 2.4), la mayoria de contrasenas se recuperan
+         en minutos.
+Solucion: Migrar a password_hash()/password_verify() (bcrypt/argon2). Para migrar sin
+         invalidar cuentas: detectar hash sha1 en login, verificar, re-hashear y actualizar.
+
+────── 2.2 Credenciales de BD en texto plano y conexion sin manejo de errores ──────
+Archivo: src/config/config.php:3-5; src/config/connection.php:1-8
+Codigo:
+    $host = "localhost"; $user = "root"; $password = "12345abraham"; $database = "red_ciudadana";
+    ...
+    $conn = new mysqli(...); // sin modo excepciones, die() en error
+Problema: Credenciales hardcodeadas y debiles (root con clave por defecto). connection.php
+         usa die() ante error (expone detalles) y no configura charset.
+Impacto: MEDIO-ALTO. Si el servidor se compromete o el repo se clona sin .gitignore, la
+         clave queda expuesta. Nota positiva: src/config/ esta en .gitignore, por lo que
+         config.php y connection.php NO estan en git (un clon fresco no arranca sin crearlos).
+Solucion: Mover credenciales a variables de entorno / archivo fuera del webroot; activar
+         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); set_charset("utf8mb4").
+
+────── 2.3 APIs publicas sin autenticacion y CORS "*" ──────
+Archivo: src/api/evidencias_api.php:4, 16-30, 31-46; src/api/categorias_api.php;
+         src/api/subir_evidencia_api.php; src/api/reportes_api.php (PATCH);
+         src/api/usuarios_api.php (GET devuelve hash password)
+Codigo:
+    header("Access-Control-Allow-Origin: *");
+    ...
+    if (isset($_GET['id_evidence'])) { ... SELECT * FROM evidencias ... }
+    else { ... SELECT * FROM evidencias ... } // devuelve TODAS las evidencias
+Problema: Ninguna API valida session ni rol. Cualquiera puede:
+         - Listar todas las evidencias y sus rutas (evidencias_api.php GET sin id).
+         - Descargar evidencias por id (GET ?id_evidence=).
+         - Subir archivos (subir_evidencia_api.php, sin sesion ni rol).
+         - Modificar cualquier reporte (PATCH reportes_api.php?); el campo
+           retroalimentacion no tiene control de longitud ni de autor.
+         - Obtener el hash de contrasena del usuario (usuarios_api.php GET).
+Impacto: CRITICO. Fuga total de datos (reportes, evidencias, hash de claves) y
+         modificacion arbitraria de registros sin autenticacion.
+Solucion: Exigir session activa (y rol correcto segun endpoint) en todos los archivos de
+         src/api. Retirar Access-Control-Allow-Origin: * (no se consume desde otro origen).
+         Nunca devolver la columna password ni siquiera a su propio dueno.
+
+────── 2.4 Evidencias subidas COMMITEADAS en git y carpeta sin proteccion ──────
+Archivo: src/uploads/evidencias_reportes/evidencia_*.jfif (6 archivos en git);
+         ningun .htaccess en el arbol
+Problema: Archivos de evidencia de usuarios (fotos/documentos personales) estan
+         versionados en el repositorio. No existe .htaccess que bloquee el listado
+         ni el acceso a la carpeta de subidas.
+Impacto: ALTO. Datos personales en el historial de git (imposible de limpiar con un
+         simple commit) y posible listado de directorio en Apache que expone todas las
+         evidencias publicamente.
+Solucion: Quitar del historial con git filter-repo/BFG, anadir src/uploads/ a .gitignore,
+         bloquear el listado con .htaccess (Options -Indexes) y servir los archivos
+         solo via endpoint autenticado (readfile con validacion de sesion y rol).
+
+────── 2.5 XSS por inyeccion sin escapar en templates innerHTML ──────
+Archivo: assets/js/panelAdmin.js:335 (y templates del modal detalle de reporte)
+Codigo:
+    <textarea ...>${reporte.retroalimentacion || ""}</textarea>
+Problema: Los datos de la API (retroalimentacion, descripcion, titulo) se insertan en
+         el DOM mediante template literals dentro de innerHTML sin escape HTML.
+Impacto: MEDIO-ALTO. Un ciudadano (o admin) puede inyectar HTML/JS almacenado que se
+         ejecuta en la sesion de quien visualiza el reporte.
+Solucion: Escapar siempre los valores dinamicos antes de insertarlos (funcion
+         escapeHtml) o construir los nodos con createElement/textContent.
+
+────── 2.6 Enumeracion de cuentas en login y recuperacion ──────
+Archivo: includes/login.php:124, 134, 90; loginAdmin/index.php (mismo patron)
+Codigo:
+    "No existe una cuenta para este correo"  vs  "Contrasena incorrecta"
+Problema: Mensajes distintos revelan si un correo esta registrado.
+Impacto: BAJO-MEDIO. Facilita phishing dirigido y enumeracion de usuarios validos.
+Solucion: Respuesta generica unica ("Credenciales incorrectas") en login y en
+         recuperacion ("Si el correo existe, recibiras instrucciones").
+
+================================================================
+SECCION 3 - BACKEND
+================================================================
+
+────── 3.1 POST de evidencias con mapeo de columnas incorrecto ──────
+Archivo: src/api/evidencias_api.php:48-72
+Codigo:
+    $nombre_archivo = trim($data['titulo'] ?? "");
+    $ruta_archivo = trim($data['descripcion'] ?? "");
+    INSERT INTO evidencias (nombre_archivo, ruta_archivo, id_reporte) VALUES (?, ?, ?)
+Problema: El campo "titulo" del JSON se guarda en la columna nombre_archivo (el nombre
+         del archivo) y el campo "descripcion" en ruta_archivo (la ruta del archivo).
+         El id_reporte se toma de $_GET y el resto del body. Es ademas una API
+         duplicada de subir_evidencia_api.php (que es la que usa el frontend).
+Impacto: MEDIO. Si se usara, los datos quedarian semanticamente corruptos. Hoy es
+         codigo muerto de bajo riesgo que confunde.
+Solucion: Eliminarlo o corregir el mapeo (nombre_archivo desde el archivo real, ruta
+         desde la subida) y unificar la creacion de evidencias en un solo endpoint.
+
+────── 3.2 Rutas de include rotas en index.php ──────
+Archivo: index.php:2-3
+Codigo:
+    require_once(__DIR__ .'../src/config/connection.php');
+    require_once(__DIR__ .'.../includes/login.php');
+Problema: Falta el separador de directorio (__DIR__."/../..."); las rutas "funcionan"
+         solo por la normalizacion que Windows hace al resolver el path concatenado.
+Impacto: MEDIO. No portable a Linux (produccion). Depende del comportamiento de la
+         plataforma para cargar archivos criticos.
+Solucion: Escribir rutas correctas: __DIR__ . "/../src/config/connection.php" y
+         __DIR__ . "/../includes/login.php".
+
+────── 3.3 API de reportes sin paginacion ni control de volumen ──────
+Archivo: src/api/reportes_api.php (GET con/ sin filtros)
+Problema: GET devuelve la tabla completa de reportes (con todos los campos) en cada
+         llamada, sin paginacion, limite ni abort. Con el tiempo el payload crece sin
+         limite.
+Impacto: MEDIO. Consumo de memoria/BW del servidor y del cliente a medida que crece
+         la base.
+Solucion: Paginacion (LIMIT/OFFSET o cursor), filtros obligatorios por usuario en el
+         panel ciudadano, y proyeccion de columnas minimas.
+
+────── 3.4 Fuga del hash de contrasena por API ──────
+Archivo: src/api/usuarios_api.php (GET ?id_usuario=)
+Problema: La consulta SELECT * incluye la columna password y se serializa completa.
+Impacto: ALTO si se combina con 2.1/2.4. Nunca debe salir por HTTP ni siquiera al
+         propio usuario.
+Solucion: Seleccionar columnas explicitas excluyendo password (y cualquier dato
+         sensible interno).
+
+================================================================
+SECCION 4 - FRONTEND / CODIGO MUERTO
+================================================================
+
+────── 4.1 Archivos JS/PHP con caracteres corruptos (mojibake) ──────
+Archivo: assets/js/panelAdmin.js:98-99, 102, 238, 334; assets/js/panelCiudadano.js:93-94;
+         includes/toast.php (icono y cuerpo)
+Codigo:
+    titleToast.textContent = "�xito";   // deberia ser "Exito" (o emoji + "Exito")
+    iconToast.textContent = "?";        // emoji de check/aviso convertido en "?"
+    <label ...>Retroalimentaci�n:</label>  // "Retroalimentación"
+    No se pudo procesar la informaci�n del reporte
+Problema: VERIFICADO. Los archivos estan guardados con codificacion mixta/rota (bytes
+         no UTF-8 validos, sin BOM). Los acentos y emojis se muestran como "?" y "�"
+         en el navegador. Afecta al toast de exito y a la etiqueta de la nueva
+         funcionalidad de retroalimentacion.
+Impacto: MEDIO (visible para el usuario). El mensaje de exito sale como "?xito".
+Solucion: Guardar los archivos en UTF-8 (sin BOM) y reescribir las cadenas afectadas
+         (Exito, emoji correcto, "Retroalimentación", "información").
+
+────── 4.2 CSS compilado duplicado y muerto ──────
+Archivo: assets/css/tailwind.css (7.621 B) no es referenciado por NINGUNA pagina
+         (todas usan ../src/output.css). src/output.css (23 KB) es el que se carga.
+Problema: VERIFICADO. assets/css/tailwind.css es un build antiguo/duplicado sin uso.
+Impacto: BAJO. Confusion en mantenimiento, peso innecesario en el repo.
+Solucion: Eliminar assets/css/tailwind.css y dejar un unico pipeline (src/input.css ->
+         src/output.css).
+
+────── 4.3 Tailwind @source no escanea .php ──────
+Archivo: src/input.css:2-3
+Codigo:
+    @import "tailwindcss";
+    @source "../panelCiudadano/*.html";
+    @source "../includes/*.html";
+Problema: Los @source apuntan solo a *.html; las clases usadas en los templates .php
+         no se detectan al compilar, por lo que clases utilitarias de Tailwind que
+         aparezcan en PHP no existiran en output.css.
+Impacto: BAJO-MEDIO. Riesgo de estilos faltantes si alguien usa utilidades de Tailwind
+         en un .php.
+Solucion: Anadir @source "../panelCiudadano/*.php"; (y demas carpetas) o documentar que
+         el proyecto usa solo clases CSS propias.
+
+────── 4.4 Dependencia "docx" sin uso y sin scripts de build ──────
+Archivo: package.json (docx ^9.7.1)
+Problema: VERIFICADO. "docx" no se referencia en ningun .php/.js/.html del proyecto.
+         package.json no define scripts (el build de Tailwind es manual).
+Impacto: BAJO. Dependencia muerta que infla node_modules si se instala.
+Solucion: Retirar docx (o implementar la exportacion a Word que parece ser el plan) y
+         anadir scripts (ej. "build:css").
+
+────── 4.5 Bootstrap cargado sin componentes Bootstrap en una pagina ──────
+Archivo: panelCiudadano/nuevoReporte.php:83 (bootstrap.bundle.min.js)
+Problema: La pagina no usa ningun componente de Bootstrap (su toast es CSS propio).
+         Bootstrap solo se usa de verdad en index.php:224 y loginAdmin/index.php:358
+         (new bootstrap.Toast). En los paneles, el boton X del toast usa
+         data-bs-dismiss="toast" pero Bootstrap NO esta cargado (lo cierra el JS propio
+         via addEventListener, por lo que funciona igual).
+Impacto: BAJO. ~100 KB de JS descargados sin necesidad en nuevoReporte.php.
+Solucion: Quitar el script de Bootstrap en nuevoReporte.php (y quitar el atributo
+         data-bs-dismiss del toast.php ya que no hay Bootstrap en los paneles).
+
+────── 4.6 HTML invalido: <div> dentro de <select> y toasts muertos ──────
+Archivo: panelAdmin/archivados.php:40-43; panelAdmin/usuarios.php:29
+Codigo:
+    <select ...> ... <div class="toast" id="toast"></div> ...
+Problema: VERIFICADO. Se coloco un <div> como hijo directo de un <select> (HTML invalido;
+         solo <option>/<optgroup> son validos). Ademas el id "toast" duplicado.
+         Por otro lado, panelAdmin/dashboard.php, estadisticas.php, categorias.php y
+         usuarios.php incluyen un <div class="toast" id="toast"></div> que showToast
+         NUNCA usa (apunta a #error-fetch con guardia if (!toastElement) return).
+Impacto: BAJO-MEDIO. El select invalido puede ser re-renderizado por el navegador; el
+         toast decorativo es codigo muerto e inconsistente con el resto.
+Solucion: Sacar el <div> del <select> y sustituir esos divs por el include
+         includes/toast.php (o eliminar la fila si el toast no aplica).
+
+────── 4.7 BASE_URL fija y con http:// ──────
+Archivo: assets/js/panelAdmin.js:1-2; assets/js/panelCiudadano.js:1-2
+Codigo:
+    const BASE_URL = "http://localhost/redCiudadana/src/api/";
+Problema: Ruta y protocolo hardcodeados. Si el proyecto se mueve de carpeta, se publica
+         en HTTPS o en otro host, todas las llamadas fetch fallan.
+Impacto: MEDIO. Rotura total de las APIs en cualquier despliegue distinto.
+Solucion: Definir BASE_URL desde el PHP (ej. una variable global impresa con
+         window.BASE_URL = "<?= $base ?>" usando la ruta relativa detectada) o usar
+         rutas relativas al directorio de la pagina.
+
+────── 4.8 Codigo CSS duplicado ──────
+Archivo: assets/css/index.css:102-115
+Codigo:
+    .register button:hover, .login button:hover, .recover-password button:hover { background: #061e24; ... }
+    ... bloque identico repetido en 111-115
+Problema: VERIFICADO. Regla hover duplicada identica en el mismo archivo.
+Impacto: BAJO. Solo limpieza.
+Solucion: Conservar una sola regla.
+
+────── 4.9 Tipografia inconsistente y dependencias CDN de terceros ──────
+Archivo: 5 de 6 paginas admin cargan Google Fonts DM Sans (panelAdmin/misDatos.php NO);
+         index.php:25 y loginAdmin/index.php:162 cargan kit de FontAwesome (CDN)
+Problema: Fuente inconsistente entre paginas del mismo panel; dependencia de
+         scripts externos (privacidad, disponibilidad y rendimiento de terceros).
+Impacto: BAJO.
+Solucion: Unificar el <link> de fuentes en un include comun o auto-hospedar.
+
+────── 4.10 Filtros admin que leen elementos inexistentes ──────
+Archivo: panelAdmin/reportes.php:30-34; assets/js/panelAdmin.js:531, 534
+Problema: renderReportes() lee document.getElementById("f-cat") y ("f-prio") que no
+         existen en el HTML de reportes.php (solo f-search y f-estado). Con "?."
+         no rompe pero el filtro por categoria/prioridad queda mudo.
+Impacto: BAJO.
+Solucion: Agregar los selects #f-cat/#f-prio a reportes.php o retirar esas lecturas.
+
+================================================================
+SECCION 5 - CONSUMO DE RECURSOS / RENDIMIENTO
+================================================================
+
+────── 5.1 APIs sin paginacion (GET todo a la vez) ──────
+Archivo: src/api/reportes_api.php; src/api/evidencias_api.php:31-46
+Problema: Cada GET sin filtro serializa la tabla completa de reportes/evidencias.
+Impacto: MEDIO-ALTO a medida que crece la base: latencia, memoria y banda de red.
+Solucion: Paginar (LIMIT/OFFSET), exigir filtros y proyectar solo columnas necesarias.
+
+────── 5.2 Subida de archivos sin limite de tamano ni validacion de MIME ──────
+Archivo: src/api/subir_evidencia_api.php
+Problema: Solo se valida la extension (jpg/jpeg/png/webp/heic/hevc/jfif), no el MIME
+         real ni el tamano. Sin limite puede agotar el disco.
+Impacto: MEDIO. Disponibilidad del servidor y riesgo de archivos disfrazados.
+Solucion: Limitar tamano (ini/post_max_size o validacion por bytes), validar MIME real
+         (finfo) y renombrar con nombre aleatorio seguro (random_bytes + bin2hex).
+
+────── 5.3 Sin capa de cache y multiples requests por pantalla ──────
+Archivo: assets/js/panelAdmin.js, assets/js/panelCiudadano.js (fetch sin cache/abort)
+Problema: El dashboard ciudadano hace varias peticiones independientes (por estado,
+         por categoria, buscar) que se repiten en cada render sin cachear.
+Impacto: BAJO-MEDIO. Duplica el trafico de red en la pantalla principal.
+Solucion: Cachear en memoria (Map) por endpoint, deduplicar peticiones concurrentes y
+         abortar las obsoletas (AbortController).
+
+────── 5.4 Assets de terceros en cada carga ──────
+Archivo: index.php:25, 224; loginAdmin/index.php:162, 358; panelCiudadano/nuevoReporte.php:83
+Problema: FontAwesome kit, Bootstrap bundle y Google Fonts se descargan de CDN en cada
+         visita (varios round-trips de terceros).
+Impacto: BAJO. Coste de red y dependencia de disponibilidad externa.
+Solucion: Consolidar los iconos SVG inline que ya usa botonModoOscuro.php y eliminar
+         los kits que no aportan componentes reales.
+
+================================================================
+SECCION 6 - MEJORAS PRIORIZADAS
+================================================================
+
+1. (CRITICO) Recuperacion de contrasena: token de un solo uso enviado por correo.
+   includes/login.php:71-109.
+2. (CRITICO) Eliminar el registro publico de administradores en loginAdmin/index.php:31-55.
+3. (CRITICO) Autenticar TODAS las APIs de src/api (sesion + rol) y retirar CORS "*".
+4. (CRITICO) Migrar sha1() -> password_hash()/password_verify() en login y loginAdmin.
+5. (ALTO) Sacar evidencias del historial de git, ignorar src/uploads/ y bloquear el
+   listado de la carpeta (Options -Indexes / .htaccess).
+6. (ALTO) Guard central de sesion para todos los paneles (includes/sesion.php).
+7. (MEDIO) Escapar datos dinamicos en templates innerHTML (XSS).
+8. (MEDIO) Re-encodificar a UTF-8 los archivos con mojibake (4.1) para que "Exito",
+   iconos y "Retroalimentacion" se muestren bien.
+9. (MEDIO) Centralizar BASE_URL en una sola constante derivada del PHP.
+10. (BAJO) Limpieza: eliminar assets/css/tailwind.css, dependencia docx sin uso,
+    Bootstrap en nuevoReporte.php, y arreglar <div> dentro de <select>.
+11. (BAJO) Corregir rutas de include en index.php:2-3 y @source de input.css para *.php.
+12. (BAJO) Paginacion en GET de reportes y evidencias; limite de tamano y MIME real en
+    subir_evidencia_api.php.
+
+================================================================
+NOTA - PROYECTO JAVA (consumidor de la misma API)
+================================================================
+No se encontro ningun proyecto Java asociado a Red Ciudadana.
+Busqueda recursiva de *.java, pom.xml, build.gradle y build.xml:
+- En C:\xampp\htdocs\redCiudadana: SIN RESULTADOS.
+- En carpetas hermanas revisadas (programacionAvanzada, ProgramacionAvanzadaAAPA,
+  y el resto de C:\xampp\htdocs): SIN RESULTADOS.
+Por tanto, no hay aplicacion desktop Java que auditar ni que consuma la API.
+
+================================================================
+FIN DEL ANALISIS
+================================================================
