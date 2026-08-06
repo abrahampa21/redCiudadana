@@ -40,14 +40,14 @@ $query->close();
         <?php $activo = $_SESSION['activo'] ?? 1; ?>
         <?php if ($activo == 0): ?>
           <a id="btn-new" class="btn-new disabled flex items-center py-2 px-4 rounded-lg" href="#" onclick="return false;" aria-disabled="true" title="Cuenta deshabilitada">
-        <?php else: ?>
-          <a href="nuevoReporte.php" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
-        <?php endif; ?>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
-          </svg>
-          Nuevo
-        </a>
+          <?php else: ?>
+            <a href="nuevoReporte.php" id="btn-new" class="btn-new flex items-center py-2 px-4 rounded-lg">
+            <?php endif; ?>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+            </svg>
+            Nuevo
+            </a>
       </div>
       <div class="search-container py-5 px-7">
         <div class="filters flex items-center gap-2.5 p-3 justify-between bg-white rounded-[10px] mb-4 flex-wrap">
@@ -77,9 +77,10 @@ $query->close();
   </main>
 
   <!-- Modal detalles del Reporte -->
-  <div id="modal-reporte" class="fixed inset-0  z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
-    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-xl overflow-hidden">
-      <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+  <!-- Modal detalles del Reporte -->
+  <div id="modal-reporte" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4 shrink-0">
         <h2 class="text-2xl font-bold text-slate-800">
           Detalles del reporte
         </h2>
@@ -88,7 +89,7 @@ $query->close();
           &times;
         </button>
       </div>
-      <div class="p-6 space-y-6">
+      <div class="p-6 space-y-6 overflow-y-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <img id="detalle-imagen"
             src="#"
@@ -117,8 +118,12 @@ $query->close();
           <p class="text-sm text-slate-500 mb-2">Descripción</p>
           <p id="detalle-descripcion" class="text-slate-700 leading-relaxed bg-slate-50 border border-slate-200 rounded-lg p-4"></p>
         </div>
+        <div id="retroalimentacion-block" class="hidden">
+          <p class="text-sm text-slate-500 mb-2">Comentario del administrador</p>
+          <p id="detalle-retroalimentacion" class="text-slate-700 leading-relaxed bg-slate-50 border border-slate-200 rounded-lg p-4"></p>
+        </div>
       </div>
-      <div class="flex justify-end gap-3 px-6 py-4 border-t border-slate-200">
+      <div class="flex justify-end gap-3 px-6 py-4 border-t border-slate-200 shrink-0">
         <button id="cerrar-modal-footer"
           class="px-5 py-2 rounded-lg border border-slate-300 hover:bg-slate-100 transition cursor-pointer">
           Cerrar

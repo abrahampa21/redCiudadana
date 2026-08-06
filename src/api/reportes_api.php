@@ -22,7 +22,7 @@ switch ($method) {
             }
 
             $id_usuario = $_SESSION['id_usuario'];
-            $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+            $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
@@ -45,7 +45,7 @@ switch ($method) {
             }
 
             $id_usuario = $_SESSION['id_usuario'];
-            $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+            $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
@@ -90,7 +90,7 @@ switch ($method) {
                 $conn->close();
             } //Endpoint para obtener los reportes mas recientes en el dashboard, en base a su fecha de creación y limitando a 3 resultados
             elseif (isset($_GET['recent']) && $_GET['recent'] === 'true') {
-                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
@@ -115,7 +115,7 @@ switch ($method) {
                     echo json_encode(["mensaje" => "El id_categoria debe ser un número válido"]);
                     break;
                 }
-                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
@@ -145,7 +145,7 @@ switch ($method) {
                     echo json_encode(["mensaje" => "El id_estado debe ser un número válido"]);
                     break;
                 }
-                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
@@ -193,7 +193,7 @@ switch ($method) {
             //obtener todos los reportes (admin)
             //endpoint: http://localhost/redciudadana/src/api/reportes_api.php
             else {
-                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
+                $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.ubicacion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
@@ -288,6 +288,7 @@ switch ($method) {
             }
             $id_estado = $data['id_estado'] ?? null;
             $id_prioridades = $data['id_prioridades'] ?? null;
+            $retroalimentacion = $data['retroalimentacion'] ?? null;
             if (isset($id_estado) && $id_estado !== '' && !filter_var($id_estado, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
                 http_response_code(400);
                 echo json_encode(["mensaje" => "El id_estado debe ser un número válido"]);
@@ -302,8 +303,8 @@ switch ($method) {
                 http_response_code(400);
                 echo json_encode(array("mensaje" => "Debe enviar al menos un cambio de estado o prioridad"));
             } elseif (!empty($id_estado)) {
-                $stmt = $conn->prepare("UPDATE reporte SET id_estado = COALESCE(NULLIF(?, ''), id_estado) , id_prioridades = COALESCE(NULLIF(?, ''), id_prioridades) WHERE id_reporte = ?");
-                $stmt->bind_param("iii", $id_estado, $id_prioridades, $id_reporte);
+                $stmt = $conn->prepare("UPDATE reporte SET id_estado = COALESCE(NULLIF(?, ''), id_estado) , id_prioridades = COALESCE(NULLIF(?, ''), id_prioridades) , retroalimentacion = COALESCE(NULLIF(?, ''), retroalimentacion) WHERE id_reporte = ?");
+                $stmt->bind_param("iiss", $id_estado, $id_prioridades, $retroalimentacion, $id_reporte);
                 if ($stmt->execute()) {
                     http_response_code(200);
                     echo json_encode(array("mensaje" => "Estado cambiado exitosamente"));

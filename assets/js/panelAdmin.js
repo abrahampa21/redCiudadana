@@ -53,11 +53,13 @@ function actualizarIconoDarkMode() {
 
   if (isDarkMode) {
     // Ícono de sol
-    icon.innerHTML = '<circle cx="320" cy="320" r="120"/><path d="M320 40v80M320 520v80M600 320h-80M120 320H40M512.5 127.5l-56.6 56.6M184.1 455.9l-56.6 56.6M512.5 512.5l-56.6-56.6M184.1 184.1l-56.6-56.6" stroke="currentColor" stroke-width="40" stroke-linecap="round" fill="none"/>';
+    icon.innerHTML =
+      '<circle cx="320" cy="320" r="120"/><path d="M320 40v80M320 520v80M600 320h-80M120 320H40M512.5 127.5l-56.6 56.6M184.1 455.9l-56.6 56.6M512.5 512.5l-56.6-56.6M184.1 184.1l-56.6-56.6" stroke="currentColor" stroke-width="40" stroke-linecap="round" fill="none"/>';
     darkModeToggle.classList.add("active");
   } else {
     // Ícono de luna
-    icon.innerHTML = '<path d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C388.8 576 451.3 548.8 497.3 504.6C504.6 497.6 506.7 486.7 502.6 477.5C498.5 468.3 488.9 462.6 478.8 463.4C473.9 463.8 469 464 464 464C362.4 464 280 381.6 280 280C280 207.9 321.5 145.4 382.1 115.2C391.2 110.7 396.4 100.9 395.2 90.8C394 80.7 386.6 72.5 376.7 70.3C358.4 66.2 339.4 64 320 64z"/>';
+    icon.innerHTML =
+      '<path d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C388.8 576 451.3 548.8 497.3 504.6C504.6 497.6 506.7 486.7 502.6 477.5C498.5 468.3 488.9 462.6 478.8 463.4C473.9 463.8 469 464 464 464C362.4 464 280 381.6 280 280C280 207.9 321.5 145.4 382.1 115.2C391.2 110.7 396.4 100.9 395.2 90.8C394 80.7 386.6 72.5 376.7 70.3C358.4 66.2 339.4 64 320 64z"/>';
     darkModeToggle.classList.remove("active");
   }
 }
@@ -328,6 +330,11 @@ async function abrirModalReporte(reporte) {
       </select>
     </div>
 
+    <div style="margin:0 0 10px;">
+      <label style="display:block;font-weight:bold;margin-bottom:4px;">Retroalimentación:</label>
+      <textarea id="textarea-retro-modal" rows="3" placeholder="Escribe un comentario para el ciudadano..." style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:8px;font-family:inherit;resize:vertical;">${reporte.retroalimentacion || ""}</textarea>
+    </div>
+
     <p style="margin:0 0 10px;"><strong>Ciudadano:</strong> ${reporte.nombre_ciudadano || "Sin asignar"}</p>
     <p style="margin:0 0 10px;"><strong>Fecha de creación:</strong> ${reporte.fecha_creacion || "Sin fecha"}</p>
     ${evidencia}
@@ -340,8 +347,12 @@ async function abrirModalReporte(reporte) {
 
   modal.style.display = "flex";
 
-  document.getElementById("btn-cancelar-reporte").addEventListener("click", cerrarModalReporte);
-  document.getElementById("btn-confirmar-reporte").addEventListener("click", solicitarConfirmacionCambios);
+  document
+    .getElementById("btn-cancelar-reporte")
+    .addEventListener("click", cerrarModalReporte);
+  document
+    .getElementById("btn-confirmar-reporte")
+    .addEventListener("click", solicitarConfirmacionCambios);
 }
 
 //===== MODAL DE CONFIRMACIÓN DE CAMBIOS =====
@@ -364,7 +375,7 @@ function crearModalConfirmacionCambios() {
     modal.innerHTML = `
       <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,0.2);">
         <h3 style="margin:0 0 8px;font-size:1.05rem;">¿Confirmar estos cambios?</h3>
-        <p style="margin:0 0 20px;color:#64748b;font-size:0.88rem;">Se actualizará el estado y/o la prioridad del reporte.</p>
+        <p style="margin:0 0 20px;color:#64748b;font-size:0.88rem;">Esta acción actualizará el reporte de forma permanente.</p>
         <div style="display:flex;gap:10px;justify-content:flex-end;">
           <button type="button" id="btn-confirmacion-no" style="border:1.5px solid #e2e8f0;background:#fff;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;">Cancelar</button>
           <button type="button" id="btn-confirmacion-si" style="background:#16a34a;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;">Sí, confirmar</button>
@@ -391,7 +402,8 @@ function solicitarConfirmacionCambios() {
   const modal = crearModalConfirmacionCambios();
   modal.style.display = "flex";
 
-  document.getElementById("btn-confirmacion-no").onclick = cerrarModalConfirmacionCambios;
+  document.getElementById("btn-confirmacion-no").onclick =
+    cerrarModalConfirmacionCambios;
   document.getElementById("btn-confirmacion-si").onclick = async () => {
     await guardarCambiosReporte();
     cerrarModalConfirmacionCambios();
@@ -405,12 +417,17 @@ async function guardarCambiosReporte() {
   const idEstadoSeleccionado = selectEstado.value;
   const nombreEstadoSeleccionado =
     selectEstado.options[selectEstado.selectedIndex].text;
-  const idPrioridadSeleccionada = document.getElementById("select-prioridad-modal").value;
+  const idPrioridadSeleccionada = document.getElementById(
+    "select-prioridad-modal",
+  ).value;
+  const textareaRetro = document.getElementById("textarea-retro-modal");
+  const retroalimentacion = textareaRetro ? textareaRetro.value.trim() : "";
 
   const guardado = await cambiarEstadoPrioridadReporte(
     reporteModalActual.id_reporte,
     idEstadoSeleccionado,
     idPrioridadSeleccionada,
+    retroalimentacion,
   );
 
   if (!guardado) {
@@ -432,7 +449,8 @@ async function guardarCambiosReporte() {
   }
 
   // Si desde archivados el estado cambia a pendiente o en proceso, vuelve a reportes.php
-  const esPaginaArchivados = window.location.pathname.endsWith("archivados.php");
+  const esPaginaArchivados =
+    window.location.pathname.endsWith("archivados.php");
   if (
     esPaginaArchivados &&
     (etiqueta.includes("pendiente") || etiqueta.includes("proceso"))
@@ -445,7 +463,12 @@ async function guardarCambiosReporte() {
 }
 
 //PATCH para cambiar el estado y prioridad de un reporte
-async function cambiarEstadoPrioridadReporte(id_reporte, id_estado, id_prioridades) {
+async function cambiarEstadoPrioridadReporte(
+  id_reporte,
+  id_estado,
+  id_prioridades,
+  retroalimentacion,
+) {
   try {
     const endpoint = `${BASE_URL}reportes_api.php?id_reporte=${id_reporte}`;
     const response = await fetch(endpoint, {
@@ -456,6 +479,7 @@ async function cambiarEstadoPrioridadReporte(id_reporte, id_estado, id_prioridad
       body: JSON.stringify({
         id_estado,
         id_prioridades,
+        retroalimentacion,
       }),
     });
 
@@ -489,7 +513,8 @@ function clearFilters() {
 //Renderizar reportes y filtrar usuarios desde el panel
 async function renderReportes() {
   const esPaginaReportes = window.location.pathname.endsWith("reportes.php");
-  const esPaginaArchivados = window.location.pathname.endsWith("archivados.php");
+  const esPaginaArchivados =
+    window.location.pathname.endsWith("archivados.php");
   const tbodyReportes = document.getElementById(
     esPaginaArchivados ? "reportesArchivados-tbody" : "reportes-tbody",
   );
@@ -522,12 +547,20 @@ async function renderReportes() {
       const prioridad = obtenerEtiquetaPrioridad(reporte.id_prioridades);
 
       // En reportes.php solo se muestran reportes pendientes o en proceso
-      if (esPaginaReportes && estado !== "pendiente" && estado !== "en proceso") {
+      if (
+        esPaginaReportes &&
+        estado !== "pendiente" &&
+        estado !== "en proceso"
+      ) {
         return false;
       }
 
       // En archivados.php solo se muestran reportes resueltos o rechazados
-      if (esPaginaArchivados && estado !== "resuelto" && estado !== "rechazado") {
+      if (
+        esPaginaArchivados &&
+        estado !== "resuelto" &&
+        estado !== "rechazado"
+      ) {
         return false;
       }
 
@@ -772,7 +805,9 @@ function mostrarReportesPorEstado(data) {
 
   if (Array.isArray(data)) {
     data.forEach((estado) => {
-      const nombreEstado = normalizarTexto(estado.nombre_categoria || estado.nombre || "");
+      const nombreEstado = normalizarTexto(
+        estado.nombre_categoria || estado.nombre || "",
+      );
 
       if (nombreEstado.includes("pendiente") && estadoPendiente) {
         estadoPendiente.textContent = estado.total ?? 0;

@@ -163,6 +163,18 @@ function abrirModal(reporte) {
   document.getElementById("detalle-descripcion").textContent =
     reporte.descripcion;
 
+  const retroalimentacionBlock = document.getElementById("retroalimentacion-block");
+  const detalleRetroalimentacion = document.getElementById("detalle-retroalimentacion");
+  if (retroalimentacionBlock && detalleRetroalimentacion) {
+    const hayRetroalimentacion = reporte.retroalimentacion && reporte.retroalimentacion.trim() !== "";
+    if (hayRetroalimentacion) {
+      detalleRetroalimentacion.textContent = reporte.retroalimentacion;
+      retroalimentacionBlock.classList.remove("hidden");
+    } else {
+      retroalimentacionBlock.classList.add("hidden");
+    }
+  }
+
   const detalleImagen = document.getElementById("detalle-imagen");
   detalleImagen.src = reporte.ruta_archivo
     ? `${BASE_URL_UPLOADS}${reporte.ruta_archivo}`
