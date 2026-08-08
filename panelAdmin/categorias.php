@@ -25,12 +25,48 @@
         
         <!-- CONTENIDO DE LA SECCIÓN DE CATEGORÍAS -->
         <div class="cat-card">
-          <div class="cat-row"><span>Alumbrado</span><span class="cat-count" data-id-categoria="1">0 reportes</span></div>
-          <div class="cat-row"><span>Seguridad</span><span class="cat-count" data-id-categoria="2">0 reportes</span></div>
-          <div class="cat-row"><span>Agua</span><span class="cat-count" data-id-categoria="3">0 reportes</span></div>
-          <div class="cat-row"><span>Áreas verdes</span><span class="cat-count" data-id-categoria="4">0 reportes</span></div>
-          <div class="cat-row"><span>Tránsito</span><span class="cat-count" data-id-categoria="5">0 reportes</span></div>
-          <div class="cat-row"><span>Baches y vialidad</span><span class="cat-count" data-id-categoria="6">0 reportes</span></div>
+          <div class="cat-row">
+            <div class="cat-info">
+              <span>Alumbrado</span>
+              <p class="cat-desc" data-desc-categoria="1"></p>
+            </div>
+            <span class="cat-count" data-id-categoria="1">0 reportes</span>
+          </div>
+          <div class="cat-row">
+            <div class="cat-info">
+              <span>Seguridad</span>
+              <p class="cat-desc" data-desc-categoria="2"></p>
+            </div>
+            <span class="cat-count" data-id-categoria="2">0 reportes</span>
+          </div>
+          <div class="cat-row">
+            <div class="cat-info">
+              <span>Agua</span>
+              <p class="cat-desc" data-desc-categoria="3"></p>
+            </div>
+            <span class="cat-count" data-id-categoria="3">0 reportes</span>
+          </div>
+          <div class="cat-row">
+            <div class="cat-info">
+              <span>Áreas verdes</span>
+              <p class="cat-desc" data-desc-categoria="4"></p>
+            </div>
+            <span class="cat-count" data-id-categoria="4">0 reportes</span>
+          </div>
+          <div class="cat-row">
+            <div class="cat-info">
+              <span>Tránsito</span>
+              <p class="cat-desc" data-desc-categoria="5"></p>
+            </div>
+            <span class="cat-count" data-id-categoria="5">0 reportes</span>
+          </div>
+          <div class="cat-row">
+            <div class="cat-info">
+              <span>Baches y vialidad</span>
+              <p class="cat-desc" data-desc-categoria="6"></p>
+            </div>
+            <span class="cat-count" data-id-categoria="6">0 reportes</span>
+          </div>
           <div class="cat-footer">Las categorías se administran desde la estructura del sistema.</div>
         </div>
       </div>

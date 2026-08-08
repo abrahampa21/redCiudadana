@@ -752,6 +752,30 @@ async function getReportesPorCategoria() {
   }
 }
 
+//GET para obtener las categorías con su descripción
+async function getCategorias() {
+  try {
+    const endpoint = `${BASE_URL}categorias_api.php`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al obtener las categorías:", error);
+    return [];
+  }
+}
+
+//Mostrar la descripción de cada categoría en el panel de administracion
+function mostrarDescripcionCategorias(categorias) {
+  if (!Array.isArray(categorias)) return;
+  categorias.forEach((cat) => {
+    const desc = document.querySelector(
+      `[data-desc-categoria="${cat.id_categoria}"]`,
+    );
+    if (desc) desc.textContent = cat.descripcion || "Sin descripción";
+  });
+}
+
 //GET para obtener el total de reportes por estado
 async function getReportesPorEstado() {
   try {
@@ -975,6 +999,10 @@ async function poblarFormularioEdicion() {
 async function initCategoriasPage() {
   const data = await getReportesPorCategoria();
   mostrarReportesPorCategoria(data);
+  if (document.querySelector("[data-desc-categoria]")) {
+    const categorias = await getCategorias();
+    mostrarDescripcionCategorias(categorias);
+  }
 }
 
 //Inicializar la página de dashboard

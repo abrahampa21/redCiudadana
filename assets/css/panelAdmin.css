@@ -843,7 +843,7 @@ tr:last-child td {
 /*============= CATEGORÍAS ==========*/
 .cat-card {
   padding: 8px 0;
-  max-width: 560px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -854,6 +854,7 @@ tr:last-child td {
   padding: 12px 20px;
   border-bottom: 1px solid #e2e8f0;
   font-size: 0.88rem;
+  gap: 1rem;
 }
 
 .cat-row:last-of-type {
@@ -863,6 +864,28 @@ tr:last-child td {
 .cat-count {
   color: #64748b;
   font-size: 0.78rem;
+}
+
+.cat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-desc {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .cat-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }
 
 .cat-footer {
@@ -1343,6 +1366,7 @@ body.dark .page-sub,
 body.dark .reportes-empty,
 body.dark .form-hint,
 body.dark .cat-count,
+body.dark .cat-desc,
 body.dark .cat-footer,
 body.dark .reportes-archived-text,
 body.dark .editar-perfil .text p,
