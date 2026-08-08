@@ -55,6 +55,38 @@ function ocultarSpinner() {
   document.getElementById("spinner").classList.add("hidden");
 }
 
+//===DARK MODE===
+const darkModeToggle = document.getElementById("dark-mode-toggle");
+
+// Función para cambiar el ícono del botón según el modo
+function actualizarIconoDarkMode() {
+  if (!darkModeToggle) return;
+
+  const isDarkMode = document.body.classList.contains("dark");
+  const icon = darkModeToggle.querySelector("svg");
+
+  if (isDarkMode) {
+    // Ícono de sol
+    icon.innerHTML =
+      '<circle cx="320" cy="320" r="120"/><path d="M320 40v80M320 520v80M600 320h-80M120 320H40M512.5 127.5l-56.6 56.6M184.1 455.9l-56.6 56.6M512.5 512.5l-56.6-56.6M184.1 184.1l-56.6-56.6" stroke="currentColor" stroke-width="40" stroke-linecap="round" fill="none"/>';
+    darkModeToggle.classList.add("active");
+  } else {
+    // Ícono de luna
+    icon.innerHTML =
+      '<path d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C388.8 576 451.3 548.8 497.3 504.6C504.6 497.6 506.7 486.7 502.6 477.5C498.5 468.3 488.9 462.6 478.8 463.4C473.9 463.8 469 464 464 464C362.4 464 280 381.6 280 280C280 207.9 321.5 145.4 382.1 115.2C391.2 110.7 396.4 100.9 395.2 90.8C394 80.7 386.6 72.5 376.7 70.3C358.4 66.2 339.4 64 320 64z"/>';
+    darkModeToggle.classList.remove("active");
+  }
+}
+
+// Alterna el modo al hacer clic
+if (darkModeToggle) {
+  darkModeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    actualizarIconoDarkMode();
+  });
+}
+
 //Para el menu toggle responsivo
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
@@ -823,4 +855,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
+
+  const darkModeGuardado = localStorage.getItem("darkMode") === "true";
+  if (darkModeGuardado) {
+    document.body.classList.add("dark");
+  }
+  actualizarIconoDarkMode();
 });

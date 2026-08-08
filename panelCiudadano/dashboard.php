@@ -13,6 +13,7 @@
 <body>
   
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/botonModoOscuro.php"; ?>
   <?php include_once "../includes/toast.php"; ?>
   <main class="main-container">
     <div class="page" id="page-dashboard">

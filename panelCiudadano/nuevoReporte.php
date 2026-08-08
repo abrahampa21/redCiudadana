@@ -23,6 +23,7 @@ if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0) {
 
 <body>
   <?php include_once "../includes/sidebarCiudadano.php"; ?>
+  <?php include_once "../includes/botonModoOscuro.php"; ?>
   <?php include_once "../includes/spinner.php"; ?>
   <!-- Nuevo Reporte -->
   <main class="main-container forms nuevo-reporte">

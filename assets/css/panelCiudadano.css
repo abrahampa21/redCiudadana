@@ -545,6 +545,152 @@ body {
   border-left-color: #ef4444;
 }
 
+/*============= DARK MODE ==========*/
+/* Contenedor del botón modo oscuro */
+.container-dark-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: fixed;
+  top: 24px;
+  right: 65px;
+  z-index: 2000;
+  color: #0a2e36;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .container-dark-mode span {
+    display: none;
+  }
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 2000;
+  background: transparent;
+  color: #fff;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.dark-mode-toggle svg {
+  fill: #0a2e36;
+}
+
+.dark-mode-toggle svg:hover {
+  fill: #061e24;
+  transition: fill 0.2s;
+}
+
+.dark-mode-toggle.active svg {
+  fill: #fff;
+}
+
+.dark-mode-toggle.active:hover {
+  fill: #061e24;
+  transition: fill 0.2s;
+}
+
+/* Contenido en modo oscuro */
+body.dark {
+  background: #061e24;
+  color: #e2e8f0;
+}
+
+/* Tarjetas y contenedores */
+body.dark .stat-card,
+body.dark .main-container .card,
+body.dark .forms form,
+body.dark .reportes .filters {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: none;
+}
+
+/* Textos */
+body.dark .page-title,
+body.dark .stat-num,
+body.dark .reportes h1,
+body.dark .forms h1,
+body.dark .editar-perfil .text h1,
+body.dark .forms form label,
+body.dark .editar-perfil .div-input label {
+  color: #f1f5f9;
+}
+
+body.dark .page-date,
+body.dark .reportes-list p,
+body.dark .editar-perfil .text p,
+body.dark .editar-perfil .required-text p,
+body.dark .forms .required-text p,
+body.dark .reportes .clear-btn {
+  color: #94a3b8;
+}
+
+/* Inputs, selects, textareas */
+body.dark .reportes input,
+body.dark .reportes select,
+body.dark .forms .div-input input,
+body.dark .forms .div-input select,
+body.dark .forms form textarea,
+body.dark .editar-perfil .div-input input {
+  background: #061e24;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark .editar-perfil .div-input input[readonly] {
+  background: #334155;
+  color: #94a3b8;
+}
+
+/* Bordes */
+body.dark .reportes .topbar,
+body.dark .reportes-list div {
+  border-color: #334155;
+}
+
+/* Toast */
+body.dark .toast {
+  background: #1e293b;
+}
+
+body.dark .toast.toast-success {
+  background: #14532d;
+  border-left-color: #22c55e;
+}
+
+body.dark .toast.toast-error {
+  background: #7f1d1d;
+  border-left-color: #ef4444;
+}
+
+body.dark .toast .btn-close {
+  color: #e2e8f0;
+}
+
+/* Override de utilidades Tailwind usadas inline en las páginas */
+body.dark .bg-white {
+  background: #1e293b !important;
+}
+body.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+body.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+body.dark .border-slate-200,
+body.dark .border-slate-300 {
+  border-color: #334155 !important;
+}
+
 /*Responsividad*/
 @media (max-width: 750px) {
   .menu-toggle {
