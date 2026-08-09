@@ -410,6 +410,68 @@ function solicitarConfirmacionCambios() {
   };
 }
 
+//Función para crear el modal de confirmación de habilitar/inhabilitar usuario
+function crearModalConfirmacionUsuario() {
+  let modal = document.getElementById("modal-confirmar-usuario");
+
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "modal-confirmar-usuario";
+    modal.className =
+      "fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm";
+
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:24px;box-shadow:0 16px 48px rgba(0,0,0,0.2);">
+        <h3 id="modal-usuario-titulo" style="margin:0 0 8px;font-size:1.05rem;">¿Inhabilitar a este usuario?</h3>
+        <p id="modal-usuario-mensaje" style="margin:0 0 20px;color:#64748b;font-size:0.88rem;"></p>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <button type="button" id="btn-confirmacion-usuario-no" style="border:1.5px solid #e2e8f0;background:#fff;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;">Cancelar</button>
+          <button type="button" id="btn-confirmacion-usuario-si" style="background:#16a34a;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;">Sí, confirmar</button>
+        </div>
+      </div>
+    `;
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) cerrarModalConfirmacionUsuario();
+    });
+
+    document.body.appendChild(modal);
+  }
+
+  return modal;
+}
+
+function cerrarModalConfirmacionUsuario() {
+  const modal = document.getElementById("modal-confirmar-usuario");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }
+}
+
+function solicitarConfirmacionUsuario(id, activoActual, btn) {
+  const inhabilitar = activoActual == 1;
+  const modal = crearModalConfirmacionUsuario();
+
+  document.getElementById("modal-usuario-titulo").textContent = inhabilitar
+    ? "¿Inhabilitar a este usuario?"
+    : "¿Habilitar a este usuario?";
+
+  document.getElementById("modal-usuario-mensaje").textContent = inhabilitar
+    ? "El usuario no podrá crear nuevos reportes hasta que sea habilitado nuevamente."
+    : "El usuario podrá acceder nuevamente al sistema y crear nuevos reportes.";
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  document.getElementById("btn-confirmacion-usuario-no").onclick =
+    cerrarModalConfirmacionUsuario;
+  document.getElementById("btn-confirmacion-usuario-si").onclick = async () => {
+    await deshabilitarUsuario(id, activoActual, btn);
+    cerrarModalConfirmacionUsuario();
+  };
+}
+
 async function guardarCambiosReporte() {
   if (!reporteModalActual) return;
 
@@ -687,7 +749,7 @@ async function getUsuariosCiudadanos() {
     <td>${usuario.fecha_registro}</td>
     <td>
       <button class="btn ${claseBoton} btn-sm" data-id="${usuario.id_usuario}"
-        onclick="deshabilitarUsuario(${usuario.id_usuario}, ${usuario.activo}, this)">
+        onclick="solicitarConfirmacionUsuario(${usuario.id_usuario}, ${usuario.activo}, this)">
         ${textoBoton}
       </button>
     </td>
@@ -732,7 +794,7 @@ async function deshabilitarUsuario(id, activoActual, btn) {
 
     btn.setAttribute(
       "onclick",
-      `deshabilitarUsuario(${id}, ${nuevoEstado}, this)`,
+      `solicitarConfirmacionUsuario(${id}, ${nuevoEstado}, this)`,
     );
   } catch (error) {
     console.error("Error al actualizar usuario:", error);
