@@ -1490,4 +1490,34 @@ body.dark #btn-confirmacion-no {
   color: #e2e8f0 !important;
 }
 
+/* Modal de confirmación de habilitar/inhabilitar usuario (creado en JS) */
+body.dark #modal-confirmar-usuario > div {
+  background: #1e293b !important;
+}
+
+body.dark #modal-confirmar-usuario h3 {
+  color: #f1f5f9 !important;
+}
+
+body.dark #modal-confirmar-usuario p {
+  color: #94a3b8 !important;
+}
+
+body.dark #btn-confirmacion-usuario-no {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Textarea de retroalimentación y caja de evidencia del modal de detalle */
+body.dark #modal-detalle-reporte textarea {
+  background: #061e24 !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark #modal-detalle-reporte div[style*="background:#f8fafc"] {
+  background: #0f172a !important;
+}
+
 

@@ -62,18 +62,6 @@ switch ($method) {
 
         break;
     case 'PATCH':
-    if (!isset($_GET['id_usuario'])) {
-        http_response_code(400);
-        echo json_encode(array("mensaje" => "El id_usuario es necesario"));
-        break;
-    }
-
-    $id_usuario = filter_input(INPUT_GET, 'id_usuario', FILTER_VALIDATE_INT);
-    if ($id_usuario === false || $id_usuario < 1) {
-        http_response_code(400);
-        echo json_encode(["mensaje" => "El id_usuario debe ser un número válido"]);
-        break;
-    }
     $data = json_decode(file_get_contents("php://input"), true);
     if (!is_array($data)) {
         http_response_code(400);
@@ -84,6 +72,19 @@ switch ($method) {
 
     // --- Habilitar/deshabilitar cuenta (admin) ---
     if ($accion === 'estado') {
+
+        if (!isset($_GET['id_usuario'])) {
+            http_response_code(400);
+            echo json_encode(array("mensaje" => "El id_usuario es necesario"));
+            break;
+        }
+
+        $id_usuario = filter_input(INPUT_GET, 'id_usuario', FILTER_VALIDATE_INT);
+        if ($id_usuario === false || $id_usuario < 1) {
+            http_response_code(400);
+            echo json_encode(["mensaje" => "El id_usuario debe ser un número válido"]);
+            break;
+        }
 
         if (!isset($data['activo']) || ($data['activo'] != 0 && $data['activo'] != 1)) {
             http_response_code(400);

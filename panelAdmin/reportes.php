@@ -13,7 +13,7 @@
 
 <body>
   <?php include_once "../includes/sidebarAdmin.php"; ?>
- 
+  <?php include_once "../includes/botonModoOscuro.php"; ?>
 
 
   <!-- REPORTES -->
