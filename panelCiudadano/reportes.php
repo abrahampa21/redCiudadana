@@ -78,7 +78,6 @@ $query->close();
   </main>
 
   <!-- Modal detalles del Reporte -->
-  <!-- Modal detalles del Reporte -->
   <div id="modal-reporte" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
     <div class="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-xl overflow-hidden flex flex-col">
       <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4 shrink-0">
@@ -134,7 +133,7 @@ $query->close();
   </div>
 
   <?php include_once "../includes/toast.php"; ?>
-  <script src="../assets/js/panelCiudadano.js"></script>
+  <script src="../assets/js/panelCiudadano.js?v=2"></script>
   <?php if (isset($_SESSION['activo']) && $_SESSION['activo'] == 0): ?>
     <script>
       document.addEventListener('DOMContentLoaded', () => {

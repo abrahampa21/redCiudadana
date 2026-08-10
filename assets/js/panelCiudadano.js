@@ -438,6 +438,11 @@ async function filtrarPorEstado(estado) {
       }
 
       renderizarPagina();
+    } else if (response.status === 404) {
+      todosLosReportes = [];
+      paginaActual = 1;
+      reportesContainer.innerHTML = "";
+      document.getElementById("paginacion").innerHTML = "";
     } else {
       throw new Error(`${response.status}`);
     }
@@ -464,6 +469,11 @@ async function filtrarPorCategoria(categoria) {
       }
 
       renderizarPagina();
+    } else if (response.status === 404) {
+      todosLosReportes = [];
+      paginaActual = 1;
+      reportesContainer.innerHTML = "";
+      document.getElementById("paginacion").innerHTML = "";
     } else {
       throw new Error(`${response.status}`);
     }

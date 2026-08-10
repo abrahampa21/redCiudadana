@@ -115,14 +115,20 @@ switch ($method) {
                     echo json_encode(["mensaje" => "El id_categoria debe ser un número válido"]);
                     break;
                 }
+                if (!isset($_SESSION['id_usuario'])) {
+                    http_response_code(401);
+                    echo json_encode(["mensaje" => "No autorizado"]);
+                    break;
+                }
+                $id_usuario = $_SESSION['id_usuario'];
                 $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
                 INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario 
                 LEFT JOIN evidencias ON reporte.id_reporte = evidencias.id_reporte
-                WHERE reporte.id_categoria = ?");
-                $stmt->bind_param("i", $id_categoria);
+                WHERE reporte.id_categoria = ? AND usuario.id_usuario = ?");
+                $stmt->bind_param("ii", $id_categoria, $id_usuario);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
@@ -145,14 +151,20 @@ switch ($method) {
                     echo json_encode(["mensaje" => "El id_estado debe ser un número válido"]);
                     break;
                 }
+                if (!isset($_SESSION['id_usuario'])) {
+                    http_response_code(401);
+                    echo json_encode(["mensaje" => "No autorizado"]);
+                    break;
+                }
+                $id_usuario = $_SESSION['id_usuario'];
                 $stmt = $conn->prepare("SELECT reporte.id_reporte, reporte.titulo, reporte.descripcion, reporte.id_prioridades, reporte.id_categoria, reporte.id_estado, reporte.retroalimentacion, reporte.ubicacion, categoria.nombre AS nombre_categoria, usuario.nombre AS nombre_ciudadano, estado.nombre AS nombre_estado, reporte.fecha_creacion, evidencias.ruta_archivo 
                 FROM reporte 
                 INNER JOIN categoria ON reporte.id_categoria = categoria.id_categoria 
                 INNER JOIN estado ON reporte.id_estado = estado.id_estado 
                 INNER JOIN usuario ON reporte.id_usuario = usuario.id_usuario 
                 LEFT JOIN evidencias ON reporte.id_reporte = evidencias.id_reporte
-                WHERE reporte.id_estado = ?");
-                $stmt->bind_param("i", $id_estado);
+                WHERE reporte.id_estado = ? AND usuario.id_usuario = ?");
+                $stmt->bind_param("ii", $id_estado, $id_usuario);
                 $stmt->execute();
                 $resultado = $stmt->get_result();
                 if ($resultado->num_rows > 0) {
