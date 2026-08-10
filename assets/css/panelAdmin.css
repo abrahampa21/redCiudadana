@@ -624,6 +624,12 @@ tr:last-child td {
   border-color: #1e7e34;
 }
 
+
+#reportes-tbody .btn.btn-primary.btn-sm {
+  background: #633806;
+  border-color: #633806;
+}
+
 .btn-back {
   display: inline-flex;
   align-items: center;
