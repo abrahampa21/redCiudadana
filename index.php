@@ -24,7 +24,7 @@ require_once __DIR__ .'.../includes/login.php';
   <script
     src="https://kit.fontawesome.com/e522357059.js"
     crossorigin="anonymous"></script>
-  <title>Inicio de Sesiones</title>
+  <title>Inicio de Sesión</title>
 </head>
 
 <body>
